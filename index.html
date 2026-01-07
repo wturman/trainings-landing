@@ -3,85 +3,133 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trainings Landing</title>
+    <title>Сила інтелекту</title>
     <link rel="stylesheet" href="css/main.css" />
+    <script type="module" src="js/main.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <!-- Хедер -->
+    <!-- Header -->
     <header class="site-header">
-      <div class="logo">Trainings</div>
-      <nav class="nav">
-        <ul>
-          <li><a href="#about">Про нас</a></li>
-          <li><a href="#programs">Програми</a></li>
-          <li><a href="#gallery">Галерея</a></li>
-          <li><a href="#contacts">Контакти</a></li>
-        </ul>
-      </nav>
-    </header>
+  <div class="logo-block">
+    <img src="img/logo.jpg" alt="Логотип" class="logo-img">
+    <span class="logo-text">Сила інтелекту</span>
+  </div>
 
-    <!-- Герой-секція -->
+  <!-- Burger -->
+  <div class="burger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Nav -->
+
+  <nav class="nav">
+    <ul>
+      <li><a href="#about">Про нас</a></li>
+      <li><a href="#programs">Тренінги</a></li>
+      <li><a href="#gallery">Галерея</a></li>
+      <li><a href="#contacts">Контакти</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Hero -->
+
     <section class="hero">
-      <h1>Тренінги для розвитку навичок</h1>
-      <p>
-        Ми допомагаємо людям розкривати потенціал через практичні навчальні
-        програми.
-      </p>
-      <img src="https://picsum.photos/1200/400" alt="Група людей на тренінгу" />
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <h1>Сила інтелекту</h1>
+          <p>Розвиваємо інтелект — змінюємо майбутнє</p>
+          <a href="#programs" class="btn">Наші тренінги</a>
+        </div>
+      </div>
+      
+      </div>
+      <div class="hero-slogans">
+        <div class="slogan">
+          <svg class="shape circle" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="6" />
+          </svg>
+          <span>Зустрічі групи підтримки</span>
+        </div>
+        <div class="slogan">
+          <svg class="shape triangle" viewBox="0 0 24 24">
+            <polygon points="12,4 20,20 4,20" />
+          </svg>
+          <span>Молодіжний простір</span>
+        </div>
+        <div class="slogan">
+          <svg class="shape square" viewBox="0 0 24 24">
+            <rect x="6" y="6" width="12" height="12" />
+          </svg>
+          <span>Ініціатива «Дім там, де ти»</span>
+        </div>
+        <div class="slogan">
+          <svg class="shape circle" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="6" />
+          </svg>
+          <span>Відверто на дорослі теми</span>
+        </div>
+      </div>
     </section>
 
-    <!-- Про нас -->
-    <section id="about">
+    <!-- About -->
+    <section id="about" class="about">
       <h2>Про нас</h2>
       <p>
-        Наша команда організовує тренінги з комунікації, лідерства та особистого
-        розвитку. Ми віримо, що навчання має бути доступним, практичним і
-        надихаючим.
+        Ми допомагаємо людям розкривати свій потенціал через тренінги, освітні
+        програми та підтримку спільноти.
       </p>
     </section>
 
-    <!-- Програми -->
-    <section id="programs">
-      <h2>Наші програми</h2>
-      <ul>
-        <li>
-          <strong>Комунікація:</strong> ефективне спілкування та командна
-          робота.
-        </li>
-        <li>
-          <strong>Лідерство:</strong> розвиток навичок управління та мотивації.
-        </li>
-        <li>
-          <strong>Особистий розвиток:</strong> тайм-менеджмент, впевненість у
-          собі.
-        </li>
-      </ul>
-      <img src="https://picsum.photos/600/300" alt="Фото тренінгу" />
+    <!-- Programs -->
+    <section id="programs" class="programs">
+      <h2>Наші тренінги</h2>
+      <div class="program-list">
+        <div class="program-card">
+          <h3>Комунікація</h3>
+          <p>Ефективне спілкування та командна робота.</p>
+        </div>
+        <div class="program-card">
+          <h3>Лідерство</h3>
+          <p>Розвиток навичок управління та мотивації.</p>
+        </div>
+        <div class="program-card">
+          <h3>Особистий розвиток</h3>
+          <p>Тайм-менеджмент, впевненість у собі.</p>
+        </div>
+      </div>
     </section>
 
-    <!-- Галерея -->
-    <section id="gallery">
+    <!-- Gallery -->
+    <section id="gallery" class="gallery">
       <h2>Галерея</h2>
-      <div class="gallery">
+      <div class="gallery-grid">
         <img
-          src="https://picsum.photos/400/200?random=1"
+          src="https://picsum.photos/400/250?random=1"
           alt="Фото тренінгу 1"
         />
         <img
-          src="https://picsum.photos/400/200?random=2"
+          src="https://picsum.photos/400/250?random=2"
           alt="Фото тренінгу 2"
         />
         <img
-          src="https://picsum.photos/400/200?random=3"
+          src="https://picsum.photos/400/250?random=3"
           alt="Фото тренінгу 3"
         />
       </div>
     </section>
 
-    <!-- Контакти -->
-    <footer id="contacts">
+    <!-- Contacts -->
+    <footer id="contacts" class="footer">
       <h2>Контакти</h2>
-      <p>Email: info@trainings.org</p>
+      <p>Email: info@silaintellect.org</p>
       <p>Телефон: +380 00 000 00 00</p>
     </footer>
   </body>

@@ -1,22 +1,24 @@
-#programs {
+.programs {
   background-color: #fff;
+  text-align: center;
 }
 
-#programs ul {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
+.program-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-#programs li {
-  margin-bottom: 10px;
-  font-size: 1.1em;
-}
-
-#programs img {
-  display: block;
-  margin: 20px auto;
-  max-width: 100%;
+.program-card {
+  background-color: #fcebb6;
+  padding: 20px;
   border-radius: 8px;
+  width: 250px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.program-card:hover {
+  transform: translateY(-5px);
 }

@@ -1,34 +1,155 @@
 .site-header {
+  position: fixed; /* закріплюємо зверху */
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: #2c3e50;
-  color: #fff;
+  padding: 15px 40px;
+  background-color: rgba(252, 235, 182, 1); /* пастельний жовтий */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease,
+    padding 0.3s ease;
+  z-index: 1000;
 }
 
-.site-header .logo {
-  font-size: 1.5em;
+/* Стиль при скролі */
+.site-header.scrolled {
+  background-color: rgba(252, 235, 182, 0.85); /* трохи прозоріший */
+  backdrop-filter: blur(4px); /* легке розмиття */
+  padding: 10px 30px; /* компактніший */
+}
+
+.logo-block {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  height: 40px;
+  margin-right: 10px;
+  transition: height 0.3s ease;
+}
+
+.site-header.scrolled .logo-img {
+  height: 32px; /* зменшується при скролі */
+}
+
+.logo-text {
+  font-size: 1.6em;
   font-weight: bold;
+  color: #2c3e50;
+  transition: font-size 0.3s ease;
 }
 
-.site-header .nav ul {
+.site-header.scrolled .logo-text {
+  font-size: 1.4em; /* компактніше */
+}
+
+/* Навігація */
+.nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
+  display: flex; /* горизонтально */
+  gap: 25px;
 }
 
-.site-header .nav li {
-  margin-left: 20px;
+.nav li {
+  margin: 0;
 }
 
-.site-header .nav a {
-  color: #fff;
+.nav a {
+  color: #2c3e50;
   text-decoration: none;
-  transition: color 0.3s;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
-.site-header .nav a:hover {
-  color: #f1c40f;
+/* Ефект при наведенні */
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background-color: #3498db;
+  transition: width 0.3s ease;
+}
+
+.nav a:hover {
+  color: #3498db;
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+/* --- Бургер меню для мобільних --- */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 1101;
+}
+
+.burger span {
+  display: block;
+  height: 3px;
+  background: #2c3e50;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Анімація бургер -> хрестик */
+.burger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.burger.active span:nth-child(2) {
+  opacity: 0;
+}
+.burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+  .burger {
+    display: flex;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 70%;
+    height: 100%;
+    background: rgba(252, 235, 182, 0.95);
+    transform: translateX(100%);
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+
+  .nav.open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .nav a {
+    font-size: 1.4em;
+  }
 }

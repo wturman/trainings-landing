@@ -1,9 +1,10 @@
-#about {
+.about {
   background-color: #f9f9f9;
   text-align: center;
 }
 
-#about p {
+.about p {
   max-width: 600px;
   margin: 0 auto;
+  font-size: 1.2em;
 }
