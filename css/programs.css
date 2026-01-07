@@ -1,0 +1,22 @@
+#programs {
+  background-color: #fff;
+}
+
+#programs ul {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+#programs li {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+#programs img {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  border-radius: 8px;
+}
