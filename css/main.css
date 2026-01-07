@@ -1,0 +1,11 @@
+/* Підключаємо окремі файли */
+@import url("header.css");
+@import url("footer.css");
+@import url("gallery.css");
+
+/* Базові стилі для всього сайту */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
