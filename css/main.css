@@ -4,6 +4,9 @@
 @import url("programs.css");
 @import url("gallery.css");
 @import url("footer.css");
+@import url("directions.css");
+@import url("portfolio.css");
+@import url("aktualno.css");
 
 body {
   margin: 0;

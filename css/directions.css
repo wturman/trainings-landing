@@ -1,0 +1,35 @@
+.directions {
+  padding: 60px 20px;
+  background-color: #fffaf2;
+  text-align: center;
+}
+
+.direction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.direction-card {
+  background-color: #fef6e4;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.direction-card:hover {
+  transform: translateY(-5px);
+}
+
+.direction-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.4em;
+  color: #2c3e50;
+}
+
+.direction-card p {
+  font-size: 1em;
+  color: #555;
+}
