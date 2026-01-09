@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="img/favicon-16x16.png">
     <title>Сила інтелекту</title>
     <link rel="stylesheet" href="css/main.css" />
     <script type="module" src="js/main.js"></script>
@@ -16,9 +17,10 @@
     <!-- Header -->
     <header class="site-header">
   <div class="logo-block">
-    <img src="img/logo.jpg" alt="Логотип" class="logo-img">
-    <span class="logo-text">Сила інтелекту</span>
-  </div>
+  <img src="img/logo.png" alt="Логотип" class="logo-img">
+  <img src="img/logo-text.png" alt="Логотип текст" class="logo-text-img">
+</div>
+
 
   <!-- Burger -->
   <div class="burger">
@@ -92,32 +94,107 @@
   </div>
 </section>
 
+
 <!-- Directions -->
 <section id="directions" class="directions">
   <h2>Напрями</h2>
   <div class="direction-grid">
-    <div class="direction-card">
-      <h3>Рівність</h3>
-      <p>Просування інклюзивності, прав людини та підтримка вразливих груп.</p>
+
+    <!-- Рівність -->
+    <div class="direction-card" data-id="1">
+      <div class="card-header">
+        <h3>Рівність</h3>
+        <span class="arrow">➤</span>
+      </div>
+      <p class="card-summary">Просування інклюзивності та прав людини.</p>
+      <div class="card-details">
+        <img src="https://picsum.photos/600/300?random=11" alt="Стокове фото" />
+        <p>
+          Ми підтримуємо ініціативи, що сприяють рівним можливостям у освіті,
+          працевлаштуванні та громадському житті. Наші програми допомагають
+          долати дискримінацію та формувати культуру взаємоповаги.
+        </p>
+        <button class="close-btn">Закрити</button>
+      </div>
     </div>
-    <div class="direction-card">
-      <h3>Критичне мислення</h3>
-      <p>Навчання аналізу інформації, протидія маніпуляціям та фейкам.</p>
+
+    <!-- Критичне мислення та інформаційна безпека -->
+    <div class="direction-card" data-id="2">
+      <div class="card-header">
+        <h3>Критичне мислення та інформаційна безпека</h3>
+        <span class="arrow">➤</span>
+      </div>
+      <p class="card-summary">Розвиток навичок аналізу та захисту від маніпуляцій.</p>
+      <div class="card-details">
+        <img src="https://picsum.photos/600/300?random=12" alt="Стокове фото" />
+        <p>
+          Ми навчаємо учасників розпізнавати фейки, пропаганду та маніпуляції.
+          Тренінги включають практичні вправи з перевірки джерел, кібербезпеки
+          та медіаграмотності, щоб кожен міг впевнено орієнтуватися в
+          інформаційному просторі.
+        </p>
+        <button class="close-btn">Закрити</button>
+      </div>
     </div>
-    <div class="direction-card">
-      <h3>Ментальне здоровʼя</h3>
-      <p>Психологічна підтримка, тренінги, безпечні простори.</p>
+
+    <!-- Ментальне здоровʼя -->
+    <div class="direction-card" data-id="3">
+      <div class="card-header">
+        <h3>Ментальне здоровʼя</h3>
+        <span class="arrow">➤</span>
+      </div>
+      <p class="card-summary">Підтримка психологічного добробуту та стійкості.</p>
+      <div class="card-details">
+        <img src="https://picsum.photos/600/300?random=13" alt="Стокове фото" />
+        <p>
+          Ми організовуємо воркшопи та групові зустрічі, що допомагають
+          зменшити стрес, розвивати емоційну стійкість і підтримувати баланс
+          між роботою та особистим життям. Учасники отримують інструменти для
+          турботи про себе та інших.
+        </p>
+        <button class="close-btn">Закрити</button>
+      </div>
     </div>
-    <div class="direction-card">
-      <h3>Національна ідентичність</h3>
-      <p>Збереження культурних цінностей, мова, традиції, історія.</p>
+
+    <!-- Національна ідентичність -->
+    <div class="direction-card" data-id="4">
+      <div class="card-header">
+        <h3>Національна ідентичність</h3>
+        <span class="arrow">➤</span>
+      </div>
+      <p class="card-summary">Збереження культурних традицій та історичної пам’яті.</p>
+      <div class="card-details">
+        <img src="https://picsum.photos/600/300?random=14" alt="Стокове фото" />
+        <p>
+          Ми підтримуємо культурні проєкти, що популяризують українську мову,
+          мистецтво та історію. Організовуємо фестивалі, лекції та інтерактивні
+          заходи, які формують гордість за національну спадщину.
+        </p>
+        <button class="close-btn">Закрити</button>
+      </div>
     </div>
-    <div class="direction-card">
-      <h3>Громадянська участь</h3>
-      <p>Активність у суспільному житті, волонтерство, ініціативи.</p>
+
+    <!-- Громадянська участь -->
+    <div class="direction-card" data-id="5">
+      <div class="card-header">
+        <h3>Громадянська участь</h3>
+        <span class="arrow">➤</span>
+      </div>
+      <p class="card-summary">Активізація громади та розвиток лідерства.</p>
+      <div class="card-details">
+        <img src="https://picsum.photos/600/300?random=15" alt="Стокове фото" />
+        <p>
+          Ми мотивуємо людей брати участь у прийнятті рішень на місцевому та
+          національному рівні. Програми включають навчання з адвокації,
+          волонтерства та розвитку громадських ініціатив.
+        </p>
+        <button class="close-btn">Закрити</button>
+      </div>
     </div>
+
   </div>
 </section>
+
 
 
 <!-- Portfolio -->
