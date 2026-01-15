@@ -1,10 +1,10 @@
 /* === Секція Портфоліо === */
 .portfolio {
   padding: 60px 20px;
-  background: #fffbea; /* пастельний світло-жовтий фон */
+  background: #fffbea;
 }
 
-/* Заголовок Портфоліо: fade-in + slide */
+/* Заголовок */
 .portfolio h2 {
   font-size: 2.8em;
   font-weight: 700;
@@ -21,7 +21,7 @@
   transform: translateY(0);
 }
 
-/* Підзаголовок Проєкти: typing effect + позиціонування над фото */
+/* Підзаголовок Проєкти */
 .projects-title {
   font-size: 2em;
   font-weight: 600;
@@ -103,7 +103,7 @@
   color: #555;
 }
 
-/* Чергування: кожен другий проект міняє порядок */
+/* Чергування */
 .project-item:nth-child(even) {
   flex-direction: row-reverse;
 }
@@ -116,7 +116,6 @@
   margin-top: 2.5rem;
 }
 
-/* Звичайні картки */
 .story-card {
   background: #fffdf5;
   border-radius: 0.75rem;
@@ -138,9 +137,8 @@
   object-fit: cover;
 }
 
-/* Картки з логотипами / великими зображеннями */
 .story-card-logo {
-  background: #f5f2e9; /* трохи інший пастельний фон */
+  background: #f5f2e9;
   border-radius: 0.75rem;
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
   min-height: 22rem;
@@ -151,12 +149,12 @@
 }
 
 .story-card-logo img {
-  width: 70%; /* збільшений розмір */
+  width: 70%;
   height: auto;
   object-fit: contain;
 }
 
-/* Заголовок Історії учасників: typing effect */
+/* Заголовок Історії */
 .stories-title {
   font-size: 2em;
   font-weight: 600;
@@ -185,5 +183,13 @@
   }
   to {
     width: 18ch;
+  }
+}
+
+/* === МОБІЛЬНА ВЕРСІЯ === */
+@media (max-width: 768px) {
+  /* Прибираємо тільки картки з логотипами */
+  .story-card-logo {
+    display: none;
   }
 }
