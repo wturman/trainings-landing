@@ -1,10 +1,66 @@
 .footer {
-  background-color: #a3c9e2;
-  color: #2c3e50;
-  text-align: center;
+  background: #fffbea;
   padding: 40px 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.footer.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footer h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .footer p {
-  margin: 5px 0;
+  font-size: 1.1em;
+  color: #555;
+  margin: 8px 0;
+}
+
+.footer a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Соцмережі */
+.social-links {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.social-icon {
+  font-size: 1.8em;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Базові кольори */
+.social-icon.facebook {
+  color: #1877f2; /* синій Facebook */
+}
+
+.social-icon.instagram {
+  color: #e1306c; /* рожевий Instagram */
+}
+
+.social-icon.telegram {
+  color: #0088cc; /* блакитний Telegram */
+}
+
+/* Ефект при наведенні */
+.social-icon:hover {
+  transform: scale(1.2);
+  filter: brightness(1.2); /* робимо яскравішим */
 }

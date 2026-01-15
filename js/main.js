@@ -6,3 +6,4 @@ import "./directions.js";
 import "./portfolio.js";
 import "./actualno.js";
 import "./services.js";
+import "./footer.js";
