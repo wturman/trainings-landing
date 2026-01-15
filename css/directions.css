@@ -20,32 +20,81 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-} /* Активна картка */
+  justify-content: space-between;
+}
+
+/* Активна картка */
 .direction-card.active {
   flex: 2;
   transform: scale(1.05);
   z-index: 10;
-} /* Інші картки */
+}
+
+/* Інші картки */
 .direction-card.inactive {
   transform: scale(0.9);
   opacity: 0.6;
 }
 
-/* Хедер картки */
+/* Хедер картки: назва + стрілочка */
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.card-header h3 {
+  font-size: 1.3em;
+  margin: 0;
+  color: #333;
+  flex: 1;
 }
 
 .arrow {
-  font-size: 1.2em;
+  font-size: 1.4em;
+  color: #3498db;
+  margin-left: 10px;
   transition: transform 0.3s ease;
 }
 
 .direction-card.active .arrow {
   transform: rotate(90deg);
+}
+
+/* Опис напряму — завжди внизу */
+.card-summary {
+  font-size: 1em;
+  color: #555;
+  margin-top: auto;
+  min-height: 60px; /* однакова висота */
+}
+
+/* Кнопка "Докладніше" */
+.more-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+/* показати кнопку при наведенні */
+.direction-card:hover .more-btn {
+  opacity: 1;
+}
+
+/* у активній картці кнопка завжди видима */
+.direction-card.active .more-btn {
+  opacity: 1;
+  background: #e74c3c; /* червоний для "Закрити" */
 }
 
 /* Деталі картки */
@@ -55,9 +104,11 @@
   overflow: hidden;
   transition: max-height 0.6s ease, opacity 0.6s ease;
 }
+
 .direction-card.active .card-details {
   max-height: 600px; /* плавне розгортання */
   opacity: 1;
+  animation: fadeIn 0.4s ease;
 }
 
 .card-details img {
@@ -68,7 +119,7 @@
   margin-bottom: 15px;
 }
 
-/* Кнопки */
+/* Кнопка закриття */
 .close-btn {
   margin-top: 10px;
   background: #e07a5f;
@@ -81,29 +132,10 @@
 
 /* Ховер ефект */
 .direction-card:hover {
-  transform: scale(1.03);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Кнопка "Докладніше" */
-.more-btn {
-  display: none;
-  margin-top: 12px;
-  background: #3498db;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.direction-card:hover .more-btn {
-  display: inline-block;
-  opacity: 1;
-}
-
-/* Анімація */
+/* Анімація появи */
 @keyframes fadeIn {
   from {
     opacity: 0;

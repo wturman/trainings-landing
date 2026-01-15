@@ -1,0 +1,189 @@
+/* === Секція Портфоліо === */
+.portfolio {
+  padding: 60px 20px;
+  background: #fffbea; /* пастельний світло-жовтий фон */
+}
+
+/* Заголовок Портфоліо: fade-in + slide */
+.portfolio h2 {
+  font-size: 2.8em;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.portfolio h2.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Підзаголовок Проєкти: typing effect + позиціонування над фото */
+.projects-title {
+  font-size: 2em;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  margin-bottom: 20px;
+  border-right: 3px solid #3498db;
+  display: block;
+  margin-left: calc(50% - 100px);
+  max-width: 200px;
+}
+
+.projects-title.typing {
+  animation: typing 3s steps(7, end) forwards;
+}
+
+.projects-title.finished {
+  border-right: none;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 7ch;
+  }
+}
+
+/* === Проєкти === */
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.project-item {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  background: #fffdf5;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.project-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-image img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.project-text {
+  width: 50%;
+}
+
+.project-image,
+.project-text {
+  flex: 1;
+}
+
+.project-text h4 {
+  margin-bottom: 10px;
+  font-size: 1.4em;
+  color: #333;
+}
+
+.project-text p {
+  font-size: 1em;
+  color: #555;
+}
+
+/* Чергування: кожен другий проект міняє порядок */
+.project-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+/* === Історії учасників === */
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+/* Звичайні картки */
+.story-card {
+  background: #fffdf5;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+  text-align: center;
+  min-height: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.story-photo img {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+/* Картки з логотипами / великими зображеннями */
+.story-card-logo {
+  background: #f5f2e9; /* трохи інший пастельний фон */
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+  min-height: 22rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.story-card-logo img {
+  width: 70%; /* збільшений розмір */
+  height: auto;
+  object-fit: contain;
+}
+
+/* Заголовок Історії учасників: typing effect */
+.stories-title {
+  font-size: 2em;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  margin-bottom: 20px;
+  border-right: 3px solid #3498db;
+  display: block;
+  margin-left: calc(50% - 150px);
+  max-width: 300px;
+}
+
+.stories-title.typing {
+  animation: typingStories 4s steps(18, end) forwards;
+}
+
+.stories-title.finished {
+  border-right: none;
+}
+
+@keyframes typingStories {
+  from {
+    width: 0;
+  }
+  to {
+    width: 18ch;
+  }
+}

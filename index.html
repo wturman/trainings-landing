@@ -83,16 +83,27 @@
 
     <!-- About -->
 <section id="about" class="about">
-  <h2>Про нас</h2>
-  <p>
-    Ми — громадська організація «Сила інтелекту». Наша мета — підтримувати розвиток
-    критичного мислення, рівності та активної громадянської участі.
-  </p>
-  <div class="about-links">
-    <a href="#documents">Документи та звіти</a> |
-    <a href="#partners">Партнери</a>
+  <div class="about-container">
+    <!-- Логотип/іконка зліва -->
+    <div class="about-icon">
+      <img src="img/logo.png" alt="Сила інтелекту" />
+    </div>
+
+    <!-- Основний текст справа -->
+    <div class="about-content">
+      <h2>Про нас</h2>
+      <p>
+        Ми — громадська організація «Сила інтелекту». Наша мета — підтримувати розвиток
+        критичного мислення, рівності та активної громадянської участі.
+      </p>
+      <div class="about-links">
+        <a href="#documents"><span class="link-icon"></span> Документи та звіти</a>
+        <a href="#partners"><span class="link-icon"></span> Партнери</a>
+      </div>
+    </div>
   </div>
 </section>
+
 
 
 <!-- Directions -->
@@ -107,6 +118,10 @@
         <span class="arrow">➤</span>
       </div>
       <p class="card-summary">Просування інклюзивності та прав людини.</p>
+
+      <!-- Кнопка завжди в картці, але з’являється при hover -->
+      <div class="more-btn">Докладніше</div>
+
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=11" alt="Стокове фото" />
         <p>
@@ -114,7 +129,6 @@
           працевлаштуванні та громадському житті. Наші програми допомагають
           долати дискримінацію та формувати культуру взаємоповаги.
         </p>
-        <button class="close-btn">Закрити</button>
       </div>
     </div>
 
@@ -125,6 +139,9 @@
         <span class="arrow">➤</span>
       </div>
       <p class="card-summary">Розвиток навичок аналізу та захисту від маніпуляцій.</p>
+
+      <div class="more-btn">Докладніше</div>
+
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=12" alt="Стокове фото" />
         <p>
@@ -133,7 +150,6 @@
           та медіаграмотності, щоб кожен міг впевнено орієнтуватися в
           інформаційному просторі.
         </p>
-        <button class="close-btn">Закрити</button>
       </div>
     </div>
 
@@ -144,6 +160,9 @@
         <span class="arrow">➤</span>
       </div>
       <p class="card-summary">Підтримка психологічного добробуту та стійкості.</p>
+
+      <div class="more-btn">Докладніше</div>
+
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=13" alt="Стокове фото" />
         <p>
@@ -152,7 +171,6 @@
           між роботою та особистим життям. Учасники отримують інструменти для
           турботи про себе та інших.
         </p>
-        <button class="close-btn">Закрити</button>
       </div>
     </div>
 
@@ -163,6 +181,9 @@
         <span class="arrow">➤</span>
       </div>
       <p class="card-summary">Збереження культурних традицій та історичної пам’яті.</p>
+
+      <div class="more-btn">Докладніше</div>
+
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=14" alt="Стокове фото" />
         <p>
@@ -170,7 +191,6 @@
           мистецтво та історію. Організовуємо фестивалі, лекції та інтерактивні
           заходи, які формують гордість за національну спадщину.
         </p>
-        <button class="close-btn">Закрити</button>
       </div>
     </div>
 
@@ -181,6 +201,9 @@
         <span class="arrow">➤</span>
       </div>
       <p class="card-summary">Активізація громади та розвиток лідерства.</p>
+
+      <div class="more-btn">Докладніше</div>
+
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=15" alt="Стокове фото" />
         <p>
@@ -188,7 +211,6 @@
           національному рівні. Програми включають навчання з адвокації,
           волонтерства та розвитку громадських ініціатив.
         </p>
-        <button class="close-btn">Закрити</button>
       </div>
     </div>
 
@@ -197,23 +219,141 @@
 
 
 
+
 <!-- Portfolio -->
 <section id="portfolio" class="portfolio">
-  <h2>Портфоліо</h2>
-  <div class="portfolio-block">
-    <h3>Проєкти</h3>
-    <p>
-      Ми реалізували низку освітніх та соціальних проєктів, спрямованих на розвиток
-      молоді та підтримку громади.
-    </p>
+  <h2 class="gradient-title">Портфоліо</h2>
+
+
+  <!-- Проєкти -->
+  <div class="projects">
+    <h3 class="projects-title">Проєкти</h3>
+    <div class="project-list">
+      <div class="project-item">
+        <div class="project-image">
+          <img src="https://picsum.photos/600/400?random=1" alt="Проєкт 1" />
+        </div>
+        <div class="project-text">
+          <h4>Освітня ініціатива</h4>
+          <p>Ми створили програму для розвитку навичок критичного мислення серед школярів.</p>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <div class="project-image">
+          <img src="https://picsum.photos/600/400?random=2" alt="Проєкт 2" />
+        </div>
+        <div class="project-text">
+          <h4>Соціальний простір</h4>
+          <p>Запустили центр для молоді, де проводяться тренінги та воркшопи.</p>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <div class="project-image">
+          <img src="https://picsum.photos/600/400?random=3" alt="Проєкт 3" />
+        </div>
+        <div class="project-text">
+          <h4>Менторська програма</h4>
+          <p>Залучили експертів для підтримки студентів у їхніх освітніх проєктах.</p>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <div class="project-image">
+          <img src="https://picsum.photos/600/400?random=4" alt="Проєкт 4" />
+        </div>
+        <div class="project-text">
+          <h4>Культурні заходи</h4>
+          <p>Організували серію подій для збереження національної ідентичності.</p>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <div class="project-image">
+          <img src="https://picsum.photos/600/400?random=5" alt="Проєкт 5" />
+        </div>
+        <div class="project-text">
+          <h4>Громадянська участь</h4>
+          <p>Підтримали ініціативи, що сприяють активному залученню громади.</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="portfolio-block">
-    <h3>Історії учасників</h3>
-    <p>
-      Наші учасники діляться власними історіями успіху та досвідом, який надихає інших.
-    </p>
+
+  <!-- Історії учасників -->
+<section class="stories">
+  <h3 class="stories-title">Історії учасників</h3>
+
+  <div class="stories-grid">
+    <!-- Перший ряд -->
+    <div class="story-card">
+      <div class="story-photo">
+        <img src="https://picsum.photos/150?random=6" alt="Учасник 1" />
+      </div>
+      <p>
+        Анна: «Завдяки програмі я знайшла нових друзів та впевненість у собі.
+        Ми працювали над спільними проєктами, і це допомогло мені відчути
+        підтримку команди та зрозуміти, що я можу досягати більшого.»
+      </p>
+    </div>
+
+    <div class="story-card-logo">
+      <img src="img/img-rewiev-1.png" alt="Логотип" />
+    </div>
+
+    <div class="story-card">
+      <div class="story-photo">
+        <img src="https://picsum.photos/150?random=7" alt="Учасник 2" />
+      </div>
+      <p>
+        Олег: «Проєкти допомогли мені розвинути навички лідерства. Я навчився
+        організовувати роботу групи, брати відповідальність за результат і
+        мотивувати інших. Це стало важливим кроком у моєму професійному розвитку.»
+      </p>
+    </div>
+
+    <div class="story-card-logo">
+      <img src="img/img-rewiev-2.png" alt="Логотип" />
+    </div>
+
+    <!-- Другий ряд -->
+     <div class="story-card-logo">
+      <img src="img/img-rewiev-3.png" alt="Логотип" />
+    </div>
+    <div class="story-card">
+      <div class="story-photo">
+        <img src="https://picsum.photos/150?random=8" alt="Учасник 3" />
+      </div>
+      <p>
+        Марія: «Я навчилася краще працювати в команді та долати труднощі.
+        Участь у програмі дала мені можливість відчути, що навіть складні завдання
+        можна вирішити разом. Це додало мені впевненості у власних силах.»
+      </p>
+    </div>
+
+    
+
+    <div class="story-card-logo">
+      <img src="img/img-rewiev-4.png" alt="Логотип" />
+    </div>
+
+    <div class="story-card">
+      <div class="story-photo">
+        <img src="https://picsum.photos/150?random=8" alt="Учасник 4" />
+      </div>
+      <p>
+        Іван: «Участь у тренінгах дала мені нові можливості для кар’єри.
+        Я отримав практичні знання, які зміг застосувати на роботі, і це
+        допомогло мені отримати підвищення. Програма стала справжнім поштовхом
+        для мого професійного зростання.»
+      </p>
+    </div>
+
+    
   </div>
 </section>
+
 
 <!-- Aktualno -->
 <section id="aktualno" class="aktualno">
