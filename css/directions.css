@@ -3,7 +3,8 @@
   display: flex;
   gap: 30px;
   justify-content: space-between;
-  align-items: flex-start; /* кожна картка має власну висоту */
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 /* === КАРТКА === */
@@ -14,7 +15,7 @@
   border-radius: 12px;
   padding: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
   position: relative;
   overflow: hidden;
   cursor: pointer;
@@ -36,7 +37,7 @@
   opacity: 0.6;
 }
 
-/* Хедер картки: назва + стрілочка */
+/* Хедер картки */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -62,12 +63,12 @@
   transform: rotate(90deg);
 }
 
-/* Опис напряму — завжди внизу */
+/* Опис напряму */
 .card-summary {
   font-size: 1em;
   color: #555;
   margin-top: auto;
-  min-height: 60px; /* однакова висота */
+  min-height: 60px;
 }
 
 /* Кнопка "Докладніше" */
@@ -83,18 +84,11 @@
   font-size: 0.9em;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.3s ease, background 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
-/* показати кнопку при наведенні */
 .direction-card:hover .more-btn {
   opacity: 1;
-}
-
-/* у активній картці кнопка завжди видима */
-.direction-card.active .more-btn {
-  opacity: 1;
-  background: #e74c3c; /* червоний для "Закрити" */
 }
 
 /* Деталі картки */
@@ -106,7 +100,7 @@
 }
 
 .direction-card.active .card-details {
-  max-height: 600px; /* плавне розгортання */
+  max-height: 600px;
   opacity: 1;
   animation: fadeIn 0.4s ease;
 }
@@ -144,5 +138,39 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* === МОБІЛЬНА ВЕРСІЯ === */
+@media (max-width: 768px) {
+  .direction-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .direction-card {
+    width: 90%;
+    height: 40vh; /* базова висота */
+    flex: none;
+  }
+
+  .direction-card.active {
+    height: 90vh; /* розгорнута картка */
+    transform: none;
+  }
+
+  /* Прибираємо кнопку "Докладніше" */
+  .more-btn {
+    display: none;
+  }
+
+  /* Кнопка закриття показується тільки у відкритій картці */
+  .direction-card.active .close-btn {
+    display: block;
+  }
+
+  .close-btn {
+    display: none; /* прихована у звичайному стані */
   }
 }
