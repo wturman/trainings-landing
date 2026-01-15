@@ -8,31 +8,31 @@
   background-color: rgba(252, 235, 182, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  transition: height 0.4s ease, padding 0.4s ease, background-color 0.4s ease,
+    backdrop-filter 0.4s ease;
 }
-
 .header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100%;
   padding: 0 40px;
-  transition: padding 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+  transition: padding 0.4s ease;
 }
 
 /* === СКРОЛІНГ ДЛЯ ДЕСКТОПУ === */
 @media (min-width: 769px) {
   .site-header.scrolled {
     height: 60px;
-    padding: 0 30px;
     background-color: rgba(252, 235, 182, 0.85);
     backdrop-filter: blur(4px);
   }
-
-  /* замість % ставимо px */
+  .header-inner.scrolled {
+    padding: 0 30px;
+  }
   .site-header.scrolled .logo-img {
     height: 35px;
   }
-
   .site-header.scrolled .logo-text-img {
     height: 40px;
   }
@@ -44,14 +44,10 @@
   align-items: center;
 }
 
-.logo-img {
-  height: 45px;
-}
-
+.logo-img,
 .logo-text-img {
-  height: 50px;
-  margin-left: 12px;
-  transform: scale(1.1);
+  height: 45px;
+  transition: height 0.4s ease;
 }
 
 /* === НАВІГАЦІЯ (десктоп) === */
