@@ -4,58 +4,63 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px; /* фіксована висота */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  background-color: rgba(252, 235, 182, 1); /* пастельний жовтий */
+  height: 80px;
+  background-color: rgba(252, 235, 182, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease,
-    height 0.3s ease, padding 0.3s ease;
   z-index: 1000;
 }
 
-.site-header.scrolled {
-  height: 60px; /* компактніше при скролі */
-  padding: 0 30px;
-  background-color: rgba(252, 235, 182, 0.85);
-  backdrop-filter: blur(4px);
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 40px;
+  transition: padding 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+}
+
+/* === СКРОЛІНГ ДЛЯ ДЕСКТОПУ === */
+@media (min-width: 769px) {
+  .site-header.scrolled {
+    height: 60px;
+    padding: 0 30px;
+    background-color: rgba(252, 235, 182, 0.85);
+    backdrop-filter: blur(4px);
+  }
+
+  /* замість % ставимо px */
+  .site-header.scrolled .logo-img {
+    height: 35px;
+  }
+
+  .site-header.scrolled .logo-text-img {
+    height: 40px;
+  }
 }
 
 /* === ЛОГОТИП === */
 .logo-block {
   display: flex;
   align-items: center;
-  height: 100%; /* підтягується по хедеру */
 }
 
-.logo-img,
+.logo-img {
+  height: 45px;
+}
+
 .logo-text-img {
-  height: 70%; /* займають більшу частину хедера */
-  object-fit: contain;
-  background-color: transparent !important;
-  mix-blend-mode: normal;
-  filter: none;
-  transition: height 0.3s ease;
+  height: 50px;
+  margin-left: 12px;
+  transform: scale(1.1);
 }
 
-.site-header.scrolled .logo-img,
-.site-header.scrolled .logo-text-img {
-  height: 60%; /* зменшуються разом із хедером */
-}
-
-/* === НАВІГАЦІЯ === */
+/* === НАВІГАЦІЯ (десктоп) === */
 .nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   gap: 25px;
-}
-
-.nav li {
-  margin: 0;
 }
 
 .nav a {
@@ -85,7 +90,7 @@
   width: 100%;
 }
 
-/* === БУРГЕР МЕНЮ === */
+/* === БУРГЕР === */
 .burger {
   display: none;
   flex-direction: column;
@@ -114,36 +119,37 @@
   transform: rotate(-45deg) translate(6px, -6px);
 }
 
-/* === АДАПТИВНІСТЬ === */
+/* === МОБІЛЬНА ВЕРСІЯ === */
 @media (max-width: 768px) {
+  .header-inner {
+    padding: 0 20px;
+  }
+
+  /* логотип */
+  .logo-img {
+    height: 40px;
+  }
+
+  .logo-text-img {
+    height: 48px;
+    margin-left: 12px;
+    transform: scale(1.1);
+  }
+
+  /* бургер праворуч від лого */
   .burger {
     display: flex;
   }
 
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-    height: auto; /* дозволяємо обтікання */
-    padding: 10px 20px;
-  }
-
-  .site-header.scrolled {
-    padding: 8px 16px;
-  }
-
-  .logo-img,
-  .logo-text-img {
-    height: 40px;
-  }
-
+  /* навігація прихована */
   .nav {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     width: 70%;
     height: 100%;
     background: rgba(252, 235, 182, 0.95);
-    transform: translateX(100%);
+    transform: translateX(-100%);
     opacity: 0;
     display: flex;
     justify-content: center;
