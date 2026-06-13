@@ -151,12 +151,14 @@
 
   .direction-card {
     width: 90%;
-    height: 40vh; /* базова висота */
+    min-height: 160px;
+    height: auto;
     flex: none;
   }
 
   .direction-card.active {
-    height: 90vh; /* розгорнута картка */
+    min-height: 400px;
+    height: auto;
     transform: none;
   }
 

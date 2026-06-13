@@ -9,21 +9,31 @@
 @import url("aktualno.css");
 @import url("services.css");
 
+:root {
+  --primary: #0f4c5c;
+  --accent: #e76f51;
+  --secondary: #bfd8bd;
+  --background: #f6f1e9;
+  --text: #1e2d2f;
+}
+
 body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
   color: #333;
-  background-color: #fdfdfd;
+  background-color: var(--background);
 }
 * {
   box-sizing: border-box;
 }
 
+
+
 h1,
 h2,
 h3 {
   font-family: "Montserrat", sans-serif;
-  color: #222;
+  color: var(--text);
 }
 
 section {

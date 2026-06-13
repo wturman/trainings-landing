@@ -192,4 +192,13 @@
   .story-card-logo {
     display: none;
   }
+
+  .project-item,
+  .project-item:nth-child(even) {
+    flex-direction: column;
+  }
+
+  .project-text {
+    width: 100%;
+  }
 }
