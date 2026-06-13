@@ -7,3 +7,4 @@ import "./portfolio.js";
 import "./actualno.js";
 import "./services.js";
 import "./footer.js";
+import "./back-to-top.js";

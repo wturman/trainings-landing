@@ -1,172 +1,202 @@
-/* === ХЕДЕР === */
+/* ============================================================
+   HEADER
+   ============================================================ */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
-  background-color: rgba(252, 235, 182, 1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  height: 72px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   z-index: 1000;
-  transition: height 0.4s ease, padding 0.4s ease, background-color 0.4s ease,
-    backdrop-filter 0.4s ease;
+  transition: height var(--transition), box-shadow var(--transition), background var(--transition);
 }
+
+.site-header.scrolled {
+  height: 60px;
+  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(6px);
+}
+
 .header-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   height: 100%;
-  padding: 0 40px;
-  transition: padding 0.4s ease;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
 }
 
-/* === СКРОЛІНГ ДЛЯ ДЕСКТОПУ === */
-@media (min-width: 769px) {
-  .site-header.scrolled {
-    height: 60px;
-    background-color: rgba(252, 235, 182, 0.85);
-    backdrop-filter: blur(4px);
-  }
-  .header-inner.scrolled {
-    padding: 0 30px;
-  }
-  .site-header.scrolled .logo-img {
-    height: 35px;
-  }
-  .site-header.scrolled .logo-text-img {
-    height: 40px;
-  }
-}
-
-/* === ЛОГОТИП === */
+/* ============================================================
+   LOGO
+   ============================================================ */
 .logo-block {
   display: flex;
   align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
 }
 
-.logo-img,
+.logo-img {
+  height: 40px;
+  width: auto;
+  transition: height var(--transition);
+}
+
 .logo-text-img {
-  height: 45px;
-  transition: height 0.4s ease;
+  height: 36px;
+  width: auto;
+  transition: height var(--transition);
 }
 
-/* === НАВІГАЦІЯ (десктоп) === */
+.site-header.scrolled .logo-img {
+  height: 32px;
+}
+
+.site-header.scrolled .logo-text-img {
+  height: 28px;
+}
+
+/* ============================================================
+   DESKTOP NAV
+   ============================================================ */
 .nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
-  gap: 25px;
+  align-items: center;
+  gap: var(--space-4);
 }
 
 .nav a {
-  color: #2c3e50;
-  text-decoration: none;
-  font-weight: 500;
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   position: relative;
-  transition: color 0.3s ease;
+  padding-bottom: 3px;
+  transition: color var(--transition);
 }
 
 .nav a::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -5px;
-  width: 0%;
+  bottom: 0;
+  width: 0;
   height: 2px;
-  background-color: #3498db;
-  transition: width 0.3s ease;
+  background: var(--color-accent);
+  border-radius: 1px;
+  transition: width var(--transition);
 }
 
 .nav a:hover {
-  color: #3498db;
+  color: var(--color-accent);
 }
 
 .nav a:hover::after {
   width: 100%;
 }
 
-/* === БУРГЕР === */
+/* ============================================================
+   BURGER BUTTON
+   ============================================================ */
 .burger {
   display: none;
   flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: var(--space-1);
   cursor: pointer;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
   z-index: 1101;
+  transition: background var(--transition);
+}
+
+.burger:hover {
+  background: var(--color-bg);
 }
 
 .burger span {
   display: block;
-  height: 3px;
-  background: #2c3e50;
+  width: 22px;
+  height: 2px;
+  background: var(--color-primary);
   border-radius: 2px;
-  transition: all 0.3s ease;
+  transition: transform 0.35s ease, opacity 0.35s ease, width 0.35s ease;
+  transform-origin: center;
 }
 
+/* Animated X state */
 .burger.active span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);
 }
 
 .burger.active span:nth-child(2) {
   opacity: 0;
-  transform: scale(0);
+  width: 0;
 }
 
 .burger.active span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
-/* === МОБІЛЬНА ВЕРСІЯ === */
+/* ============================================================
+   MOBILE NAV OVERLAY
+   ============================================================ */
 @media (max-width: 768px) {
-  .header-inner {
-    padding: 0 20px;
-  }
-
-  /* логотип */
-  .logo-img {
-    height: 40px;
-  }
-
-  .logo-text-img {
-    height: 48px;
-    margin-left: 12px;
-    transform: scale(1.1);
-  }
-
-  /* бургер праворуч від лого */
   .burger {
     display: flex;
   }
 
-  /* навігація прихована */
   .nav {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 100%;
-    background: rgba(252, 235, 182, 0.95);
-    transform: translateX(-100%);
-    opacity: 0;
+    inset: 0;
+    background: var(--color-primary);
     display: flex;
-    justify-content: center;
     align-items: center;
-    transition: transform 0.4s ease, opacity 0.4s ease;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+    z-index: 1100;
   }
 
   .nav.open {
-    transform: translateX(0);
     opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   .nav ul {
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-4);
+    text-align: center;
   }
 
   .nav a {
-    font-size: 1.4em;
+    font-size: 1.3rem;
+    color: var(--color-surface);
+    letter-spacing: 0.06em;
+  }
+
+  .nav a::after {
+    background: var(--color-accent);
+  }
+
+  .nav a:hover {
+    color: var(--color-secondary);
+  }
+
+  .header-inner {
+    padding: 0 var(--space-3);
   }
 }

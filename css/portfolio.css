@@ -1,75 +1,89 @@
-/* === Секція Портфоліо === */
+/* ============================================================
+   PORTFOLIO
+   ============================================================ */
 .portfolio {
-  padding: 60px 20px;
-  background: #fffbea;
+  background: var(--color-bg);
 }
 
-/* Заголовок */
-.portfolio h2 {
-  font-size: 2.8em;
-  font-weight: 700;
-  text-align: center;
+.portfolio > h2 {
+  margin-bottom: var(--space-5);
+  color: var(--color-primary);
+  position: relative;
+  display: inline-block;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  margin-bottom: 40px;
-  color: #333;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-.portfolio h2.visible {
+.portfolio > h2::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-top: var(--space-1);
+}
+
+.portfolio > h2.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Підзаголовок Проєкти */
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+.projects {
+  margin-bottom: var(--space-6);
+}
+
 .projects-title {
-  font-size: 2em;
-  font-weight: 600;
-  color: #333;
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
   overflow: hidden;
   white-space: nowrap;
   width: 0;
-  margin-bottom: 20px;
-  border-right: 3px solid #3498db;
-  display: block;
-  margin-left: calc(50% - 100px);
-  max-width: 200px;
+  border-right: 3px solid var(--color-accent);
+  display: inline-block;
 }
 
 .projects-title.typing {
-  animation: typing 3s steps(7, end) forwards;
+  animation: typingProjects 1.5s steps(7, end) forwards;
 }
 
 .projects-title.finished {
   border-right: none;
 }
 
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 7ch;
-  }
+@keyframes typingProjects {
+  from { width: 0; }
+  to   { width: 7ch; }
 }
 
-/* === Проєкти === */
 .project-list {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: var(--space-4);
 }
 
 .project-item {
   display: flex;
-  gap: 30px;
+  gap: var(--space-4);
   align-items: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  background: #fffdf5;
-  border-radius: 12px;
-  padding: 20px;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow var(--transition);
+}
+
+.project-item:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .project-item.visible {
@@ -77,100 +91,67 @@
   transform: translateY(0);
 }
 
-.project-image img {
-  width: 100%;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-.project-text {
-  width: 50%;
-}
-
-.project-image,
-.project-text {
-  flex: 1;
-}
-
-.project-text h4 {
-  margin-bottom: 10px;
-  font-size: 1.4em;
-  color: #333;
-}
-
-.project-text p {
-  font-size: 1em;
-  color: #555;
-}
-
-/* Чергування */
 .project-item:nth-child(even) {
   flex-direction: row-reverse;
 }
 
-/* === Історії учасників === */
-.stories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  gap: 2rem;
-  margin-top: 2.5rem;
+.project-image {
+  flex: 0 0 45%;
+  overflow: hidden;
 }
 
-.story-card {
-  background: #fffdf5;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
-  text-align: center;
-  min-height: 22rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.story-photo img {
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  margin-bottom: 1rem;
+.project-image img {
+  width: 100%;
+  height: 260px;
   object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
 }
 
-.story-card-logo {
-  background: #f5f2e9;
-  border-radius: 0.75rem;
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
-  min-height: 22rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+.project-item:hover .project-image img {
+  transform: scale(1.04);
 }
 
-.story-card-logo img {
-  width: 70%;
-  height: auto;
-  object-fit: contain;
+.project-text {
+  flex: 1;
+  padding: var(--space-4);
 }
 
-/* Заголовок Історії */
+.project-text h4 {
+  font-size: 1.15rem;
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.project-text p {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: none;
+}
+
+/* ============================================================
+   STORIES
+   ============================================================ */
+.stories {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
 .stories-title {
-  font-size: 2em;
-  font-weight: 600;
-  color: #333;
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
   overflow: hidden;
   white-space: nowrap;
   width: 0;
-  margin-bottom: 20px;
-  border-right: 3px solid #3498db;
-  display: block;
-  margin-left: calc(50% - 150px);
-  max-width: 300px;
+  border-right: 3px solid var(--color-accent);
+  display: inline-block;
 }
 
 .stories-title.typing {
-  animation: typingStories 4s steps(18, end) forwards;
+  animation: typingStories 2s steps(18, end) forwards;
 }
 
 .stories-title.finished {
@@ -178,27 +159,91 @@
 }
 
 @keyframes typingStories {
-  from {
-    width: 0;
-  }
-  to {
-    width: 18ch;
-  }
+  from { width: 0; }
+  to   { width: 18ch; }
 }
 
-/* === МОБІЛЬНА ВЕРСІЯ === */
-@media (max-width: 768px) {
-  /* Прибираємо тільки картки з логотипами */
-  .story-card-logo {
-    display: none;
-  }
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
 
+.story-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.story-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.story-photo img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-secondary);
+}
+
+.story-card p {
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: none;
+}
+
+.story-card-logo {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.story-card-logo img {
+  width: 60%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width: 768px) {
   .project-item,
   .project-item:nth-child(even) {
     flex-direction: column;
   }
 
-  .project-text {
+  .project-image {
+    flex: none;
     width: 100%;
+  }
+
+  .project-image img {
+    height: 200px;
+  }
+
+  .project-text {
+    padding: var(--space-3);
+    width: 100%;
+  }
+
+  .story-card-logo {
+    display: none;
   }
 }

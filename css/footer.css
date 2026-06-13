@@ -1,10 +1,14 @@
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
-  background: #fffbea;
-  padding: 40px 20px;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  padding: var(--space-6) var(--space-4);
   text-align: center;
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
 .footer.visible {
@@ -13,54 +17,65 @@
 }
 
 .footer h2 {
-  font-size: 2em;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--color-surface);
+  margin-bottom: var(--space-3);
+}
+
+.footer h2::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin: var(--space-1) auto 0;
 }
 
 .footer p {
-  font-size: 1.1em;
-  color: #555;
-  margin: 8px 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: var(--space-1) auto;
+  max-width: none;
+  line-height: 1.6;
 }
 
 .footer a {
-  color: #3498db;
-  text-decoration: none;
+  color: var(--color-secondary);
+  transition: color var(--transition);
 }
 
 .footer a:hover {
-  text-decoration: underline;
+  color: var(--color-accent);
 }
 
-/* Соцмережі */
+/* Social links */
 .social-links {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .social-icon {
-  font-size: 1.8em;
-  transition: transform 0.3s ease, color 0.3s ease;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 1.1rem;
+  color: var(--color-surface);
+  transition: background var(--transition), transform var(--transition), color var(--transition);
 }
 
-/* Базові кольори */
-.social-icon.facebook {
-  color: #1877f2; /* синій Facebook */
-}
-
-.social-icon.instagram {
-  color: #e1306c; /* рожевий Instagram */
-}
-
-.social-icon.telegram {
-  color: #0088cc; /* блакитний Telegram */
-}
-
-/* Ефект при наведенні */
 .social-icon:hover {
-  transform: scale(1.2);
-  filter: brightness(1.2); /* робимо яскравішим */
+  transform: translateY(-3px);
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
+
+.social-icon.facebook  { color: #a8c7f0; }
+.social-icon.instagram { color: #f4a8c0; }
+.social-icon.telegram  { color: #a8d8f0; }

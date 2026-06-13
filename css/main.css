@@ -9,140 +9,248 @@
 @import url("aktualno.css");
 @import url("services.css");
 
+/* ============================================================
+   DESIGN SYSTEM — CSS VARIABLES
+   ============================================================ */
 :root {
-  --primary: #0f4c5c;
-  --accent: #e76f51;
-  --secondary: #bfd8bd;
-  --background: #f6f1e9;
-  --text: #1e2d2f;
+  /* Colors */
+  --color-primary:    #0f4c5c;
+  --color-accent:     #e76f51;
+  --color-secondary:  #bfd8bd;
+  --color-bg:         #f6f1e9;
+  --color-text:       #1e2d2f;
+  --color-text-muted: #5a6e70;
+  --color-surface:    #ffffff;
+  --color-border:     #dde8e3;
+
+  /* Spacing (8px base) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+
+  /* Typography */
+  --font-heading: "Montserrat", sans-serif;
+  --font-body:    "Open Sans", sans-serif;
+
+  /* Radii */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(15, 76, 92, 0.08);
+  --shadow-md: 0 4px 16px rgba(15, 76, 92, 0.12);
+  --shadow-lg: 0 8px 32px rgba(15, 76, 92, 0.16);
+
+  /* Transitions */
+  --transition: 0.3s ease;
+
+  /* Content width */
+  --content-width: 1200px;
+  --text-width: 680px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  font-family: "Open Sans", sans-serif;
-  color: #333;
-  background-color: var(--background);
-}
-* {
-  box-sizing: border-box;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--color-text);
+  background-color: var(--color-bg);
 }
 
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-h1,
-h2,
-h3 {
-  font-family: "Montserrat", sans-serif;
-  color: var(--text);
+ul {
+  list-style: none;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  line-height: 1.25;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.6rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+h4 { font-size: 1.1rem; }
+
+p {
+  max-width: var(--text-width);
+  line-height: 1.7;
+}
+
+/* ============================================================
+   LAYOUT UTILITIES
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
 }
 
 section {
-  padding: 60px 20px;
+  padding: var(--space-6) var(--space-4);
 }
 
-/* Загальні адаптивні стилі */
-@media (max-width: 1024px) {
-  h1 {
-    font-size: 2.8em;
-  }
-  h2 {
-    font-size: 2em;
-  }
-  h3 {
-    font-size: 1.4em;
-  }
+.section-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  color: var(--color-primary);
+  margin-bottom: var(--space-5);
+  position: relative;
+  display: inline-block;
 }
 
+.section-title::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-top: var(--space-1);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-accent);
+  color: var(--color-surface);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  border: none;
+}
+
+.btn:hover {
+  background: #d05c3e;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cta-btn {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-surface);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), transform var(--transition);
+}
+
+.cta-btn:hover {
+  background: #0a3340;
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   SCROLL REVEAL (shared)
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+.back-to-top {
+  position: fixed;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  width: 44px;
+  height: 44px;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition), background var(--transition);
+  z-index: 900;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  background: var(--color-accent);
+  transform: translateY(-3px);
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
 @media (max-width: 768px) {
-  body {
-    font-size: 0.95em;
+  section {
+    padding: var(--space-5) var(--space-3);
   }
 
-  /* Хедер */
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav ul {
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-  }
-
-  /* Герой */
-  .hero {
-    height: auto;
-    padding: 60px 20px;
-  }
-
-  .hero-content h1 {
-    font-size: 2.2em;
-  }
-
-  .hero-content p {
-    font-size: 1.1em;
-  }
-
-  .hero-content .btn {
-    font-size: 1em;
-    padding: 10px 20px;
-  }
-
-  /* Про нас */
-  .about p {
-    font-size: 1.1em;
-    padding: 0 10px;
-  }
-
-  /* Програми */
-  .program-list {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .program-card {
-    width: 90%;
-    margin-bottom: 20px;
-  }
-
-  /* Галерея */
-  .gallery-grid {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .gallery-grid img {
-    width: 90%;
-    max-width: 400px;
-  }
-
-  /* Футер */
-  .footer {
-    padding: 20px;
-    font-size: 0.9em;
+  .container {
+    padding: 0 var(--space-3);
   }
 }
 
 @media (max-width: 480px) {
-  .hero-content h1 {
-    font-size: 1.8em;
+  section {
+    padding: var(--space-4) var(--space-2);
   }
 
-  .hero-content p {
-    font-size: 1em;
-  }
-
-  .hero-content .btn {
-    font-size: 0.9em;
-    padding: 8px 16px;
-  }
-
-  .logo-text {
-    font-size: 1.2em;
-  }
-
-  .logo-img {
-    height: 30px;
+  .container {
+    padding: 0 var(--space-2);
   }
 }
