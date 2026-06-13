@@ -106,46 +106,67 @@
    ============================================================ */
 .burger {
   display: none;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 5px;
   width: 40px;
   height: 40px;
-  padding: var(--space-1);
+  padding: 0;
   cursor: pointer;
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
   z-index: 1101;
   transition: background var(--transition);
+  /* inner canvas for precise span positioning */
+  position: relative;
 }
 
 .burger:hover {
   background: var(--color-bg);
 }
 
-.burger span {
+/* Fixed-size inner canvas — spans are positioned inside this */
+.burger::before {
+  content: "";
   display: block;
   width: 22px;
-  height: 2px;
-  background: var(--color-primary);
-  border-radius: 2px;
-  transition: transform 0.35s ease, opacity 0.35s ease, width 0.35s ease;
-  transform-origin: center;
+  height: 20px;
+  position: relative;
+  pointer-events: none;
 }
 
-/* Animated X state */
+.burger span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  width: 22px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transform-origin: center;
+  /* translate(-50%, 0) keeps left:50% centered horizontally */
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity   0.25s ease;
+}
+
+/* Evenly spaced: 0 / 9px / 18px from top of the 20px canvas,
+   offset by -10px (half of 20px) to center within the 40px button */
+.burger span:nth-child(1) { transform: translate(-50%, -9px);  }
+.burger span:nth-child(2) { transform: translate(-50%,  0px);  }
+.burger span:nth-child(3) { transform: translate(-50%,  9px);  }
+
+/* Active — X state */
 .burger.active span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
+  transform: translate(-50%, 0px) rotate(45deg);
 }
 
 .burger.active span:nth-child(2) {
   opacity: 0;
-  width: 0;
+  /* no width change — avoids horizontal glitch mid-transition */
 }
 
 .burger.active span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+  transform: translate(-50%, 0px) rotate(-45deg);
 }
 
 /* ============================================================
