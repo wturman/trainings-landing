@@ -17,7 +17,13 @@
   height: 60px;
   box-shadow: var(--shadow-md);
   background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(6px);
+}
+
+/* backdrop-filter on an ancestor makes position:fixed nav cover the header box only (mobile menu strip bug) */
+@media (min-width: 769px) {
+  .site-header.scrolled {
+    backdrop-filter: blur(6px);
+  }
 }
 
 .header-inner {
