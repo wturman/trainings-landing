@@ -227,9 +227,20 @@ section {
   pointer-events: auto;
 }
 
-.back-to-top:hover {
-  background: var(--color-accent);
-  transform: translateY(-3px);
+@media (hover: hover) {
+  .back-to-top:hover {
+    background: var(--color-accent);
+    transform: translateY(-3px);
+  }
+}
+
+.back-to-top:focus {
+  outline: none;
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 /* ============================================================
@@ -253,4 +264,26 @@ section {
   .container {
     padding: 0 var(--space-2);
   }
+}
+
+/* Section h2 underlines — nearly full heading width, small side inset */
+.about-content h2::after,
+.directions h2::after,
+.aktualno h2::after,
+.services h2::after,
+.portfolio > h2::after,
+.footer h2::after,
+.section-title::after {
+  width: calc(100% - var(--space-2));
+  margin-left: var(--space-1);
+  margin-right: var(--space-1);
+}
+
+.footer h2 {
+  display: inline-block;
+}
+
+.footer h2::after {
+  margin-left: auto;
+  margin-right: auto;
 }
