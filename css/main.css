@@ -270,6 +270,7 @@ section {
 /* Section h2 underlines — nearly full heading width, small side inset */
 .about-content h2::after,
 .directions h2::after,
+.news-section h2::after,
 .aktualno h2::after,
 .services h2::after,
 .portfolio > h2::after,
