@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>Закінчення навчального року — Новини</title>
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/gallery.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/gallery.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
   </head>
 
@@ -88,7 +90,36 @@
 
         <section class="news-article__section news-article__gallery" aria-label="Галерея">
           <h2 class="news-article__section-title">Галерея</h2>
-          <p class="news-article__placeholder">Тут з’явиться фотогалерея події.</p>
+          <div class="news-gallery">
+            <ul class="news-gallery__grid" role="list">
+              <li class="news-gallery__item">
+                <button type="button" class="news-gallery__thumb" aria-label="Відкрити фото 1">
+                  <span class="news-gallery__frame">
+                    <img
+                      src="../img/news/zakinchennia-navchalnoho-roku-2026-05-31/zakinchennia-navchalnoho-roku-2026-05-31-01.png"
+                      alt="Учасники проєкту на зустрічі з нагоди завершення навчального року"
+                      width="1200"
+                      height="900"
+                      loading="lazy"
+                    />
+                  </span>
+                </button>
+              </li>
+              <li class="news-gallery__item">
+                <button type="button" class="news-gallery__thumb" aria-label="Відкрити фото 2">
+                  <span class="news-gallery__frame">
+                    <img
+                      src="../img/news/zakinchennia-navchalnoho-roku-2026-05-31/zakinchennia-navchalnoho-roku-2026-05-31-02.png"
+                      alt="Спільне фото учасників після підбиття підсумків року"
+                      width="1200"
+                      height="900"
+                      loading="lazy"
+                    />
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </div>
         </section>
 
         <section class="news-article__section news-article__video" aria-label="Відео">
