@@ -33,16 +33,28 @@
 
     <main class="news-article-page">
       <article class="news-article">
+        <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
         <time class="news-article__date" datetime="2026-04-26">26 квітня 2026</time>
         <h1>Фільм про Чорнобиль</h1>
         <div class="news-article__cover">
-          <img src="../img/news/film-pro-chornobyl-2026-04-26/cover.jpg" alt="" width="1200" height="630" />
+          <div class="news-preview__frame">
+            <img src="../img/news/film-pro-chornobyl-2026-04-26/cover.jpg" alt="" width="1200" height="630" />
+          </div>
         </div>
         <div class="news-article__content">
           <p>Тут буде текст новини про перегляд фільму про Чорнобиль. Зміст статті додамо пізніше.</p>
           <p>Дякуємо, що стежите за подіями «Сили інтелекту».</p>
+          <p class="news-article__tags"></p>
         </div>
-        <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
+        <section class="news-article__section news-article__gallery" aria-label="Галерея">
+          <h2 class="news-article__section-title">Галерея</h2>
+          <p class="news-article__placeholder">Тут з’явиться фотогалерея події.</p>
+        </section>
+        <section class="news-article__section news-article__video" aria-label="Відео">
+          <h2 class="news-article__section-title">Відео</h2>
+          <p class="news-article__placeholder">Тут буде вбудоване відео з YouTube.</p>
+        </section>
+        <p class="news-article__footer-nav"><a href="../news.html">← Повернутися до архіву новин</a></p>
       </article>
     </main>
 

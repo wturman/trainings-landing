@@ -151,3 +151,18 @@ Spacing: `--space-1` (8px) … `--space-6` (64px). Prefer variables over hardcod
 ---
 
 *Last updated from repo state: static landing, aktualno/services commented in `index.html`.*
+
+---
+
+## News archive (`news.html`) — changelog
+
+**2026-06-14 — Archive page repair**
+
+- **Root cause:** `news.html` on disk was only an inner fragment (`<div class="news-feed">` …) with no `<!DOCTYPE>`, `<head>`, charset, site header/footer, or `main`/`section` wrapper — so CSS/JS did not load and the page could not render as an archive (often looked like an unstyled block or “card grid” without site chrome).
+- **Fix:** Restored full HTML document; archive content lives in `<main class="news-archive-page">` → `<section class="news-archive">` with `<h1>Новини</h1>`, lead paragraph, and vertical `.news-feed` of `<article class="news-feed__item">` rows (image left, title/date/excerpt/«Читати далі» right; stacks on ≤768px). Links unchanged to `news/*.html`.
+- **CSS (`news.css`):** Feed preview width via `--news-preview-width`; previews use **16:10** + `object-fit: cover` only (removed `min-height`/`height: 100%` on feed frames that broke uniform thumbnails). Archive page padding/background on `.news-archive-page` / `.news-archive`.
+
+**2026-06-14 — Article content links & HTML structure**
+
+- Fixed link interaction issue in news article content (`.news-article__content` stacking/`pointer-events`; cover no longer intercepts clicks; in-content links styled and clickable).
+- Standardized structure in 5 news article HTML files (`h2` → `p` blocks → organizer `p` if present → `p.news-article__tags` last).
