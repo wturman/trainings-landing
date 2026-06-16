@@ -292,6 +292,7 @@ a.news-card:hover {
 .news-article__content {
   position: relative;
   z-index: 1;
+  text-indent: 16px;
   max-width: var(--text-width);
   margin-bottom: var(--space-5);
   pointer-events: auto;
