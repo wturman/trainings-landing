@@ -301,7 +301,7 @@ a.news-card:hover {
 .news-article h1 {
   margin-bottom: var(--space-4);
   color: var(--color-primary);
-  max-width: var(--text-width);
+  /* max-width: var(--text-width); */
 }
 
 .news-article__cover {
@@ -317,7 +317,7 @@ a.news-card:hover {
 
 .news-article__cover .news-preview__frame {
   aspect-ratio: 21 / 9;
-  max-height: 420px;
+  max-height: 550px;
 }
 
 .news-article__cover img {
@@ -329,7 +329,7 @@ a.news-card:hover {
 .news-article__content {
   position: relative;
   z-index: 1;
-  text-indent: 16px;
+  /* text-indent: 16px; */
   max-width: var(--text-width);
   margin-bottom: var(--space-5);
   pointer-events: auto;
@@ -352,6 +352,7 @@ a.news-card:hover {
   line-height: 1.7;
   max-width: none;
   pointer-events: auto;
+  text-align: justify;
 }
 
 .news-article__content a {
