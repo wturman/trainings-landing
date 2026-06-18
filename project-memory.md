@@ -166,3 +166,9 @@ Spacing: `--space-1` (8px) … `--space-6` (64px). Prefer variables over hardcod
 
 - Fixed link interaction issue in news article content (`.news-article__content` stacking/`pointer-events`; cover no longer intercepts clicks; in-content links styled and clickable).
 - Standardized structure in 5 news article HTML files (`h2` → `p` blocks → organizer `p` if present → `p.news-article__tags` last).
+
+**2026-06-14 — Burger overlay click / icon sync**
+
+- **Bug:** Tapping empty space in the open mobile menu could change the burger/X look without fully closing the overlay (`.active` on the button out of sync with `.open` on `.nav`).
+- **Fix:** `setNavOpen()` updates burger `.active`, nav `.open`, `aria-expanded`, and body scroll together; overlay clicks on `.nav` (excluding links) call `closeNav()`; closed mobile nav uses `pointer-events: none`, open uses `pointer-events: auto`.
+- **Files:** `js/burger.js`, `css/header.css` (burger + mobile `.nav` rules).

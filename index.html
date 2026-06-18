@@ -27,20 +27,30 @@
 <header class="site-header">
   <div class="header-inner">
     <!-- Лого -->
-    <div class="logo-block">
-      <img src="img/logo.png" alt="Логотип громадської організації Сила інтелекту" class="logo-img">
-      <img src="img/logo-text.png" alt="Логотип громадської організації Сила інтелекту" class="logo-text-img">
-    </div>
+    <a href="../index.html" class="logo-link" aria-label="Перейти на головну сторінку">
+      <div class="logo-block">
+        <img
+          src="../img/logo.png"
+          alt="Логотип громадської організації Сила інтелекту"
+          class="logo-img"
+        />
+        <img
+          src="../img/logo-text.png"
+          alt="Логотип громадської організації Сила інтелекту"
+          class="logo-text-img"
+        />
+      </div>
+    </a>
 
     <!-- Навігація (десктоп) -->
     <nav class="nav">
       <ul>
         <li><a href="#about">Про нас</a></li>
         <li><a href="#directions">Напрями</a></li>
-        <li><a href="#services">Послуги</a></li>
+        <!-- <li><a href="#services">Послуги</a></li> -->
         <li><a href="news.html">Новини</a></li>
         <!-- <li><a href="#aktualno">Актуально</a></li> -->
-        <!-- <li><a href="#contacts">Контакти</a></li> -->
+        <li><a href="#contacts">Контакти</a></li>
       </ul>
     </nav>
 
@@ -134,7 +144,7 @@
       <p class="card-summary">Просування інклюзивності та прав людини.</p>
 
       <!-- Кнопка завжди в картці, але з’являється при hover -->
-      <div class="more-btn">Докладніше</div>
+      <!-- <div class="more-btn">Докладніше</div> -->
 
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=11" alt="Стокове фото" />
@@ -154,7 +164,7 @@
       </div>
       <p class="card-summary">Розвиток навичок аналізу та захисту від маніпуляцій.</p>
 
-      <div class="more-btn">Докладніше</div>
+      <!-- <div class="more-btn">Докладніше</div> -->
 
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=12" alt="Стокове фото" />
@@ -175,7 +185,7 @@
       </div>
       <p class="card-summary">Підтримка психологічного добробуту та стійкості.</p>
 
-      <div class="more-btn">Докладніше</div>
+      <!-- <div class="more-btn">Докладніше</div> -->
 
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=13" alt="Стокове фото" />
@@ -196,7 +206,7 @@
       </div>
       <p class="card-summary">Збереження культурних традицій та історичної пам’яті.</p>
 
-      <div class="more-btn">Докладніше</div>
+      <!-- <div class="more-btn">Докладніше</div> -->
 
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=14" alt="Стокове фото" />
@@ -216,7 +226,7 @@
       </div>
       <p class="card-summary">Активізація громади та розвиток лідерства.</p>
 
-      <div class="more-btn">Докладніше</div>
+      <!-- <div class="more-btn">Докладніше</div> -->
 
       <div class="card-details">
         <img src="https://picsum.photos/600/300?random=15" alt="Стокове фото" />
@@ -233,7 +243,9 @@
 
 <!-- Останні новини -->
 <section id="news" class="news-section">
-  <h2>Останні новини</h2>
+  <h2>
+    <a href="news.html">Останні новини</a>
+  </h2>
   <div class="news-grid">
     <a class="news-card" href="news/rozpys-metelykiv-2026-06-13.html">
       <div class="news-card__image">
@@ -346,18 +358,22 @@
     <!-- Перший ряд -->
     <div class="story-card story-card--gallery">
       <button
-          type="button"
-          class="news-gallery__thumb"
-          aria-label="Відкрити фото">
-          <span class="news-gallery__frame">
-            <img
-            src="img/vidhuky/vidhuky-1.jpg" width="150" height="150" 
-            alt="Фото учасника"
-            
-            loading="lazy"
-            >
-          </span>
+        type="button"
+        class="news-gallery__thumb"
+        aria-label="Відкрити фото Марії">
+    
+        <span class="news-gallery__frame">
+          <img
+            src="img/vidhuky/vidhuky-1.jpg"
+            width="150"
+            height="150"
+            alt="Марія"
+            loading="lazy">
+        </span>
+    
       </button>
+    
+      <p class="story-card__title">Єва</p>
     </div>
 
     <div class="story-card-logo">
@@ -378,6 +394,7 @@
             >
           </span>
       </button>
+      <p class="story-card__title">Дмитро</p>
     </div>
 
     <div class="story-card-logo">
@@ -402,6 +419,7 @@
             >
           </span>
       </button>
+      <p class="story-card__title">Діана</p>
     </div>
 
     
@@ -424,6 +442,7 @@
             >
           </span>
       </button>
+      <p class="story-card__title">Матвій</p>
     </div>
   </div>
     

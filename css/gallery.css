@@ -40,9 +40,14 @@
   display: block;
   aspect-ratio: 4 / 3;
   width: 100%;
-  background: #1c1c1c;
+  background: var(--color-primary);
   border-radius: var(--radius-sm);
   overflow: hidden;
+}
+.story-card__title {
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: 600;
 }
 
 .news-gallery__frame img {
