@@ -155,6 +155,7 @@
   color: var(--color-text-muted);
   line-height: 1.65;
   max-width: none;
+  text-align: justify;
 }
 
 /* ============================================================
