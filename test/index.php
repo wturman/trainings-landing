@@ -1,3 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/includes/news-data.php';
+require __DIR__ . '/includes/news-render.php';
+
+$homepageNews = array_slice(load_published_news(__DIR__ . '/data/news.json'), 0, 3);
+?>
 <!DOCTYPE html>
 <html lang="uk">
   <head>
@@ -248,67 +257,9 @@
     <a href="news.html">Останні новини</a>
   </h2>
   <div class="news-grid">
-    <a class="news-card" href="news/nove-obladnannia-dlia-tuteshnikh-2026-06-20.html">
-
-      <div class="news-card__image">
-        <img
-          src="img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/cover.png"
-          alt="Нове обладнання для молодіжного простору «Тутешні»"
-          width="400"
-          height="250"
-          loading="lazy"
-        />
-      </div>
-    
-      <div class="news-card__body">
-    
-        <h3 class="news-card__title">
-          Нове обладнання — нові можливості для «Тутешніх»
-        </h3>
-    
-        <time class="news-card__date" datetime="2026-06-20">
-          20 червня 2026
-        </time>
-    
-      </div>
-    
-    </a>
-    <a class="news-card" href="news/rozpys-metelykiv-2026-06-13.html">
-      <div class="news-card__image">
-        <img src="img/news/rozpys-metelykiv-2026-06-13/cover.jpg" alt="" width="400" height="250" />
-      </div>
-      <div class="news-card__body">
-        <h3 class="news-card__title">Коли дитяча творчість оживає: магія нашого майстер-класу в Ображіївці!</h3>
-        <time class="news-card__date" datetime="2026-05-23">13 червня 2026</time>
-      </div>
-    </a>
-    <a class="news-card" href="news/zakinchennia-navchalnoho-roku-2026-05-31.html">
-      <div class="news-card__image">
-        <img src="img/news/zakinchennia-navchalnoho-roku-2026-05-31/cover.jpg" alt="" width="400" height="250" />
-      </div>
-      <div class="news-card__body">
-        <h3 class="news-card__title">Навчальний рік позаду — попереду літо нових можливостей!</h3>
-        <time class="news-card__date" datetime="2026-05-09">31 травня 2026</time>
-      </div>
-    </a>
-    <a class="news-card" href="news/potochna-zustrich-pro-harnyi-nastrii-2026-05-23.html">
-      <div class="news-card__image">
-        <img src="img/news/potochna-zustrich-pro-harnyi-nastrii-2026-05-23/cover.jpg" alt="" width="400" height="250" />
-      </div>
-      <div class="news-card__body">
-        <h3 class="news-card__title">Разом цікавіше!</h3>
-        <time class="news-card__date" datetime="2026-05-02">23 травня 2026</time>
-      </div>
-    </a>
-    <a class="news-card" href="news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09.html">
-      <div class="news-card__image">
-        <img src="img/news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09/cover.jpg" alt="" width="400" height="250" />
-      </div>
-      <div class="news-card__body">
-        <h3 class="news-card__title">Гарний настрій, живе спілкування та активний відпочинок</h3>
-        <time class="news-card__date" datetime="2026-04-26">9 травня 2026</time>
-      </div>
-    </a>
+<?php foreach ($homepageNews as $item): ?>
+<?php render_news_card($item); ?>
+<?php endforeach; ?>
   </div>
   <p class="news-section__more">
     <a href="news.html" class="cta-btn">Усі новини</a>

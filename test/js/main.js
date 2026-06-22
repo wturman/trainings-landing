@@ -1,0 +1,10 @@
+import "./header.js";
+import "./burger.js";
+import "./hero.js";
+import "./gallery.js";
+import "./directions.js";
+import "./portfolio.js";
+import "./actualno.js";
+import "./services.js";
+import "./footer.js";
+import "./back-to-top.js";
