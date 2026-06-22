@@ -73,7 +73,7 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 - `id` === `slug`; `date` → `YYYY-MM-DD`.
 - Slugs: `news_sanitize_slug_candidate()` → `news_normalize_article_slug()`; empty admin input → `news_slug_from_title_and_date()`; uniqueness via `news_article_slug_is_taken()`.
 - `cover` / `gallery` under `img/news/{slug}/`.
-- `published === true` for public views.
+- `published === true` for public views; admin/list uses `news_item_is_published()` for display (accepts JSON boolean and common truthy forms).
 
 ---
 
@@ -97,6 +97,7 @@ Staging only; no auth in this minimal build.
 
 - `load_all_news()`, `load_published_news()`, `load_news_item_by_slug()`, `load_published_news_item_by_slug()`
 - `news_normalize_article_slug()`, `news_resolve_article_slug()`, `news_article_slug_is_taken()`, `news_legacy_article_file()`
+- `news_item_is_published()` — normalized read for list, filters, and edit form
 - `news_format_admin_content()`, `news_content_looks_like_html()` — admin plain-text → `<p>` on save only
 - `render_news_feed_item()`, `render_news_card()`, `render_news_article()`, `render_news_article_not_found()`
 - `news_article_href()` → `news/article.php?slug=…`
@@ -104,6 +105,12 @@ Staging only; no auth in this minimal build.
 ---
 
 ## Task log (latest first)
+
+### 2026-06-14 — Admin published badge fix
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `test/admin/admin-lib.php`, `test/includes/news-data.php`, `project-memory.md`
+- **Root cause:** Status used strict `published === true`; JSON/POST truthy values (`1`, `"true"`, `"1"`) read as draft. Fixed with `news_item_is_published()` (`filter_var` boolean).
 
 ### 2026-06-14 — Admin delete confirmation
 

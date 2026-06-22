@@ -24,11 +24,11 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
     $messageType = 'error';
 }
 
-$data = admin_load_data();
-$items = load_all_news(__DIR__ . '/../data/news.json');
+$jsonPath = __DIR__ . '/../data/news.json';
+$items = load_all_news($jsonPath);
 
 $editSlug = isset($_GET['edit']) ? news_normalize_article_slug((string) $_GET['edit']) : null;
-$editItem = $editSlug !== null ? admin_find_item_by_slug($data, $editSlug) : null;
+$editItem = $editSlug !== null ? load_news_item_by_slug($jsonPath, $editSlug) : null;
 $isEdit = $editItem !== null;
 
 $today = (new DateTimeImmutable('now'))->format('Y-m-d');
@@ -41,7 +41,7 @@ $formContent = $isEdit ? (string) ($editItem['content'] ?? '') : '';
 $formCover = $isEdit ? (string) ($editItem['cover'] ?? '') : '';
 $formGalleryPaths = $isEdit && is_array($editItem['gallery'] ?? null) ? $editItem['gallery'] : [];
 $formTags = $isEdit ? admin_tags_to_text(is_array($editItem['tags'] ?? null) ? $editItem['tags'] : []) : '';
-$formPublished = $isEdit ? (($editItem['published'] ?? false) === true) : false;
+$formPublished = $isEdit ? news_item_is_published($editItem) : false;
 $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover)
     ? admin_public_asset_href($formCover)
     : '';
@@ -120,7 +120,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
     if ($rowSlug === '') {
         continue;
     }
-    $rowPublished = ($row['published'] ?? false) === true;
+    $rowPublished = news_item_is_published($row);
 ?>
         <tr>
           <td><?= htmlspecialchars((string) ($row['date'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>

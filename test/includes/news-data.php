@@ -30,6 +30,17 @@ function load_all_news(string $jsonPath): array
     return $items;
 }
 
+function news_item_is_published(array $item): bool
+{
+    if (!array_key_exists('published', $item)) {
+        return false;
+    }
+
+    $validated = filter_var($item['published'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+    return $validated === true;
+}
+
 /**
  * @return list<array<string, mixed>>
  */
@@ -37,7 +48,7 @@ function load_published_news(string $jsonPath): array
 {
     return array_values(array_filter(
         load_all_news($jsonPath),
-        static fn(array $item): bool => ($item['published'] ?? false) === true
+        static fn(array $item): bool => news_item_is_published($item)
     ));
 }
 
@@ -66,7 +77,7 @@ function load_news_item_by_slug(string $jsonPath, string $slug): ?array
 function load_published_news_item_by_slug(string $jsonPath, string $slug): ?array
 {
     $item = load_news_item_by_slug($jsonPath, $slug);
-    if ($item === null || ($item['published'] ?? false) !== true) {
+    if ($item === null || !news_item_is_published($item)) {
         return null;
     }
 

@@ -148,7 +148,7 @@ function admin_parse_published_from_post(): bool
     $value = $_POST['published'];
     if (is_array($value)) {
         foreach ($value as $part) {
-            if ((string) $part === '1') {
+            if (filter_var($part, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === true) {
                 return true;
             }
         }
@@ -156,7 +156,7 @@ function admin_parse_published_from_post(): bool
         return false;
     }
 
-    return (string) $value === '1';
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === true;
 }
 
 /**
