@@ -5,23 +5,89 @@ declare(strict_types=1);
 require __DIR__ . '/../includes/news-data.php';
 require __DIR__ . '/../includes/news-render.php';
 
-$slug = isset($_GET['slug']) ? (string) $_GET['slug'] : '';
+$slugRaw = isset($_GET['slug']) ? (string) $_GET['slug'] : '';
+$slug = news_normalize_article_slug($slugRaw);
+$preview = isset($_GET['preview']) && (string) $_GET['preview'] === '1';
 $jsonPath = __DIR__ . '/../data/news.json';
-$item = load_published_news_item_by_slug($jsonPath, $slug);
+
+if ($slug !== null) {
+    $item = $preview
+        ? load_news_item_by_slug($jsonPath, $slug)
+        : load_published_news_item_by_slug($jsonPath, $slug);
+} else {
+    $item = null;
+}
+
+if ($item === null && $slug !== null && !$preview) {
+    $legacyFile = news_legacy_article_file(__DIR__, $slug);
+    if ($legacyFile !== null) {
+        header('Content-Type: text/html; charset=UTF-8');
+        readfile($legacyFile);
+        exit;
+    }
+}
+
 $notFound = $item === null;
 
 if ($notFound) {
     http_response_code(404);
-    $pageTitle = 'Новину не знайдено — Новини';
-} else {
-    $pageTitle = htmlspecialchars((string) ($item['title'] ?? ''), ENT_QUOTES, 'UTF-8') . ' — Новини';
 }
+
+$siteBrand = 'Сила інтелекту';
+$siteOrigin = 'https://silaintellect.org';
+
+if ($notFound) {
+    $metaTitle = 'Новина не знайдена | ' . $siteBrand;
+    $metaDescription = 'Запис відсутній';
+    $ogTitle = '';
+    $ogDescription = '';
+    $ogType = 'article';
+    $ogImage = '';
+    $ogUrl = $slug !== null
+        ? $siteOrigin . '/news/article.php?slug=' . rawurlencode($slug)
+        : '';
+} else {
+    $articleTitle = (string) ($item['title'] ?? '');
+    $articleExcerpt = (string) ($item['excerpt'] ?? '');
+    $articleSlug = (string) ($item['slug'] ?? $slug ?? '');
+    $coverPath = ltrim((string) ($item['cover'] ?? ''), '/');
+
+    $metaTitle = $articleTitle !== '' ? $articleTitle . ' | ' . $siteBrand : $siteBrand;
+    $metaDescription = $articleExcerpt;
+    $ogTitle = $articleTitle;
+    $ogDescription = $articleExcerpt;
+    $ogType = 'article';
+    $ogImage = $coverPath !== '' ? $siteOrigin . '/' . $coverPath : '';
+    $ogUrl = $articleSlug !== ''
+        ? $siteOrigin . '/news/article.php?slug=' . rawurlencode($articleSlug)
+        : '';
+}
+
+$pageTitle = htmlspecialchars($metaTitle, ENT_QUOTES, 'UTF-8');
+$metaDescriptionEsc = htmlspecialchars($metaDescription, ENT_QUOTES, 'UTF-8');
+$ogTitleEsc = htmlspecialchars($ogTitle, ENT_QUOTES, 'UTF-8');
+$ogDescriptionEsc = htmlspecialchars($ogDescription, ENT_QUOTES, 'UTF-8');
+$ogTypeEsc = htmlspecialchars($ogType, ENT_QUOTES, 'UTF-8');
+$ogImageEsc = htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8');
+$ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="<?= $metaDescriptionEsc ?>" />
+<?php if (!$notFound): ?>
+    <meta property="og:title" content="<?= $ogTitleEsc ?>" />
+    <meta property="og:description" content="<?= $ogDescriptionEsc ?>" />
+    <meta property="og:type" content="<?= $ogTypeEsc ?>" />
+<?php if ($ogImage !== ''): ?>
+    <meta property="og:image" content="<?= $ogImageEsc ?>" />
+<?php endif; ?>
+<?php if ($ogUrl !== ''): ?>
+    <meta property="og:url" content="<?= $ogUrlEsc ?>" />
+<?php endif; ?>
+<?php endif; ?>
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title><?= $pageTitle ?></title>
