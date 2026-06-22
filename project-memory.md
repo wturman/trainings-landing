@@ -82,7 +82,7 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 PHP UI — **reads/writes only** `/test/data/news.json` (no database). Public routing unchanged (`news/article.php?slug=`).
 
 - **`admin-lib.php`** — load/save JSON (`LOCK_EX`), validation, slug uniqueness, **image uploads** to `test/img/news/{slug}/`, gallery path safety.
-- **`index.php`** — item list; delete uses `confirm()` before POST to `save.php`; create/edit form with cover upload + gallery queue.
+- **`index.php`** — site chrome (`site-header`, `news-archive-page`, `footer`); `../css/main.css` + scoped `admin-*` styles; delete `confirm()`; CRUD/upload unchanged.
 - **`save.php`** — create / update / delete; `news_format_admin_content()` on save; gallery uploads merged with `gallery_keep[]`.
 
 **Images:** stored under `/test/img/news/{slug}/` (`cover.{ext}`, `{slug}-NN.{ext}`). JSON paths: `img/news/{slug}/…`.
@@ -105,6 +105,12 @@ Staging only; no auth in this minimal build.
 ---
 
 ## Task log (latest first)
+
+### 2026-06-14 — Admin UI aligned with site design
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `project-memory.md`
+- **Logic:** Markup/CSS only — `main.css`, header/footer, `section-title`, `.btn`; no PHP behavior changes.
 
 ### 2026-06-14 — Admin published badge fix
 
