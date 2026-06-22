@@ -46,13 +46,13 @@ function load_published_news(string $jsonPath): array
  */
 function load_news_item_by_slug(string $jsonPath, string $slug): ?array
 {
-    $slug = trim($slug);
+    $slug = news_normalize_article_slug(trim($slug)) ?? '';
     if ($slug === '') {
         return null;
     }
 
     foreach (load_all_news($jsonPath) as $item) {
-        if ((string) ($item['slug'] ?? '') === $slug) {
+        if ((string) ($item['slug'] ?? '') === $slug || (string) ($item['id'] ?? '') === $slug) {
             return $item;
         }
     }
@@ -84,6 +84,103 @@ function news_normalize_article_slug(string $slug): ?string
     }
 
     return $slug;
+}
+
+function news_sanitize_slug_candidate(string $slug): string
+{
+    $slug = trim($slug);
+    if ($slug === '') {
+        return '';
+    }
+
+    $slug = mb_strtolower($slug, 'UTF-8');
+    $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);
+    if (is_string($converted) && $converted !== '') {
+        $slug = strtolower($converted);
+    }
+
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug) ?? '';
+    $slug = trim($slug, '-');
+    $slug = preg_replace('/-+/', '-', $slug) ?? '';
+
+    return $slug;
+}
+
+function news_slug_from_title_and_date(string $title, string $date): ?string
+{
+    $base = news_sanitize_slug_candidate($title);
+    if ($base === '') {
+        $base = 'news';
+    }
+
+    return news_normalize_article_slug($base . '-' . $date);
+}
+
+/**
+ * Manual slug, edit fallback, or title+date when input is empty.
+ */
+function news_resolve_article_slug(
+    string $slugInput,
+    string $title,
+    string $date,
+    ?string $editFallbackSlug = null
+): ?string {
+    $slugInput = trim($slugInput);
+
+    if ($slugInput === '') {
+        if ($editFallbackSlug !== null) {
+            return news_normalize_article_slug($editFallbackSlug);
+        }
+
+        return news_slug_from_title_and_date($title, $date);
+    }
+
+    $candidate = news_sanitize_slug_candidate($slugInput);
+    if ($candidate === '') {
+        return null;
+    }
+
+    return news_normalize_article_slug($candidate);
+}
+
+/**
+ * @param list<array<string, mixed>> $items
+ */
+function news_article_slug_is_taken(array $items, string $slug, ?string $exceptSlug = null): bool
+{
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        $existingSlug = (string) ($item['slug'] ?? '');
+        $existingId = (string) ($item['id'] ?? '');
+
+        if ($exceptSlug !== null && ($existingSlug === $exceptSlug || $existingId === $exceptSlug)) {
+            continue;
+        }
+
+        if ($existingSlug === $slug || $existingId === $slug) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @param list<array<string, mixed>> $items
+ */
+function news_item_matches_slug_key(array $item, string $slugKey): bool
+{
+    if (!is_array($item)) {
+        return false;
+    }
+
+    $existingSlug = (string) ($item['slug'] ?? '');
+    $existingId = (string) ($item['id'] ?? '');
+
+    return $existingSlug === $slugKey || $existingId === $slugKey;
 }
 
 /**

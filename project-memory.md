@@ -67,6 +67,7 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 ## News data consistency
 
 - `id` === `slug`; `date` → `YYYY-MM-DD`.
+- Slugs: `news_sanitize_slug_candidate()` → `news_normalize_article_slug()`; empty admin input → `news_slug_from_title_and_date()`; uniqueness via `news_article_slug_is_taken()`.
 - `cover` / `gallery` under `img/news/{slug}/`.
 - `published === true` for public views.
 
@@ -78,7 +79,7 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). Public ro
 
 - **`admin-lib.php`** — load/save JSON (`LOCK_EX`), validation, slug uniqueness, **image uploads** to `test/img/news/{slug}/`, gallery path safety.
 - **`index.php`** — item list; create/edit form with cover upload + preview, gallery keep/remove + multi-file upload previews (`enctype="multipart/form-data"`).
-- **`save.php`** — create / update / delete; on save: optional folder rename when slug changes; cover file overrides manual path; `gallery_keep[]` + new uploads → `gallery[]` in JSON.
+- **`save.php`** — create / update / delete; `published` from hidden `0` + checkbox `1`; gallery `gallery_keep[]` + normalized `$_FILES['gallery_files']`.
 
 **Images:** stored under `/test/img/news/{slug}/` (`cover.{ext}`, `{slug}-NN.{ext}`). JSON paths: `img/news/{slug}/…`.
 
@@ -91,13 +92,25 @@ Staging only; no auth in this minimal build.
 ## PHP API (summary)
 
 - `load_all_news()`, `load_published_news()`, `load_news_item_by_slug()`, `load_published_news_item_by_slug()`
-- `news_normalize_article_slug()`, `news_legacy_article_file()` — hybrid article resolution
+- `news_normalize_article_slug()`, `news_resolve_article_slug()`, `news_article_slug_is_taken()`, `news_legacy_article_file()`
 - `render_news_feed_item()`, `render_news_card()`, `render_news_article()`, `render_news_article_not_found()`
 - `news_article_href()` → `news/article.php?slug=…`
 
 ---
 
 ## Task log (latest first)
+
+### 2026-06-14 — Slug normalization and uniqueness
+
+- **Created:** none
+- **Modified:** `test/includes/news-data.php`, `test/admin/save.php`, `project-memory.md`
+- **Logic:** Central slug sanitize/generate/resolve in `news-data.php`; admin save enforces unique slug/id; edit matches by slug or id; legacy HTML fallback unchanged.
+
+### 2026-06-14 — Admin publish + gallery upload fixes
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `test/admin/save.php`, `test/admin/admin-lib.php`, `project-memory.md`
+- **Logic:** Hidden `published=0` + checkbox; `admin_parse_published_from_post()`. Gallery JS no longer clears file input on change; `admin_normalize_uploaded_files()` for multipart gallery.
 
 ### 2026-06-14 — Article SEO + Open Graph
 

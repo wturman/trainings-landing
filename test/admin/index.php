@@ -223,6 +223,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
 
       <p class="row-check">
         <label>
+          <input type="hidden" name="published" value="0" />
           <input type="checkbox" name="published" value="1" <?= $formPublished ? 'checked' : '' ?> />
           Published <span class="hint">(знято = чернетка, не показується на сайті)</span>
         </label>
@@ -302,9 +303,15 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
         galleryClearNew.addEventListener('click', clearGalleryNewPreviews);
 
         galleryFiles.addEventListener('change', function () {
-          clearGalleryNewPreviews();
+          galleryObjectUrls.forEach(function (url) { URL.revokeObjectURL(url); });
+          galleryObjectUrls = [];
+          galleryNewPreview.innerHTML = '';
+          galleryClearNew.style.display = 'none';
+
           const files = galleryFiles.files;
-          if (!files || !files.length) return;
+          if (!files || !files.length) {
+            return;
+          }
           galleryClearNew.style.display = 'inline-block';
           Array.from(files).forEach(function (file) {
             const url = URL.createObjectURL(file);

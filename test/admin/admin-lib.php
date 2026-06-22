@@ -139,6 +139,53 @@ function admin_validate_date(string $date): bool
     return checkdate($m, $d, $y);
 }
 
+function admin_parse_published_from_post(): bool
+{
+    if (!isset($_POST['published'])) {
+        return false;
+    }
+
+    $value = $_POST['published'];
+    if (is_array($value)) {
+        foreach ($value as $part) {
+            if ((string) $part === '1') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    return (string) $value === '1';
+}
+
+/**
+ * @return list<array{name: string, type: string, tmp_name: string, error: int, size: int}>
+ */
+function admin_normalize_uploaded_files(?array $files): array
+{
+    if ($files === null || !isset($files['error'])) {
+        return [];
+    }
+
+    if (!is_array($files['error'])) {
+        return [$files];
+    }
+
+    $normalized = [];
+    foreach ($files['error'] as $index => $error) {
+        $normalized[] = [
+            'name' => (string) ($files['name'][$index] ?? ''),
+            'type' => (string) ($files['type'][$index] ?? ''),
+            'tmp_name' => (string) ($files['tmp_name'][$index] ?? ''),
+            'error' => (int) $error,
+            'size' => (int) ($files['size'][$index] ?? 0),
+        ];
+    }
+
+    return $normalized;
+}
+
 /**
  * @param array{items: list<array<string, mixed>>} $data
  */
@@ -399,12 +446,8 @@ function admin_process_gallery_uploads(string $slug, array $keptPaths, ?array $g
 {
     $gallery = $keptPaths;
 
-    if ($galleryFiles === null) {
-        return $gallery;
-    }
-
-    $names = $galleryFiles['name'] ?? null;
-    if (!is_array($names) || $names === []) {
+    $uploads = admin_normalize_uploaded_files($galleryFiles);
+    if ($uploads === []) {
         return $gallery;
     }
 
@@ -418,16 +461,7 @@ function admin_process_gallery_uploads(string $slug, array $keptPaths, ?array $g
         }
     }
 
-    $count = count($names);
-    for ($i = 0; $i < $count; $i++) {
-        $file = [
-            'name' => $galleryFiles['name'][$i] ?? '',
-            'type' => $galleryFiles['type'][$i] ?? '',
-            'tmp_name' => $galleryFiles['tmp_name'][$i] ?? '',
-            'error' => $galleryFiles['error'][$i] ?? UPLOAD_ERR_NO_FILE,
-            'size' => $galleryFiles['size'][$i] ?? 0,
-        ];
-
+    foreach ($uploads as $file) {
         if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
             continue;
         }

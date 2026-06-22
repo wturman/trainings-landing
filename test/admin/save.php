@@ -51,8 +51,7 @@ $excerpt = trim((string) ($_POST['excerpt'] ?? ''));
 $content = (string) ($_POST['content'] ?? '');
 $coverManual = trim((string) ($_POST['cover'] ?? ''));
 $tagsRaw = (string) ($_POST['tags'] ?? '');
-// Unchecked checkbox is omitted from POST → draft
-$published = isset($_POST['published']) && (string) $_POST['published'] === '1';
+$published = admin_parse_published_from_post();
 
 if ($title === '') {
     admin_redirect_error('Заголовок обовʼязковий.');
@@ -70,22 +69,20 @@ if (trim($content) === '') {
     admin_redirect_error('Контент обовʼязковий.');
 }
 
-if ($isEdit) {
-    $slug = $slugInput !== '' ? $slugInput : $oldSlug;
-} else {
-    $slug = $slugInput !== '' ? $slugInput : admin_suggest_slug_from_title($title, $date);
-}
+$slug = news_resolve_article_slug(
+    $slugInput,
+    $title,
+    $date,
+    $isEdit ? $oldSlug : null
+);
 
-$slug = news_normalize_article_slug($slug) ?? '';
-
-if ($slug === '') {
+if ($slug === null) {
     admin_redirect_error('Slug некоректний. Дозволено лише a-z, 0-9 та дефіс.');
 }
 
 $data = admin_load_data_or_error();
 
-$exceptSlug = $isEdit ? $oldSlug : null;
-if (admin_slug_exists($data, $slug, $exceptSlug)) {
+if (news_article_slug_is_taken($data['items'], $slug, $isEdit ? $oldSlug : null)) {
     admin_redirect_error('Новина з таким slug вже існує: ' . $slug);
 }
 
@@ -125,7 +122,7 @@ if ($isEdit) {
             $nextItems[] = $existing;
             continue;
         }
-        if ((string) ($existing['slug'] ?? '') === $oldSlug) {
+        if (news_item_matches_slug_key($existing, (string) $oldSlug)) {
             $nextItems[] = $item;
             $replaced = true;
             continue;
