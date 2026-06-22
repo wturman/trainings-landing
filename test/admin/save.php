@@ -69,6 +69,12 @@ if (trim($content) === '') {
     admin_redirect_error('Контент обовʼязковий.');
 }
 
+$content = news_format_admin_content($content);
+
+if (trim($content) === '') {
+    admin_redirect_error('Контент обовʼязковий.');
+}
+
 $slug = news_resolve_article_slug(
     $slugInput,
     $title,

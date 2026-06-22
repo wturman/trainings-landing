@@ -183,6 +183,50 @@ function news_item_matches_slug_key(array $item, string $slugKey): bool
     return $existingSlug === $slugKey || $existingId === $slugKey;
 }
 
+function news_content_looks_like_html(string $content): bool
+{
+    return preg_match('/<\s*[a-z][a-z0-9]*\b/i', $content) === 1;
+}
+
+/**
+ * Plain text (blank-line paragraphs) → HTML <p>; existing HTML left unchanged.
+ */
+function news_format_admin_content(string $content): string
+{
+    if (news_content_looks_like_html($content)) {
+        return $content;
+    }
+
+    $normalized = str_replace(["\r\n", "\r"], "\n", $content);
+    $trimmed = trim($normalized);
+    if ($trimmed === '') {
+        return $content;
+    }
+
+    $blocks = preg_split("/\n\s*\n/", $trimmed) ?: [];
+    $paragraphs = [];
+    foreach ($blocks as $block) {
+        $block = trim($block);
+        if ($block === '') {
+            continue;
+        }
+
+        $lines = explode("\n", $block);
+        $escapedLines = array_map(
+            static fn(string $line): string => htmlspecialchars($line, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            $lines
+        );
+        $inner = implode("<br>\n", $escapedLines);
+        $paragraphs[] = '<p>' . $inner . '</p>';
+    }
+
+    if ($paragraphs === []) {
+        return $content;
+    }
+
+    return implode("\n", $paragraphs);
+}
+
 /**
  * Readable legacy article path under $newsDirectory, or null.
  */

@@ -10,6 +10,8 @@ $slug = news_normalize_article_slug($slugRaw);
 $preview = isset($_GET['preview']) && (string) $_GET['preview'] === '1';
 $jsonPath = __DIR__ . '/../data/news.json';
 
+// preview=1: JSON item by slug (draft or published), no legacy HTML.
+// default: published JSON only, then legacy news/{slug}.html fallback.
 if ($slug !== null) {
     $item = $preview
         ? load_news_item_by_slug($jsonPath, $slug)

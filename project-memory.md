@@ -30,10 +30,14 @@
 
 **`news/article.php` (hybrid resolution):**
 
+| Mode | JSON lookup | Legacy HTML |
+|------|-------------|-------------|
+| `?preview=1` | `load_news_item_by_slug` (draft or published) | Never |
+| default | `load_published_news_item_by_slug` only | If JSON miss → `news/{slug}.html` |
+
 1. Normalize `slug` (`news_normalize_article_slug`).
-2. **Preview** (`?preview=1`): `load_news_item_by_slug` (draft or published) → PHP render; **no** legacy HTML fallback.
-3. **Normal:** `load_published_news_item_by_slug` → render; if missing, legacy `news/{slug}.html` via `readfile`.
-4. **404:** no JSON match (per mode) and no legacy (normal mode only) → `render_news_article_not_found()`.
+2. Apply table above.
+3. **404:** no item for mode → `render_news_article_not_found()` (preview never uses legacy).
 
 Draft preview URL: `news/article.php?slug={slug}&preview=1` (not linked from public lists).
 
@@ -78,8 +82,8 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 PHP UI — **reads/writes only** `/test/data/news.json` (no database). Public routing unchanged (`news/article.php?slug=`).
 
 - **`admin-lib.php`** — load/save JSON (`LOCK_EX`), validation, slug uniqueness, **image uploads** to `test/img/news/{slug}/`, gallery path safety.
-- **`index.php`** — item list; create/edit form with cover upload + preview, gallery keep/remove + multi-file upload previews (`enctype="multipart/form-data"`).
-- **`save.php`** — create / update / delete; `published` from hidden `0` + checkbox `1`; gallery `gallery_keep[]` + normalized `$_FILES['gallery_files']`.
+- **`index.php`** — item list; delete uses `confirm()` before POST to `save.php`; create/edit form with cover upload + gallery queue.
+- **`save.php`** — create / update / delete; `news_format_admin_content()` on save; gallery uploads merged with `gallery_keep[]`.
 
 **Images:** stored under `/test/img/news/{slug}/` (`cover.{ext}`, `{slug}-NN.{ext}`). JSON paths: `img/news/{slug}/…`.
 
@@ -93,12 +97,31 @@ Staging only; no auth in this minimal build.
 
 - `load_all_news()`, `load_published_news()`, `load_news_item_by_slug()`, `load_published_news_item_by_slug()`
 - `news_normalize_article_slug()`, `news_resolve_article_slug()`, `news_article_slug_is_taken()`, `news_legacy_article_file()`
+- `news_format_admin_content()`, `news_content_looks_like_html()` — admin plain-text → `<p>` on save only
 - `render_news_feed_item()`, `render_news_card()`, `render_news_article()`, `render_news_article_not_found()`
 - `news_article_href()` → `news/article.php?slug=…`
 
 ---
 
 ## Task log (latest first)
+
+### 2026-06-14 — Admin delete confirmation
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `project-memory.md`
+- **Logic:** Native `confirm()` on `form[data-action="delete"]` before POST; `save.php` delete unchanged.
+
+### 2026-06-14 — Preview mode (article resolution)
+
+- **Created:** none
+- **Modified:** `test/news/article.php`, `project-memory.md`
+- **Logic:** `?preview=1` → JSON-only via `load_news_item_by_slug`; default → published JSON then legacy HTML. Already aligned with draft workflow.
+
+### 2026-06-14 — Admin gallery queue + plain-text content → HTML
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `test/admin/save.php`, `test/includes/news-data.php`, `project-memory.md`
+- **Logic:** Client-side gallery file queue with append/remove; submit syncs all files. `news_format_admin_content()` on save for plain text.
 
 ### 2026-06-14 — Slug normalization and uniqueness
 

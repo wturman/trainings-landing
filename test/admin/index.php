@@ -135,10 +135,10 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
           </td>
           <td class="actions">
             <a href="index.php?<?= htmlspecialchars(http_build_query(['edit' => $rowSlug]), ENT_QUOTES, 'UTF-8') ?>">Редагувати</a>
-            <form method="post" action="save.php">
+            <form method="post" action="save.php" class="admin-delete-form" data-action="delete">
               <input type="hidden" name="action" value="delete" />
               <input type="hidden" name="slug" value="<?= htmlspecialchars($rowSlug, ENT_QUOTES, 'UTF-8') ?>" />
-              <button type="submit" class="btn btn-danger">Видалити</button>
+              <button type="submit" class="btn btn-danger" data-action="delete">Видалити</button>
             </form>
           </td>
         </tr>
@@ -152,7 +152,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
     <p class="msg error">Запис з slug «<?= htmlspecialchars($editSlug, ENT_QUOTES, 'UTF-8') ?>» не знайдено.</p>
 <?php endif; ?>
 
-    <form method="post" action="save.php" enctype="multipart/form-data">
+    <form id="news-admin-form" method="post" action="save.php" enctype="multipart/form-data">
 <?php if ($isEdit): ?>
       <input type="hidden" name="old_slug" value="<?= htmlspecialchars($formSlug, ENT_QUOTES, 'UTF-8') ?>" />
 <?php endif; ?>
@@ -175,8 +175,9 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       <label for="excerpt">Короткий опис (excerpt)</label>
       <textarea id="excerpt" name="excerpt" required><?= htmlspecialchars($formExcerpt, ENT_QUOTES, 'UTF-8') ?></textarea>
 
-      <label for="content">Контент (HTML)</label>
+      <label for="content">Контент</label>
       <textarea id="content" name="content" required style="min-height: 10rem;"><?= htmlspecialchars($formContent, ENT_QUOTES, 'UTF-8') ?></textarea>
+      <p class="hint">Звичайний текст: порожній рядок між абзацами → при збереженні обгортається в &lt;p&gt;. Якщо вставляєте HTML — залишається без змін.</p>
 
       <label for="cover">Обкладинка</label>
       <div class="media-block">
@@ -212,8 +213,10 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
         </div>
 
         <label for="gallery_files" style="margin-top: 1rem;">Додати зображення</label>
+        <p class="hint">Оберіть файл(и) — можна повторювати вибір; усі з’являться у списку нижче і збережуться після «Зберегти».</p>
         <input type="file" id="gallery_files" name="gallery_files[]" accept="image/jpeg,image/png,image/gif,image/webp" multiple />
 
+        <p id="gallery-pending-count" class="hint" style="margin-top: 0.5rem; display: none;"></p>
         <div class="gallery-grid" id="gallery-new-preview"></div>
         <button type="button" id="gallery-clear-new" class="btn" style="margin-top: 0.5rem; display: none;">Очистити нові файли</button>
       </div>
@@ -236,6 +239,19 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
 <?php endif; ?>
       </div>
     </form>
+    <script>
+      (function () {
+        const deleteConfirmMessage = 'Ви впевнені, що хочете видалити цю новину? Цю дію неможливо скасувати.';
+
+        document.querySelectorAll('form[data-action="delete"]').forEach(function (form) {
+          form.addEventListener('submit', function (e) {
+            if (!window.confirm(deleteConfirmMessage)) {
+              e.preventDefault();
+            }
+          });
+        });
+      })();
+    </script>
     <script>
       (function () {
         const coverInput = document.getElementById('cover');
@@ -290,44 +306,96 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
         const galleryFiles = document.getElementById('gallery_files');
         const galleryNewPreview = document.getElementById('gallery-new-preview');
         const galleryClearNew = document.getElementById('gallery-clear-new');
+        const galleryPendingCount = document.getElementById('gallery-pending-count');
+        const newsForm = document.getElementById('news-admin-form');
+        let galleryPendingFiles = [];
         let galleryObjectUrls = [];
 
-        function clearGalleryNewPreviews() {
+        function revokeGalleryObjectUrls() {
           galleryObjectUrls.forEach(function (url) { URL.revokeObjectURL(url); });
           galleryObjectUrls = [];
-          galleryNewPreview.innerHTML = '';
-          galleryFiles.value = '';
-          galleryClearNew.style.display = 'none';
         }
 
-        galleryClearNew.addEventListener('click', clearGalleryNewPreviews);
-
-        galleryFiles.addEventListener('change', function () {
-          galleryObjectUrls.forEach(function (url) { URL.revokeObjectURL(url); });
-          galleryObjectUrls = [];
+        function renderGalleryPendingPreviews() {
+          revokeGalleryObjectUrls();
           galleryNewPreview.innerHTML = '';
-          galleryClearNew.style.display = 'none';
 
-          const files = galleryFiles.files;
-          if (!files || !files.length) {
-            return;
-          }
-          galleryClearNew.style.display = 'inline-block';
-          Array.from(files).forEach(function (file) {
-            const url = URL.createObjectURL(file);
+          galleryPendingFiles.forEach(function (entry, index) {
+            const url = URL.createObjectURL(entry.file);
             galleryObjectUrls.push(url);
+
             const wrap = document.createElement('div');
             wrap.className = 'gallery-item';
+            wrap.dataset.pendingIndex = String(index);
+
             const img = document.createElement('img');
             img.src = url;
-            img.alt = file.name;
+            img.alt = entry.file.name;
             wrap.appendChild(img);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-danger gallery-remove-pending';
+            removeBtn.textContent = 'Прибрати';
+            removeBtn.dataset.index = String(index);
+            wrap.appendChild(removeBtn);
+
             const cap = document.createElement('div');
             cap.className = 'path';
-            cap.textContent = file.name;
+            cap.textContent = entry.file.name;
             wrap.appendChild(cap);
+
             galleryNewPreview.appendChild(wrap);
           });
+
+          const count = galleryPendingFiles.length;
+          if (count > 0) {
+            galleryClearNew.style.display = 'inline-block';
+            galleryPendingCount.style.display = 'block';
+            galleryPendingCount.textContent = 'До збереження: ' + count + ' нов. зображ.';
+          } else {
+            galleryClearNew.style.display = 'none';
+            galleryPendingCount.style.display = 'none';
+            galleryPendingCount.textContent = '';
+          }
+        }
+
+        function clearGalleryPending() {
+          galleryPendingFiles = [];
+          renderGalleryPendingPreviews();
+          galleryFiles.value = '';
+        }
+
+        galleryClearNew.addEventListener('click', clearGalleryPending);
+
+        galleryNewPreview.addEventListener('click', function (e) {
+          const btn = e.target.closest('.gallery-remove-pending');
+          if (!btn) {
+            return;
+          }
+          const index = parseInt(btn.dataset.index || '', 10);
+          if (Number.isNaN(index)) {
+            return;
+          }
+          galleryPendingFiles.splice(index, 1);
+          renderGalleryPendingPreviews();
+        });
+
+        galleryFiles.addEventListener('change', function () {
+          const picked = galleryFiles.files ? Array.from(galleryFiles.files) : [];
+          picked.forEach(function (file) {
+            galleryPendingFiles.push({ file: file });
+          });
+          galleryFiles.value = '';
+          renderGalleryPendingPreviews();
+        });
+
+        newsForm.addEventListener('submit', function () {
+          const dt = new DataTransfer();
+          galleryPendingFiles.forEach(function (entry) {
+            dt.items.add(entry.file);
+          });
+          galleryFiles.files = dt.files;
         });
       })();
     </script>
