@@ -78,6 +78,8 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 
 **Legacy HTML import (one-time):** `php test/migrate-legacy-news.php` (optional `--dry-run`) or admin **Import legacy HTML news**. Parses `test/news/*.html`; slug from filename; skips duplicates; **always** backs up `news.json.bak-{timestamp}` before write; appends run to `data/migration-log.json`. **Rollback last migration** restores latest `.bak-*` only (HTML untouched).
 
+**Content repair:** `node test/repair-news-content.mjs` or `php test/repair-news-content.php` — re-imports `.news-article__content` from HTML for selected slugs, normalizes `content` on all JSON items (comments/`\\r\\n` removed; `<p>`, `<strong>`, `<a>` preserved). Backs up before save.
+
 ---
 
 ## Admin (`/test/admin`)
@@ -110,6 +112,12 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 ---
 
 ## Task log (latest first)
+
+### 2026-06-23 — News JSON content repair + normalization
+
+- **Created:** `test/repair-news-content.php`, `test/repair-news-content.mjs`
+- **Modified:** `test/data/news.json`, `project-memory.md`
+- **Logic:** Restored full `.news-article__content` from legacy HTML for `nove-obladnannia-…` and `film-pro-chornobyl-…`; normalized all items’ `content` (strip comments, collapse `\\r\\n` noise, compact `<p>` blocks, keep inline tags). Backup `news.json.bak-*` before write; atomic temp rename.
 
 ### 2026-06-23 — Admin migration log + rollback
 

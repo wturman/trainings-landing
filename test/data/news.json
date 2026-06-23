@@ -1,70 +1,177 @@
 {
-  "items": [
-    {
-      "id": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
-      "slug": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
-      "title": "Тутешні обладнання",
-      "date": "2026-06-20",
-      "excerpt": "Молодіжний простір «Тутешні» отримав нове обладнання — ноутбук, проєктор, екран та інші ресурси для навчання, творчості й спільних ініціатив.",
-      "content": "<p>Молодіжний простір «Тутешні» отримав нове обладнання — ноутбук, проєктор, екран та інші ресурси для навчання, творчості й спільних ініціатив.</p>",
-      "cover": "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/cover.png",
-      "gallery": [
-        "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-01.png",
-        "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-02.png",
-        "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-03.png",
-        "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-05.png",
-        "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-06.png",
-        "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-07.png"
-      ],
-      "tags": [
-        "ISAR_Ednannia",
-        "EU_Unity4Community",
-        "ЄднанняДляГромади",
-        "MinderooFoundation"
-      ],
-      "published": true
-    },
-    {
-      "id": "nastilni-ihry-2026-05-02",
-      "slug": "nastilni-ihry-2026-05-02",
-      "title": "Нові настільні ігри",
-      "date": "2026-05-02",
-      "excerpt": "Вечір настільних ігор для молоді: командна гра, знайомства та відпочинок.",
-      "content": "<p>У рамках нашого молодіжного проєкту ми отримали довгоочікувані настільні ігри, і вони одразу стали справжнім центром уваги для учасників.</p><p>Щойно коробки були відкриті, розпочалося найцікавіше: знайомство з правилами, перші партії, обговорення стратегій та море позитивних емоцій. Молодь із захопленням випробовувала нові ігри, ділилася враженнями та підтримувала одне одного під час гри.</p><p>Настільні ігри — це не лише цікаве дозвілля. Вони допомагають розвивати логічне мислення, комунікацію, вміння працювати в команді, приймати рішення та знаходити спільну мову з іншими людьми.</p><p>Особливо приємно бачити, як спільна гра об’єднує учасників, створює дружню атмосферу та дарує простір для живого спілкування.</p><p>Дякуємо всім, хто долучився до ігрової зустрічі! А нові ігрові вечори вже попереду — і ми впевнені, що вони принесуть ще багато яскравих моментів та позитивних вражень.</p><p>Захід організований ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p>",
-      "cover": "img/news/nastilni-ihry-2026-05-02/cover.jpg",
-      "gallery": [
-        "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-01.png",
-        "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-02.png",
-        "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-03.png",
-        "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-04.png"
-      ],
-      "tags": [
-        "ISAR_Ednannia",
-        "EU_Unity4Community",
-        "ЄднанняДляГромади",
-        "MinderooFoundation"
-      ],
-      "published": true
-    },
-    {
-      "id": "film-pro-chornobyl-2026-04-26",
-      "slug": "film-pro-chornobyl-2026-04-26",
-      "title": "Чорнобильський кіноперегляд",
-      "date": "2026-04-26",
-      "excerpt": "Спільний перегляд та обговорення фільму про події в Чорнобилі та їхній урок для сьогодення.",
-      "content": "<p>Спільний перегляд та обговорення фільму про події в Чорнобилі та їхній урок для сьогодення.</p>",
-      "cover": "img/news/film-pro-chornobyl-2026-04-26/cover.jpg",
-      "gallery": [
-        "img/news/film-pro-chornobyl-2026-04-26/film-pro-chornobyl-2026-04-26-01.png",
-        "img/news/film-pro-chornobyl-2026-04-26/film-pro-chornobyl-2026-04-26-02.png"
-      ],
-      "tags": [
-        "ISAR_Ednannia",
-        "EU_Unity4Community",
-        "ЄднанняДляГромади",
-        "MinderooFoundation"
-      ],
-      "published": true
-    }
-  ]
+    "items": [
+        {
+            "id": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
+            "slug": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
+            "title": "Тутешні обладнання",
+            "date": "2026-06-20",
+            "excerpt": "Молодіжний простір «Тутешні» отримав нове обладнання — ноутбук, проєктор, екран та інші ресурси для навчання, творчості й спільних ініціатив.",
+            "content": "<p>Маємо чудову новину від учасників Молодіжного простору «Тутешні» в Ображіївці!</p><p>У рамках нашого проєкту простір отримав нове обладнання для проведення всього освітнього та цікавого: зарядна станція, ноутбук, проєктор, екран, фліпчарт, термопот, килимки (йога та тусовки на подвір'ї тепер будуть зручнішими).</p><p>Нове обладнання вже подарувало нам багато щирих емоцій. Ми радіємо цим змінам, обговорюємо нові ідеї й уже плануємо, як використовуватимемо простір для навчання, творчості, спілкування та реалізації власних ініціатив. Класно відчувати, що цей клуб стає ще більш живим і відкритим місцем, де хочеться збиратися, пробувати нове, ділитися думками й разом створювати щось важливе.</p><p>Ми щиро вдячні нашим партнерам і спонсорам за підтримку та віру в молодь. Завдяки цій допомозі у нас з’являється ще більше можливостей для розвитку, самовираження, змістовного дозвілля та втілення ідей, які справді надихають.</p><p>Попереду — нові заходи, цікаві проєкти та ще більше приводів збиратися разом. Коли ми маємо простір для ідей, ми здатні змінювати світ навколо себе!</p><p><strong>Дякуємо всім, хто допомагає створювати ці можливості!</strong></p><p>Захід організований ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia, #EU_Unity4Community, #ЄднанняДляГромади, #MinderooFoundation</p>",
+            "cover": "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/cover.png",
+            "gallery": [
+                "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-01.png",
+                "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-02.png",
+                "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-03.png",
+                "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-05.png",
+                "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-06.png",
+                "img/news/nove-obladnannia-dlia-tuteshnikh-2026-06-20/nove-obladnannia-dlia-tuteshnikh-2026-06-20-07.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia",
+                "EU_Unity4Community",
+                "ЄднанняДляГромади",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "rozpys-metelykiv-2026-06-13",
+            "slug": "rozpys-metelykiv-2026-06-13",
+            "title": "Коли дитяча творчість оживає: магія нашого майстер-класу в Ображіївці!",
+            "date": "2026-06-13",
+            "excerpt": "Сьогодні в Молодіжному просторі відбулося щось неймовірно тепле, яскраве та сповнене щирих посмішок. Діти і підлітки зібралися разом, щоб творити справжнє диво — розписувати метеликів із соленого тіста!",
+            "content": "<p>Сьогодні в Молодіжному просторі відбулося щось неймовірно тепле, яскраве та сповнене щирих посмішок. Діти і підлітки зібралися разом, щоб творити справжнє диво — розписувати метеликів із соленого тіста!</p><p>18 неймовірних учасників під керівництвом майстрині Анни на кілька годин перетворилися на справжніх чарівників. Кожен взяв до рук пензлик, і солене тісто почало оживати, виграючи всіма барвами веселки.</p><p>Атмосфера була просто неймовірною: хтось зосереджено виводив найтонші візерунки на крильцях, хтось сміливо міксував кольори, створюючи своїх фантастичних метеликів. А головне — скільки було сміху, взаємопідтримки та гордості за власну роботу!</p><p>Але на цьому історія не завершується! Розписані красені незабаром перетворяться на унікальні магнітики. Вони прикрасять домівки дітлахів або стануть зворушливими подарунками для найрідніших, щодня нагадуючи про цей світлий день.</p><p>Дякуємо кожному, хто долучився! Наші діти — неймовірно талановиті, і такі миті разом вкотре доводять: творчість об'єднує, надихає та дарує крила навіть у найтемніші часи.</p><p>Гортайте фото, заряджайтеся цим яскравим позитивом та шукайте знайомі обличчя!</p><p><strong>Організатор:</strong> ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia #EU_Unity4Community #ЄднанняДляГромади #MinderooFoundation</p>",
+            "cover": "img/news/rozpys-metelykiv-2026-06-13/cover.jpg",
+            "gallery": [
+                "img/news/rozpys-metelykiv-2026-06-13/rozpys-metelykiv-2026-06-13-01.png",
+                "img/news/rozpys-metelykiv-2026-06-13/rozpys-metelykiv-2026-06-13-02.png",
+                "img/news/rozpys-metelykiv-2026-06-13/rozpys-metelykiv-2026-06-13-03.png",
+                "img/news/rozpys-metelykiv-2026-06-13/rozpys-metelykiv-2026-06-13-04.png",
+                "img/news/rozpys-metelykiv-2026-06-13/rozpys-metelykiv-2026-06-13-05.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia",
+                "EU_Unity4Community",
+                "ЄднанняДляГромади",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "zakinchennia-navchalnoho-roku-2026-05-31",
+            "slug": "zakinchennia-navchalnoho-roku-2026-05-31",
+            "title": "Навчальний рік позаду — попереду літо нових можливостей!",
+            "date": "2026-05-31",
+            "excerpt": "На черговій зустрічі учасники нашого молодіжного проєкту підбили підсумки навчального року, поділилися своїми досягненнями, враженнями та планами на майбутнє.",
+            "content": "<p>На черговій зустрічі учасники нашого молодіжного проєкту підбили підсумки навчального року, поділилися своїми досягненнями, враженнями та планами на майбутнє.</p><p>Для когось цей рік запам’ятався новими знаннями, для когось — перемогами в конкурсах чи спортивних змаганнях, а хтось знайшов нових друзів і відкрив для себе нові захоплення. Було цікаво почути історії успіхів, викликів та маленьких перемог, які стали важливими кроками вперед.</p><p>Не менш захопливою стала розмова про літо. Учасники ділилися своїми мріями, планами на канікули, ідеями для відпочинку, саморозвитку та участі в громадському житті. Ми говорили про те, як провести цей час цікаво, корисно та з новими враженнями.</p><p>Такі зустрічі нагадують, що кожен завершений етап — це не лише привід озирнутися назад, а й можливість поставити нові цілі та сміливо рухатися вперед.</p><p>Бажаємо всім яскравого, безпечного та незабутнього літа, наповненого гарними подіями, новими знайомствами та позитивними емоціями!</p><p>Відпочивайте, мрійте, відкривайте нове та вірте у свої можливості!</p><p><strong>Організатор:</strong> ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia #EU_Unity4Community #ЄднанняДляГромади #MinderooFoundation</p>",
+            "cover": "img/news/zakinchennia-navchalnoho-roku-2026-05-31/cover.jpg",
+            "gallery": [
+                "img/news/zakinchennia-navchalnoho-roku-2026-05-31/zakinchennia-navchalnoho-roku-2026-05-31-01.png",
+                "img/news/zakinchennia-navchalnoho-roku-2026-05-31/zakinchennia-navchalnoho-roku-2026-05-31-02.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia",
+                "EU_Unity4Community",
+                "ЄднанняДляГромади",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "potochna-zustrich-pro-harnyi-nastrii-2026-05-23",
+            "slug": "potochna-zustrich-pro-harnyi-nastrii-2026-05-23",
+            "title": "Разом цікавіше!",
+            "date": "2026-05-23",
+            "excerpt": "Ще одна зустріч учасників нашого молодіжного проєкту пройшла в атмосфері гарного настрою, дружнього спілкування та цікавого дозвілля.",
+            "content": "<p>Ще одна зустріч учасників нашого молодіжного проєкту пройшла в атмосфері гарного настрою, дружнього спілкування та цікавого дозвілля.</p><p>Ми зібралися, щоб відпочити від щоденних справ, поспілкуватися, поділитися новинами та просто провести час у хорошій компанії. Кожна така зустріч стає можливістю краще пізнати одне одного, знайти спільні інтереси та отримати заряд позитивних емоцій.</p><p>Особливо приємно бачити, як молодь активно долучається до спільних активностей, підтримує дружню атмосферу та пропонує нові ідеї для майбутніх заходів. Саме з таких простих моментів народжуються довіра, нові знайомства та справжня молодіжна спільнота.</p><p>Дякуємо всім, хто був разом з нами! Попереду ще багато цікавих подій, можливостей для розвитку та приводів зустрітися знову.</p><p>Молодість — це час спілкування, відкриттів і нових вражень. І ми раді створювати для цього простір разом!</p><p><strong>Організатор:</strong> ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia #EU_Unity4Community #ЄднанняДляГромади #MinderooFoundation</p>",
+            "cover": "img/news/potochna-zustrich-pro-harnyi-nastrii-2026-05-23/cover.jpg",
+            "gallery": [
+                "img/news/potochna-zustrich-pro-harnyi-nastrii-2026-05-23/potochna-zustrich-pro-harnyi-nastrii-2026-05-23-01.png",
+                "img/news/potochna-zustrich-pro-harnyi-nastrii-2026-05-23/potochna-zustrich-pro-harnyi-nastrii-2026-05-23-02.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia",
+                "EU_Unity4Community",
+                "ЄднанняДляГромади",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09",
+            "slug": "potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09",
+            "title": "Гарний настрій, живе спілкування та активний відпочинок",
+            "date": "2026-05-09",
+            "excerpt": "Чергова зустріч учасників нашого молодіжного проєкту пройшла тепло, активно та по-домашньому затишно.",
+            "content": "<p>Чергова зустріч учасників нашого молодіжного проєкту пройшла тепло, активно та по-домашньому затишно.</p><p>Цього дня ми грали в настільні ігри, смакували чай, спілкувалися на різні теми та просто добре проводили час разом. А для любителів активного відпочинку відбувся дружній волейбольний матч, який подарував багато позитивних емоцій, азарту та командного духу.</p><p>Такі неформальні зустрічі допомагають молоді краще знайомитися, знаходити нових друзів, вчитися взаємодіяти та підтримувати одне одного. Адже молодіжний простір — це не лише заходи та активності, а й місце, де кожен може почуватися комфортно, бути почутим і проводити час у колі однодумців.</p><p>Щиро радіємо, що наша молодь із задоволенням долучається до спільних ініціатив, пропонує власні ідеї та створює атмосферу відкритості й взаємоповаги.</p><p>Попереду ще багато цікавих зустрічей, нових знайомств та яскравих вражень!</p><p>Захід організований ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia, #EU_Unity4Community, #ЄднанняДляГромади, #MinderooFoundation</p>",
+            "cover": "img/news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09/cover.jpg",
+            "gallery": [
+                "img/news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09-01.png",
+                "img/news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09-02.png",
+                "img/news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09-03.png",
+                "img/news/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09/potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09-04.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia,",
+                "EU_Unity4Community,",
+                "ЄднанняДляГромади,",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "nastilni-ihry-2026-05-02",
+            "slug": "nastilni-ihry-2026-05-02",
+            "title": "Нові настільні ігри",
+            "date": "2026-05-02",
+            "excerpt": "Вечір настільних ігор для молоді: командна гра, знайомства та відпочинок.",
+            "content": "<p>У рамках нашого молодіжного проєкту ми отримали довгоочікувані настільні ігри, і вони одразу стали справжнім центром уваги для учасників.</p><p>Щойно коробки були відкриті, розпочалося найцікавіше: знайомство з правилами, перші партії, обговорення стратегій та море позитивних емоцій. Молодь із захопленням випробовувала нові ігри, ділилася враженнями та підтримувала одне одного під час гри.</p><p>Настільні ігри — це не лише цікаве дозвілля. Вони допомагають розвивати логічне мислення, комунікацію, вміння працювати в команді, приймати рішення та знаходити спільну мову з іншими людьми.</p><p>Особливо приємно бачити, як спільна гра об’єднує учасників, створює дружню атмосферу та дарує простір для живого спілкування.</p><p>Дякуємо всім, хто долучився до ігрової зустрічі! А нові ігрові вечори вже попереду — і ми впевнені, що вони принесуть ще багато яскравих моментів та позитивних вражень.</p><p>Захід організований ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p>",
+            "cover": "img/news/nastilni-ihry-2026-05-02/cover.jpg",
+            "gallery": [
+                "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-01.png",
+                "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-02.png",
+                "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-03.png",
+                "img/news/nastilni-ihry-2026-05-02/nastilni-ihry-2026-05-02-04.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia",
+                "EU_Unity4Community",
+                "ЄднанняДляГромади",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "film-pro-chornobyl-2026-04-26",
+            "slug": "film-pro-chornobyl-2026-04-26",
+            "title": "Чорнобильський кіноперегляд",
+            "date": "2026-04-26",
+            "excerpt": "Спільний перегляд та обговорення фільму про події в Чорнобилі та їхній урок для сьогодення.",
+            "content": "<p>Разом із учасниками нашого молодіжного проєкту ми провели кіноперегляд, присвячений подіям Чорнобильської катастрофи.</p><p>Фільм став приводом не лише згадати одну з найтрагічніших сторінок історії України, а й поговорити про відповідальність, ціну людських помилок, силу правди та важливість збереження пам’яті про події, які змінили життя мільйонів людей.</p><p>Після перегляду молодь активно ділилася своїми враженнями, ставила запитання та обговорювала, які уроки сучасне покоління може винести з цієї історії. Такі зустрічі допомагають не лише отримувати нові знання, а й формувати критичне мислення, небайдужість та усвідомлення власної ролі у майбутньому громади та країни.</p><p>Дякуємо всім учасникам за щирість, відкритість до діалогу та бажання пізнавати більше про історію, яка стосується кожного з нас.</p><p><strong>Разом навчаємося, обговорюємо та зростаємо!</strong></p><p>Захід організований ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia, #EU_Unity4Community, #ЄднанняДляГромади, #MinderooFoundation</p>",
+            "cover": "img/news/film-pro-chornobyl-2026-04-26/cover.jpg",
+            "gallery": [
+                "img/news/film-pro-chornobyl-2026-04-26/film-pro-chornobyl-2026-04-26-01.png",
+                "img/news/film-pro-chornobyl-2026-04-26/film-pro-chornobyl-2026-04-26-02.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia",
+                "EU_Unity4Community",
+                "ЄднанняДляГромади",
+                "MinderooFoundation"
+            ],
+            "published": true
+        },
+        {
+            "id": "ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18",
+            "slug": "ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18",
+            "title": "Розпочинаємо роботу над нашим молодіжним проєктом",
+            "date": "2026-04-18",
+            "excerpt": "В Ображіївському будинку культури відбулася установча зустріч команди проєкту, представників Молодіжного клубу «Тутешні», партнерів та активної молоді громади.",
+            "content": "<p>В Ображіївському будинку культури відбулася установча зустріч команди проєкту, представників Молодіжного клубу «Тутешні», партнерів та активної молоді громади.</p><p>Під час зустрічі ми знайомилися, обговорювали потреби дітей та молоді, визначали виклики, які їх турбують сьогодні, та шукали можливості для їх вирішення. Разом провели діагностику потреб, окреслили першочергові завдання та сформували попередній календар майбутніх активностей.</p><p>Для нас дуже важливо чути голос молодих людей, розуміти їхні інтереси, мрії та проблеми. Саме тому всі подальші заходи проєкту будуть формуватися з урахуванням їхніх побажань та реальних потреб.</p><p>Попереду багато цікавої роботи, нових ідей та можливостей для розвитку молоді нашої громади. Дякуємо всім учасникам за відкритість, активність і бажання змінювати життя навколо на краще!</p><p><strong>Організатор:</strong> ГО «Сила інтелекту» у рамках проєкту «Єднання для громади», що реалізується ІСАР Єднання <a href=\"https://www.facebook.com/isar.ednannia\" target=\"_blank\" rel=\"noopener\">ISAR Єднання</a>, за співфінансування Європейського Союзу <a href=\"https://www.facebook.com/EUDelegationUkraine\" target=\"_blank\" rel=\"noopener\">EU Delegation Ukraine</a> та Фундації Міндеру.</p><p class=\"news-article__tags\">#ISAR_Ednannia, #EU_Unity4Community, #ЄднанняДляГромади, #MinderooFoundation</p>",
+            "cover": "img/news/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18/cover.jpg",
+            "gallery": [
+                "img/news/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18-01.png",
+                "img/news/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18-02.png",
+                "img/news/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18-03.png",
+                "img/news/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18/ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18-04.png"
+            ],
+            "tags": [
+                "ISAR_Ednannia,",
+                "EU_Unity4Community,",
+                "ЄднанняДляГромади,",
+                "MinderooFoundation"
+            ],
+            "published": true
+        }
+    ]
 }

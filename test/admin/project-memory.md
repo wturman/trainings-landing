@@ -1,0 +1,237 @@
+# Project memory — `/test` (canonical)
+
+**Source of truth:** All active development happens under **`/test`** only. Do not use production HTML or live site scans. Paths below are relative to `/test` unless noted. Production domain may appear in legacy links until `BASE_URL` config exists.
+
+**For agents:** Do not scan the whole repo unless this doc is insufficient.  
+**Rule:** Treat HTML inside `<!-- ... -->` as non-existent legacy unless the user asks to restore it.
+
+---
+
+## 1. `/test` layout
+
+| Path | Role |
+|------|------|
+| `index.html` / `index.php` | Landing: hero, about, directions, `#news`, portfolio, stories, footer |
+| `news.html` / `news.php` | News archive (vertical `.news-feed`; PHP reads JSON) |
+| `news/*.html` | Static article pages (legacy; target: one PHP template) |
+| `data/news.json` | **Single source of truth** for news content |
+| `includes/news-data.php` | `load_published_news()` |
+| `includes/news-render.php` | `render_news_feed_item()`, `render_news_card()` |
+| `css/main.css` | Design tokens + `@import` section styles |
+| `js/main.js` | ES module bundle |
+| `img/` | `news/`, `directions/`, `projects/`, `vidhuky/` (+ logos, favicons, reviews) |
+
+**Stack:** HTML/CSS/vanilla JS + minimal PHP (no framework). **Planned:** lightweight CMS (JSON → DB), promote from `/test` when ready.
+
+**News slug convention:** `{translit-title}-{YYYY-MM-DD}` → `news/{slug}.html`, `img/news/{slug}/` (`cover.jpg|png`, gallery `{slug}-NN.png`).
+
+---
+
+## 2. `data/news.json`
+
+**Shape:** `{ "items": [ … ] }`
+
+| Field | Type | Rules |
+|-------|------|--------|
+| `id` | string | Stable key; equals `slug` today |
+| `slug` | string | URL-safe, date suffix |
+| `title` | string | Headline |
+| `date` | string | `YYYY-MM-DD` |
+| `excerpt` | string | Cards / archive list |
+| `content` | string | HTML for `.news-article__content` (no tags block) |
+| `cover` | string | `img/news/{slug}/cover.*` |
+| `gallery` | string[] | `img/news/{slug}/{slug}-NN.png` |
+| `tags` | string[] | Without `#` |
+| `published` | boolean | `false` = hidden from public lists |
+
+**Consumers:**
+
+- `load_published_news()` — filter `published === true`, sort `date` DESC (do not re-sort in templates unless asked).
+- `load_published_news_item_by_slug($jsonPath, $slug)` — one published item or `null`.
+- `news.php` — full archive feed.
+- `index.php` — latest **3** cards in `#news` via `render_news_card()`.
+- `news/article.php` — `?slug=` full article (`render_news_article()`); HTTP 404 if missing.
+
+**Authoring:** Prefer editing only `news.json` for news text/metadata once HTML duplication is removed.
+
+**Seed (2026-06-14):** 3 items; full body from `news/nastilni-ihry-2026-05-02.html`; two placeholders until HTML import.
+
+---
+
+## 3. CMS / PHP (implemented)
+
+| File | Purpose |
+|------|---------|
+| `includes/news-data.php` | Read `data/news.json`, published filter, date DESC |
+| `includes/news-render.php` | BEM markup, escaped output |
+| `news.php` | JSON-driven archive (`news.html` static copy remains) |
+| `index.php` | Dynamic `#news` grid (3 items); `index.html` unchanged |
+| `news/article.php` | Single article by `?slug=` from JSON; static `news/*.html` unchanged |
+
+**Migration roadmap:**
+
+1. PHP includes for chrome; render news with existing BEM (`.news-feed__item`, `.news-article`, `.news-gallery`).
+2. Admin → JSON or DB; uploads to `img/news/{slug}/`.
+3. Retire static `news/*.html`; redirects to slug URL.
+4. `BASE_URL` for nav/logo.
+5. Gallery: loop `gallery[]`; keep `gallery.js` / `gallery.css`.
+
+---
+
+## 4. Front-end architecture
+
+| Layer | Entry | Notes |
+|-------|--------|--------|
+| HTML | `index.html` | `lang="uk"` |
+| CSS | `css/main.css` | `@import`s sections; `:root` tokens |
+| JS | `js/main.js` | ES modules; **all imports must resolve** |
+
+**Live DOM order (active markup):**
+
+1. `header.site-header` (`nav` + `burger`)
+2. `section.hero`
+3. `section#about.about`
+4. `section#directions.directions`
+5. `section#news.news-section`
+6. `section#portfolio.portfolio` → `section.stories`
+7. `footer#contacts.footer`
+
+**Commented in `index.html`:** **Aktualno**, **Services** (CSS/JS may still load). Root nav may still reference `#aktualno` / `#services` on older copies.
+
+```
+index.html → css/main.css → section CSS
+index.html → js/main.js → header, burger, hero*, gallery, directions,
+            portfolio, actualno*, services, footer, back-to-top
+            (* hero.js, actualno.js — minimal stubs; gallery.js — lightbox in /test)
+```
+
+### Important files
+
+- **`css/main.css`** — Reset, typography, `.btn` / `.cta-btn`, `.back-to-top`, `.reveal`, **global `h2::after` overrides** (end of file).
+- **`css/header.css`** — Fixed header, `.scrolled`, burger, mobile `.nav.open` (`fixed; inset: 0`).
+- **`css/news.css`** — Archive, cards, article layout, archive header alignment.
+- **`css/gallery.css`** + **`js/gallery.js`** — Article grid + lightbox.
+- **`js/header.js`** — `.scrolled` when `scrollY > 50`.
+- **`js/burger.js`** — `setNavOpen()`; link / overlay / Escape close.
+- **`directions.js`** — Card expand; document click resets.
+- **`portfolio.js`** — IntersectionObserver, typing classes.
+- **`services.js`** — Observer on `.service-card` (no DOM while section commented).
+- **`footer.js`** — `.visible` on footer (required to see footer).
+- **`back-to-top.js`** — `.visible` after 400px scroll.
+- **Section CSS:** `hero`, `about`, `directions`, `portfolio`, `footer`, `aktualno`, `services`, `programs` (programs mostly unused).
+
+### Design tokens (`:root`)
+
+| Token | Value | Use |
+|-------|--------|-----|
+| `--color-primary` | `#0f4c5c` | Headings, header, footer |
+| `--color-accent` | `#e76f51` | CTAs, underlines |
+| `--color-secondary` | `#bfd8bd` | Accents |
+| `--color-bg` | `#f6f1e9` | Page background |
+| `--color-text` | `#1e2d2f` | Body |
+
+Spacing: `--space-1` (8px) … `--space-6` (64px).
+
+---
+
+## 5. Solved bugs (do not re-break)
+
+1. **JS bundle dead** — Missing modules → 404 on import. **Fix:** stubs + full `main.js` import list.
+2. **Burger inert** — Same as (1).
+3. **Mobile menu = header strip after scroll** — `nav` inside `header`; `backdrop-filter` on `.scrolled` clipped `position: fixed` nav. **Fix:** `backdrop-filter` only `@media (min-width: 769px)` in `header.css`. Never on mobile header.
+4. **Portfolio nesting** — Unclosed `#portfolio`; aktualno/services inside portfolio. **Fix:** `</section>` after stories.
+5. **Hero invalid markup** — Stray `</div>` removed.
+6. **Broken anchors** — Hero `#programs` → `#directions`; `#documents` / `#partners` via empty spans in about.
+7. **Responsive** — About img `max-width: 100%`; portfolio stacks ≤768px; directions mobile `min-height` + `height: auto`.
+8. **Hero slogans overlap (~800–1200px)** — `max-width: min(260px, 22vw)` on `.hero-slogans`; mobile `position: static`. No desktop two-column hero without UX approval.
+9. **Burger X jitter** — Absolute spans, `translate(-50%, ±9px)`; middle line opacity only on active.
+10. **Back-to-top sticky hover on touch** — `.back-to-top:hover` inside `@media (hover: hover)` in `main.css`.
+11. **Short `h2` underlines** — Shared override in `main.css` (`calc(100% - var(--space-2))`).
+12. **Burger overlay desync** — Empty tap changed icon without closing menu. **Fix:** `setNavOpen()`; overlay click (non-link); `pointer-events` on `.nav` / `.nav.open`. Files: `burger.js`, `header.css`.
+13. **News archive misalignment** — `.news-archive` header + `.news-feed` share `max-width: var(--content-width)`, `margin-inline: auto` in `news.css`.
+14. **Article in-content links not clickable** — `.news-article__content` stacking, cover `pointer-events`, link styles in `news.css`.
+
+---
+
+## 6. Design decisions
+
+- Youth NGO palette (teal / coral / warm bg); CSS variables for spacing/color.
+- Breakpoint **768px**: burger overlay; desktop nav **769px+**.
+- **`nav` stays inside `header`** (overlay fix depends on desktop-only `backdrop-filter`).
+- Footer `opacity: 0` until JS `.visible`.
+- Directions: desktop hover `.more-btn`; mobile whole-card tap; `.close-btn` in CSS only.
+- `html { scroll-behavior: smooth }` in `main.css`.
+- **`data/news.json` is authoritative** for news where PHP/JSON consumers exist.
+
+---
+
+## 7. Known limitations
+
+- Static `news.html` / some `news/*.html` still duplicate metadata vs JSON.
+- Nav may mix `index.html`, anchors, production URLs in `/test`.
+- `#aktualno` / `#services` commented — dead anchors if nav links remain.
+- `#documents` / `#partners` — empty scroll targets in about.
+- `services.js` runs without `.service-card` in DOM.
+- `burger.js` — guard if `.burger` / `.nav` missing (verify when editing).
+- Portfolio typing uses fixed `ch` — may not match Ukrainian glyphs.
+- CDN: Google Fonts, Font Awesome.
+- `README.md` in `/test` is minimal.
+
+---
+
+## 8. Open tasks (backlog)
+
+- Restore or remove **aktualno** / **services** in HTML and sync nav.
+- Wire **full archive** to JSON only (`news.php` vs `news.html` canonical URL).
+- **Article template** PHP + retire static `news/*.html`.
+- Import remaining article bodies into `news.json`.
+- **BASE_URL** config; normalize logo/home links.
+- Add or verify **image assets** when adding content.
+- Optional: `.close-btn` in directions HTML or remove unused CSS.
+- Expand `README.md` for human onboarding.
+
+---
+
+## 9. Stable state & smoke test
+
+**Expected working in `/test`:** header scroll, burger (full overlay + overlay close), directions, portfolio observer, footer reveal, back-to-top, gallery lightbox on article pages, `news.php` / `index.php` news from JSON.
+
+**UX path:** Hero → About → Directions → News → Portfolio/Stories → Contacts.
+
+### Regression smoke test
+
+1. Mobile burger at `scrollY = 0` and after `scrollY > 50` — full-screen menu, not header strip; empty overlay closes menu.
+2. Desktop nav; scrolled header blur (≥769px).
+3. Footer visible after scrolling to contacts.
+4. Direction cards expand/collapse.
+5. ~320px: no horizontal scroll on about image.
+6. `index.php` `#news` shows 3 cards from JSON; `news.php` lists published items newest first.
+
+---
+
+## 10. Changelog
+
+**2026-06-14 — Memory merge**  
+Root `project-memory.md` merged into this file; root doc is redirect only.
+
+**2026-06-14 — `data/news.json` (SSOT)**  
+Created schema; seed 3 articles.
+
+**2026-06-14 — PHP news**  
+`news-data.php`, `news-render.php`, `news.php`, `index.php` dynamic homepage (3 cards).
+
+**2026-06-14 — Dynamic article (`news/article.php`)**  
+`load_published_news_item_by_slug()`; `render_news_article()` / gallery / tags; `?slug=` route; static `news/*.html` retained.
+
+**2026-06-14 — Archive page repair**  
+`news.html` restored as full document: `main.news-archive-page` → `.news-feed` rows; `news.css` feed thumbnails 16:10, shared column alignment.
+
+**2026-06-14 — Article content**  
+`.news-article__content` links; structure `h2` → `p` → organizer → `p.news-article__tags`.
+
+**2026-06-14 — Burger overlay**  
+`setNavOpen()`, overlay click, `pointer-events` on mobile `.nav`.
+
+---
+
+*Last updated: merged canonical memory for `/test` staging + CMS.*

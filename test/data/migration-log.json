@@ -1,0 +1,56 @@
+{
+    "runs": [
+        {
+            "timestamp": "2026-06-23T21:09:49+03:00",
+            "backup_file": "news.json.bak-2026-06-23-210949",
+            "html_files_found": 8,
+            "imported_count": 5,
+            "skipped_count": 3,
+            "items": [
+                {
+                    "slug": "film-pro-chornobyl-2026-04-26",
+                    "title": "Пам’ять, яка вчить відповідальності",
+                    "status": "skipped",
+                    "reason": "already in news.json"
+                },
+                {
+                    "slug": "nastilni-ihry-2026-05-02",
+                    "title": "Нові настільні ігри — нові емоції та нові знайомства!",
+                    "status": "skipped",
+                    "reason": "already in news.json"
+                },
+                {
+                    "slug": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
+                    "title": "Нове обладнання — нові можливості для «Тутешніх»",
+                    "status": "skipped",
+                    "reason": "already in news.json"
+                },
+                {
+                    "slug": "potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09",
+                    "title": "Гарний настрій, живе спілкування та активний відпочинок",
+                    "status": "imported"
+                },
+                {
+                    "slug": "potochna-zustrich-pro-harnyi-nastrii-2026-05-23",
+                    "title": "Разом цікавіше!",
+                    "status": "imported"
+                },
+                {
+                    "slug": "rozpys-metelykiv-2026-06-13",
+                    "title": "Коли дитяча творчість оживає: магія нашого майстер-класу в Ображіївці!",
+                    "status": "imported"
+                },
+                {
+                    "slug": "ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18",
+                    "title": "Розпочинаємо роботу над нашим молодіжним проєктом",
+                    "status": "imported"
+                },
+                {
+                    "slug": "zakinchennia-navchalnoho-roku-2026-05-31",
+                    "title": "Навчальний рік позаду — попереду літо нових можливостей!",
+                    "status": "imported"
+                }
+            ]
+        }
+    ]
+}
