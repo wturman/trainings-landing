@@ -15,7 +15,7 @@
 | Article (dynamic) | `/test/news/article.php?slug=` |
 | Homepage news (3 items) | `/test/index.php` |
 | Legacy static articles | `/test/news/*.html` (fallback when slug not in JSON; files not edited) |
-| News admin (staging) | `/test/admin/index.php` → `save.php` |
+| News admin (staging) | `/test/admin/` (login required) |
 
 **Stack in `/test`:** static HTML/CSS/JS + minimal PHP. **JSON owns news content.**
 
@@ -41,7 +41,7 @@
 
 Draft preview URL: `news/article.php?slug={slug}&preview=1` (not linked from public lists).
 
-**SEO / Open Graph** (JSON-rendered pages only; legacy `readfile` unchanged): `<title>` `{title} | Сила інтелекту`, `meta description` = excerpt; `og:title`, `og:description`, `og:type=article`, `og:image` = `https://silaintellect.org/{cover}`, `og:url` = canonical `https://silaintellect.org/news/article.php?slug={slug}`. 404: title `Новина не знайдена | Сила інтелекту`, description `Запис відсутній` (no OG tags).
+**SEO / Open Graph** (JSON-rendered pages only; legacy `readfile` unchanged): from loaded item — `<title>`, `description`, `keywords` (tags), `canonical`, Open Graph + Twitter Card; absolute URLs `{scheme}://{host}/test/news/article.php?slug={slug}`; `og:image` = cover, else first gallery image, else `test/img/logo.png`. 404: `<title>` only, no SEO meta. Preview uses same tags from draft JSON (canonical without `preview=1`).
 
 ---
 
@@ -71,7 +71,7 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 ## News data consistency
 
 - `id` === `slug`; `date` → `YYYY-MM-DD`.
-- Slugs: `news_sanitize_slug_candidate()` → `news_normalize_article_slug()`; empty admin input → `news_slug_from_title_and_date()`; uniqueness via `news_article_slug_is_taken()`.
+- Slugs: create via `news_generate_slug_for_create()` (`news_sanitize_slug_candidate` + date); **immutable after save** (edit updates title/date/content only); uniqueness via `news_article_slug_is_taken()` on create.
 - `cover` / `gallery` under `img/news/{slug}/`.
 - `published === true` for public views; admin/list uses `news_item_is_published()` for display (accepts JSON boolean and common truthy forms).
 
@@ -79,24 +79,24 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 
 ## Admin (`/test/admin`)
 
-PHP UI — **reads/writes only** `/test/data/news.json` (no database). Public routing unchanged (`news/article.php?slug=`).
+PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session auth** protects all admin pages except `login.php` / `logout.php`.
 
-- **`admin-lib.php`** — load/save JSON (`LOCK_EX`), validation, slug uniqueness, **image uploads** to `test/img/news/{slug}/`, gallery path safety.
-- **`index.php`** — site chrome (`site-header`, `news-archive-page`, `footer`); `../css/main.css` + scoped `admin-*` styles; delete `confirm()`; CRUD/upload unchanged.
-- **`save.php`** — create / update / delete; `news_format_admin_content()` on save; gallery uploads merged with `gallery_keep[]`.
+- **`test/config/admin-auth.php`** — username + `password_hash` (include-only; not a public page).
+- **`test/config/admin-auth.example.php`** — template for new installs.
+- **`auth.php`** — session, `admin_require_auth()`, `password_verify()`.
+- **`login.php`** / **`logout.php`** — sign in / sign out.
+- **`change-password.php`** — update `password_hash` in config (authenticated).
+- **`hash-password.php`** — CLI helper to generate a new bcrypt hash.
+- **`admin-lib.php`**, **`index.php`**, **`save.php`** — CRUD/upload; list **Перегляд** → `../news/article.php?slug=&preview=1` (new tab); **toggle_published** flips `published` in JSON.
 
-**Images:** stored under `/test/img/news/{slug}/` (`cover.{ext}`, `{slug}-NN.{ext}`). JSON paths: `img/news/{slug}/…`.
-
-**JSON mutation:** read full file → decode → modify `items` → encode → `LOCK_EX` write.
-
-Staging only; no auth in this minimal build.
+**Default staging login:** `admin` / `password` — change `password_hash` in `test/config/admin-auth.php` before production.
 
 ---
 
 ## PHP API (summary)
 
 - `load_all_news()`, `load_published_news()`, `load_news_item_by_slug()`, `load_published_news_item_by_slug()`
-- `news_normalize_article_slug()`, `news_resolve_article_slug()`, `news_article_slug_is_taken()`, `news_legacy_article_file()`
+- `news_normalize_article_slug()`, `news_generate_slug_for_create()` (create only), `news_article_slug_is_taken()`, `news_legacy_article_file()`
 - `news_item_is_published()` — normalized read for list, filters, and edit form
 - `news_format_admin_content()`, `news_content_looks_like_html()` — admin plain-text → `<p>` on save only
 - `render_news_feed_item()`, `render_news_card()`, `render_news_article()`, `render_news_article_not_found()`
@@ -105,6 +105,60 @@ Staging only; no auth in this minimal build.
 ---
 
 ## Task log (latest first)
+
+### 2026-06-14 — Immutable article slugs (CMS)
+
+- **Created:** none
+- **Modified:** `test/admin/save.php`, `test/includes/news-data.php`, `test/admin/index.php`, `test/admin/admin-lib.php`, `project-memory.md`
+- **Logic:** `news_generate_slug_for_create()` on create only; edit keeps JSON slug; no img dir rename.
+
+### 2026-06-14 — Admin auto slug (title + date)
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `test/admin/save.php`, `test/includes/news-data.php`, `test/admin/admin-lib.php`, `project-memory.md`
+- **Logic:** Slug generated once on create; edit keeps stored slug via `old_slug` lookup; uniqueness error on create conflict only.
+
+### 2026-06-14 — Published news XML sitemap
+
+- **Created:** `test/sitemap.php`
+- **Modified:** `project-memory.md`
+- **Logic:** `load_published_news()` only; absolute `/test/news/article.php?slug=` URLs; no legacy HTML.
+
+### 2026-06-14 — Admin list filter + top-5 collapse
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `project-memory.md`
+- **Logic:** Server-side `?filter=` on loaded JSON; display slice only (sort unchanged in `load_all_news`).
+
+### 2026-06-14 — Admin dashboard UX polish
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `project-memory.md`
+- **Logic:** UI only — table hierarchy, action button groups, English labels, delete confirm unchanged.
+
+### 2026-06-14 — Article SEO + OG + Twitter (JSON)
+
+- **Created:** none
+- **Modified:** `test/news/article.php`, `project-memory.md`
+- **Logic:** Full head metadata from JSON; dynamic host + `/test/news/article.php`; preview drafts included; legacy HTML unchanged.
+
+### 2026-06-14 — Admin preview + publish toggle UX
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `test/admin/save.php`, `project-memory.md`
+- **Logic:** List preview link (`article.php?slug=&preview=1` new tab); `toggle_published` POST flips `published` in JSON via `admin_persist_data`.
+
+### 2026-06-14 — Admin change password UI
+
+- **Created:** `test/admin/change-password.php`
+- **Modified:** `test/admin/auth.php`, `test/admin/index.php`, `project-memory.md`
+- **Logic:** Verify old password; `password_hash()` + rewrite `test/config/admin-auth.php` with `LOCK_EX`; nav link on dashboard.
+
+### 2026-06-14 — Admin session authentication
+
+- **Created:** `test/admin/auth.php`, `test/admin/login.php`, `test/admin/logout.php`, `test/admin/hash-password.php`, `test/config/admin-auth.php`, `test/config/admin-auth.example.php`
+- **Modified:** `test/admin/index.php`, `test/admin/save.php`, `project-memory.md`
+- **Logic:** PHP sessions; credentials in `test/config/admin-auth.php`; `index.php` + `save.php` require auth; logout in nav.
 
 ### 2026-06-14 — Admin UI aligned with site design
 

@@ -36,50 +36,94 @@ if ($notFound) {
 }
 
 $siteBrand = 'Сила інтелекту';
-$siteOrigin = 'https://silaintellect.org';
 
-if ($notFound) {
-    $metaTitle = 'Новина не знайдена | ' . $siteBrand;
-    $metaDescription = 'Запис відсутній';
-    $ogTitle = '';
-    $ogDescription = '';
-    $ogType = 'article';
-    $ogImage = '';
-    $ogUrl = $slug !== null
-        ? $siteOrigin . '/news/article.php?slug=' . rawurlencode($slug)
-        : '';
-} else {
-    $articleTitle = (string) ($item['title'] ?? '');
-    $articleExcerpt = (string) ($item['excerpt'] ?? '');
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443)
+    ? 'https'
+    : 'http';
+$siteOrigin = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+
+$metaTitle = 'Новина не знайдена | ' . $siteBrand;
+$metaDescription = '';
+$metaKeywords = '';
+$canonicalUrl = '';
+$ogTitle = '';
+$ogDescription = '';
+$ogType = 'article';
+$ogImage = '';
+$ogUrl = '';
+$twitterCard = 'summary_large_image';
+
+if (!$notFound) {
+    $articleTitle = trim((string) ($item['title'] ?? ''));
+    $articleExcerpt = trim((string) ($item['excerpt'] ?? ''));
     $articleSlug = (string) ($item['slug'] ?? $slug ?? '');
     $coverPath = ltrim((string) ($item['cover'] ?? ''), '/');
 
     $metaTitle = $articleTitle !== '' ? $articleTitle . ' | ' . $siteBrand : $siteBrand;
-    $metaDescription = $articleExcerpt;
-    $ogTitle = $articleTitle;
-    $ogDescription = $articleExcerpt;
-    $ogType = 'article';
-    $ogImage = $coverPath !== '' ? $siteOrigin . '/' . $coverPath : '';
-    $ogUrl = $articleSlug !== ''
-        ? $siteOrigin . '/news/article.php?slug=' . rawurlencode($articleSlug)
-        : '';
+    $metaDescription = $articleExcerpt !== '' ? $articleExcerpt : $articleTitle;
+    $ogTitle = $articleTitle !== '' ? $articleTitle : $siteBrand;
+    $ogDescription = $metaDescription;
+
+    $tagParts = [];
+    if (is_array($item['tags'] ?? null)) {
+        foreach ($item['tags'] as $tag) {
+            if (is_string($tag) && trim($tag) !== '') {
+                $tagParts[] = trim($tag);
+            }
+        }
+    }
+    $metaKeywords = implode(', ', $tagParts);
+
+    if ($articleSlug !== '') {
+        $canonicalUrl = $siteOrigin . '/test/news/article.php?slug=' . rawurlencode($articleSlug);
+        $ogUrl = $canonicalUrl;
+    }
+
+    $imagePath = $coverPath;
+    if ($imagePath === '' && is_array($item['gallery'] ?? null)) {
+        foreach ($item['gallery'] as $galleryPath) {
+            if (!is_string($galleryPath)) {
+                continue;
+            }
+            $galleryPath = ltrim($galleryPath, '/');
+            if ($galleryPath !== '' && str_starts_with($galleryPath, 'img/')) {
+                $imagePath = $galleryPath;
+                break;
+            }
+        }
+    }
+    if ($imagePath === '') {
+        $imagePath = 'test/img/logo.png';
+    }
+    $ogImage = $siteOrigin . '/' . ltrim($imagePath, '/');
 }
 
 $pageTitle = htmlspecialchars($metaTitle, ENT_QUOTES, 'UTF-8');
 $metaDescriptionEsc = htmlspecialchars($metaDescription, ENT_QUOTES, 'UTF-8');
+$metaKeywordsEsc = htmlspecialchars($metaKeywords, ENT_QUOTES, 'UTF-8');
+$canonicalUrlEsc = htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8');
 $ogTitleEsc = htmlspecialchars($ogTitle, ENT_QUOTES, 'UTF-8');
 $ogDescriptionEsc = htmlspecialchars($ogDescription, ENT_QUOTES, 'UTF-8');
 $ogTypeEsc = htmlspecialchars($ogType, ENT_QUOTES, 'UTF-8');
 $ogImageEsc = htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8');
 $ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
+$twitterCardEsc = htmlspecialchars($twitterCard, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="<?= $metaDescriptionEsc ?>" />
+    <title><?= $pageTitle ?></title>
 <?php if (!$notFound): ?>
+    <meta name="description" content="<?= $metaDescriptionEsc ?>" />
+<?php if ($metaKeywords !== ''): ?>
+    <meta name="keywords" content="<?= $metaKeywordsEsc ?>" />
+<?php endif; ?>
+<?php if ($canonicalUrl !== ''): ?>
+    <link rel="canonical" href="<?= $canonicalUrlEsc ?>" />
+<?php endif; ?>
     <meta property="og:title" content="<?= $ogTitleEsc ?>" />
     <meta property="og:description" content="<?= $ogDescriptionEsc ?>" />
     <meta property="og:type" content="<?= $ogTypeEsc ?>" />
@@ -89,10 +133,15 @@ $ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
 <?php if ($ogUrl !== ''): ?>
     <meta property="og:url" content="<?= $ogUrlEsc ?>" />
 <?php endif; ?>
+    <meta name="twitter:card" content="<?= $twitterCardEsc ?>" />
+    <meta name="twitter:title" content="<?= $ogTitleEsc ?>" />
+    <meta name="twitter:description" content="<?= $ogDescriptionEsc ?>" />
+<?php if ($ogImage !== ''): ?>
+    <meta name="twitter:image" content="<?= $ogImageEsc ?>" />
+<?php endif; ?>
 <?php endif; ?>
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <title><?= $pageTitle ?></title>
     <link rel="stylesheet" href="../css/main.css" />
 <?php if (!$notFound && is_array($item['gallery'] ?? null) && $item['gallery'] !== []): ?>
     <link rel="stylesheet" href="../css/gallery.css" />

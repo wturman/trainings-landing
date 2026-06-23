@@ -84,16 +84,9 @@ function admin_persist_data(array $data): void
 
 function admin_suggest_slug_from_title(string $title, string $date): string
 {
-    $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $title);
-    $ascii = is_string($converted) ? $converted : $title;
-    $base = strtolower($ascii);
-    $base = preg_replace('/[^a-z0-9]+/', '-', $base) ?? '';
-    $base = trim($base, '-');
-    if ($base === '') {
-        $base = 'news';
-    }
+    $slug = news_generate_slug_for_create($title, $date);
 
-    return $base . '-' . $date;
+    return $slug ?? 'news-' . $date;
 }
 
 function admin_parse_gallery(string $raw): array

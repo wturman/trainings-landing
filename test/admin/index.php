@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require __DIR__ . '/auth.php';
+admin_require_auth();
+
 require __DIR__ . '/admin-lib.php';
 
 $message = '';
@@ -16,6 +19,9 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
 } elseif (isset($_GET['deleted']) && $_GET['deleted'] === '1') {
     $message = 'Новину видалено з news.json.';
     $messageType = 'ok';
+} elseif (isset($_GET['toggled']) && $_GET['toggled'] === '1') {
+    $message = 'Статус публікації оновлено.';
+    $messageType = 'ok';
 } elseif (isset($_GET['ok']) && $_GET['ok'] === '1') {
     $message = 'Новину збережено в news.json.';
     $messageType = 'ok';
@@ -26,6 +32,112 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
 
 $jsonPath = __DIR__ . '/../data/news.json';
 $items = load_all_news($jsonPath);
+
+$adminListFilter = isset($_GET['filter']) ? (string) $_GET['filter'] : 'all';
+$adminListFilterAllowed = ['all', 'current_month', 'prev_month'];
+if (!in_array($adminListFilter, $adminListFilterAllowed, true)) {
+    $adminListFilter = 'all';
+}
+
+/**
+ * @param list<array<string, mixed>> $source
+ * @return list<array<string, mixed>>
+ */
+function admin_filter_news_list_items(array $source, string $filter): array
+{
+    if ($filter === 'all') {
+        return $source;
+    }
+
+    $now = new DateTimeImmutable('now');
+    if ($filter === 'current_month') {
+        $rangeStart = $now->modify('first day of this month')->setTime(0, 0, 0);
+        $rangeEnd = $now->modify('last day of this month')->setTime(23, 59, 59);
+    } else {
+        $rangeStart = $now->modify('first day of previous month')->setTime(0, 0, 0);
+        $rangeEnd = $now->modify('last day of previous month')->setTime(23, 59, 59);
+    }
+
+    $filtered = [];
+    foreach ($source as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $dateRaw = (string) ($row['date'] ?? '');
+        $parsed = DateTimeImmutable::createFromFormat('Y-m-d', $dateRaw);
+        if ($parsed === false) {
+            continue;
+        }
+        $parsed = $parsed->setTime(0, 0, 0);
+        if ($parsed >= $rangeStart && $parsed <= $rangeEnd) {
+            $filtered[] = $row;
+        }
+    }
+
+    return $filtered;
+}
+
+function admin_render_news_list_row(array $row, string $listFilter): void
+{
+    $rowSlug = (string) ($row['slug'] ?? '');
+    if ($rowSlug === '') {
+        return;
+    }
+    $rowPublished = news_item_is_published($row);
+    $previewUrl = '../news/article.php?' . http_build_query(['slug' => $rowSlug, 'preview' => '1']);
+    $editQuery = ['edit' => $rowSlug];
+    if ($listFilter !== 'all') {
+        $editQuery['filter'] = $listFilter;
+    }
+    $editHref = 'index.php?' . http_build_query($editQuery);
+    ?>
+                <tr class="<?= $rowPublished ? 'admin-row--published' : 'admin-row--draft' ?>">
+                  <td class="admin-col-date"><?= htmlspecialchars((string) ($row['date'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
+                  <td class="admin-col-title"><?= htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
+                  <td class="admin-col-slug"><code><?= htmlspecialchars($rowSlug, ENT_QUOTES, 'UTF-8') ?></code></td>
+                  <td class="admin-col-status">
+<?php if ($rowPublished): ?>
+                    <span class="admin-badge admin-badge-published" title="Visible on the public site">Published</span>
+<?php else: ?>
+                    <span class="admin-badge admin-badge-draft" title="Draft — preview only">Draft</span>
+<?php endif; ?>
+                  </td>
+                  <td class="admin-col-actions">
+                    <div class="admin-action-groups">
+                      <div class="admin-action-group admin-action-group--primary">
+                        <a class="btn btn-sm btn-edit" href="<?= htmlspecialchars($editHref, ENT_QUOTES, 'UTF-8') ?>">Edit</a>
+                        <a
+                          class="btn btn-sm btn-preview"
+                          href="<?= htmlspecialchars($previewUrl, ENT_QUOTES, 'UTF-8') ?>"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >Preview</a>
+                      </div>
+                      <div class="admin-action-group admin-action-group--publish">
+                        <form method="post" action="save.php">
+                          <input type="hidden" name="action" value="toggle_published" />
+                          <input type="hidden" name="slug" value="<?= htmlspecialchars($rowSlug, ENT_QUOTES, 'UTF-8') ?>" />
+                          <button type="submit" class="btn btn-sm <?= $rowPublished ? 'btn-unpublish' : 'btn-publish' ?>">
+<?= $rowPublished ? 'Unpublish' : 'Publish' ?>
+                          </button>
+                        </form>
+                      </div>
+                      <div class="admin-action-group admin-action-group--danger">
+                        <form method="post" action="save.php" class="admin-delete-form" data-action="delete">
+                          <input type="hidden" name="action" value="delete" />
+                          <input type="hidden" name="slug" value="<?= htmlspecialchars($rowSlug, ENT_QUOTES, 'UTF-8') ?>" />
+                          <button type="submit" class="btn btn-sm btn-danger" data-action="delete">Delete</button>
+                        </form>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+<?php
+}
+
+$adminListItems = admin_filter_news_list_items($items, $adminListFilter);
+$adminListRecent = array_slice($adminListItems, 0, 5);
+$adminListOlder = array_slice($adminListItems, 5);
 
 $editSlug = isset($_GET['edit']) ? news_normalize_article_slug((string) $_GET['edit']) : null;
 $editItem = $editSlug !== null ? load_news_item_by_slug($jsonPath, $editSlug) : null;
@@ -60,25 +172,47 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       rel="stylesheet"
     />
     <style>
-      .admin-page { padding-bottom: var(--space-6); }
-      .admin-page .news-archive { max-width: 52rem; margin: 0 auto; padding: var(--space-4) var(--space-2); }
-      .admin-panel__meta { color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: var(--space-4); }
-      .admin-panel__meta code { font-size: 0.85em; }
+      .admin-page { padding-bottom: var(--space-6); background: var(--color-bg); }
+      .admin-page .news-archive { max-width: 56rem; margin: 0 auto; padding: var(--space-5) var(--space-2); }
+      .admin-dashboard-intro { margin-bottom: var(--space-4); }
+      .admin-list-hint { margin-bottom: var(--space-2); }
       .admin-msg { padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin-bottom: var(--space-3); border: 1px solid var(--color-border); }
       .admin-msg.ok { background: #e8f5e9; color: #1b5e20; border-color: #c8e6c9; }
       .admin-msg.error { background: #ffebee; color: #b71c1c; border-color: #ffcdd2; }
       .admin-section { margin-top: var(--space-5); }
       .admin-section h2.section-title { margin-bottom: var(--space-3); }
-      .admin-table-wrap { overflow-x: auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+      .admin-list-card { overflow-x: auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
       .admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-family: var(--font-body); }
-      .admin-table th, .admin-table td { text-align: left; padding: var(--space-2); border-bottom: 1px solid var(--color-border); vertical-align: top; }
-      .admin-table th { font-family: var(--font-heading); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-text-muted); background: var(--color-bg); }
+      .admin-table th, .admin-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+      .admin-table th { font-family: var(--font-heading); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); background: var(--color-bg); position: sticky; top: 0; z-index: 1; }
+      .admin-table tbody tr { transition: background var(--transition); }
+      .admin-table tbody tr:hover { background: rgba(15, 76, 92, 0.04); }
       .admin-table tr:last-child td { border-bottom: none; }
-      .admin-table code { font-size: 0.8em; color: var(--color-primary); }
-      .admin-actions { white-space: nowrap; }
-      .admin-actions form { display: inline; margin: 0; }
-      .admin-actions .btn-link { margin-right: var(--space-2); color: var(--color-primary); font-weight: 600; text-decoration: underline; }
-      .admin-actions .btn-link:hover { color: var(--color-accent); }
+      .admin-col-date { white-space: nowrap; font-size: 0.85rem; color: var(--color-text-muted); width: 6.5rem; }
+      .admin-col-title { font-family: var(--font-heading); font-weight: 600; color: var(--color-text); line-height: 1.35; min-width: 10rem; }
+      .admin-col-slug code { font-size: 0.78em; color: var(--color-primary); word-break: break-all; }
+      .admin-col-status { width: 7rem; }
+      .admin-col-actions { width: 14rem; }
+      .admin-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 5px 10px; border-radius: 999px; font-family: var(--font-heading); letter-spacing: 0.02em; text-transform: uppercase; }
+      .admin-badge-published { background: #e8f5e9; color: #2e7d32; border: 1px solid #81c784; }
+      .admin-badge-draft { background: #f5f5f5; color: #e65100; border: 1px solid #e0e0e0; }
+      .admin-table tr.admin-row--published td:first-child { box-shadow: inset 4px 0 0 #43a047; }
+      .admin-table tr.admin-row--draft td:first-child { box-shadow: inset 4px 0 0 #bdbdbd; }
+      .admin-action-groups { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
+      .admin-action-group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+      .admin-action-group--danger { margin-top: 0.15rem; padding-top: var(--space-2); border-top: 1px dashed #ffcdd2; width: 100%; }
+      .admin-action-group form { display: inline; margin: 0; }
+      .btn.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; line-height: 1.2; }
+      .btn.btn-edit { background: var(--color-primary); }
+      .btn.btn-edit:hover { background: #0a3340; }
+      .btn.btn-preview { background: transparent; color: var(--color-primary); border: 2px solid var(--color-primary); box-shadow: none; }
+      .btn.btn-preview:hover { background: rgba(15, 76, 92, 0.08); transform: none; }
+      .btn.btn-publish { background: var(--color-accent); }
+      .btn.btn-publish:hover { background: #d05c3e; }
+      .btn.btn-unpublish { background: #78909c; }
+      .btn.btn-unpublish:hover { background: #607d8b; }
+      .btn.btn-danger { background: #c62828; }
+      .btn.btn-danger:hover { background: #b71c1c; }
       .admin-form { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-4); margin-top: var(--space-3); }
       .admin-form label { display: block; margin-top: var(--space-3); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); font-size: 0.95rem; }
       .admin-form label:first-of-type { margin-top: 0; }
@@ -102,13 +236,28 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       .admin-gallery-item img { width: 96px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--color-border); display: block; }
       .admin-gallery-item .btn { width: 100%; margin-top: var(--space-1); padding: 6px 8px; font-size: 0.75rem; }
       .admin-gallery-item .path { font-size: 0.65rem; color: var(--color-text-muted); word-break: break-all; margin-top: 4px; }
-      .admin-badge { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-sm); font-family: var(--font-heading); }
-      .admin-badge-published { background: #e8f5e9; color: #1b5e20; }
-      .admin-badge-draft { background: #fff3e0; color: #e65100; }
-      .btn.btn-danger { background: #c62828; }
-      .btn.btn-danger:hover { background: #b71c1c; }
       .btn.btn-secondary { background: var(--color-primary); }
       .btn.btn-secondary:hover { background: #0a3340; }
+      .admin-list-filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); align-items: center; }
+      .admin-list-filters__label { font-size: 0.85rem; color: var(--color-text-muted); margin-right: var(--space-1); font-family: var(--font-heading); font-weight: 600; }
+      .admin-filter-pill {
+        display: inline-block; padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+        text-decoration: none; color: var(--color-primary); border: 1px solid var(--color-border); background: var(--color-surface);
+        font-family: var(--font-heading); transition: background var(--transition), color var(--transition), border-color var(--transition);
+      }
+      .admin-filter-pill:hover { border-color: var(--color-primary); background: rgba(15, 76, 92, 0.06); }
+      .admin-filter-pill.is-active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+      .admin-list-older { margin-top: var(--space-3); }
+      .admin-list-older summary {
+        cursor: pointer; font-family: var(--font-heading); font-weight: 600; color: var(--color-primary);
+        padding: var(--space-2) var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-md); list-style: none;
+      }
+      .admin-list-older summary::-webkit-details-marker { display: none; }
+      .admin-list-older summary::before { content: "▸ "; display: inline-block; transition: transform var(--transition); }
+      .admin-list-older[open] summary::before { transform: rotate(90deg); }
+      .admin-list-older .admin-list-card { margin-top: var(--space-2); border-top-left-radius: 0; border-top-right-radius: 0; }
+      .admin-list-count { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: var(--space-2); }
     </style>
   </head>
   <body>
@@ -125,6 +274,8 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
             <li><a href="../index.html">Головна</a></li>
             <li><a href="../news.php">Новини</a></li>
             <li><a href="index.php" aria-current="page">Адмін</a></li>
+            <li><a href="change-password.php">Змінити пароль</a></li>
+            <li><a href="logout.php">Вийти</a></li>
           </ul>
         </nav>
         <button class="burger" aria-label="Відкрити меню" aria-expanded="false">
@@ -137,7 +288,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       <section class="news-archive admin-panel" aria-labelledby="admin-page-title">
         <p class="news-archive__back"><a href="../news.php">← Публічний архів новин</a></p>
         <h1 id="admin-page-title">Керування новинами</h1>
-        <p class="news-archive__lead">Редагування записів у <code>data/news.json</code>. Публічні посилання: <code>news/article.php?slug=</code>.</p>
+        <p class="news-archive__lead admin-dashboard-intro">Редагування записів у <code>data/news.json</code>. Публічні посилання: <code>news/article.php?slug=</code>.</p>
 
 <?php if ($message !== ''): ?>
         <p class="admin-msg <?= htmlspecialchars($messageType, ENT_QUOTES, 'UTF-8') ?>" role="status"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
@@ -145,56 +296,79 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
 
         <div class="admin-section">
           <h2 class="section-title">Усі записи</h2>
+          <p class="admin-hint admin-list-hint">Статус, перегляд і публікація — без відкриття форми редагування.</p>
+<?php
+    $adminFilterHref = static function (string $filterKey) use ($adminListFilter): string {
+        if ($filterKey === 'all') {
+            return 'index.php';
+        }
+
+        return 'index.php?' . http_build_query(['filter' => $filterKey]);
+    };
+?>
+          <div class="admin-list-filters" role="navigation" aria-label="Фільтр за періодом">
+            <span class="admin-list-filters__label">Період:</span>
+            <a class="admin-filter-pill<?= $adminListFilter === 'all' ? ' is-active' : '' ?>" href="<?= htmlspecialchars($adminFilterHref('all'), ENT_QUOTES, 'UTF-8') ?>">Всі</a>
+            <a class="admin-filter-pill<?= $adminListFilter === 'current_month' ? ' is-active' : '' ?>" href="<?= htmlspecialchars($adminFilterHref('current_month'), ENT_QUOTES, 'UTF-8') ?>">Цей місяць</a>
+            <a class="admin-filter-pill<?= $adminListFilter === 'prev_month' ? ' is-active' : '' ?>" href="<?= htmlspecialchars($adminFilterHref('prev_month'), ENT_QUOTES, 'UTF-8') ?>">Попередній місяць</a>
+          </div>
 <?php if ($items === []): ?>
           <p class="admin-hint">Записів немає.</p>
+<?php elseif ($adminListItems === []): ?>
+          <p class="admin-hint">За обраним періодом записів немає.</p>
 <?php else: ?>
-          <div class="admin-table-wrap">
+          <p class="admin-list-count">Показано <?= count($adminListRecent) ?> з <?= count($adminListItems) ?> (найновіші спочатку).</p>
+          <div class="admin-list-card">
             <table class="admin-table">
               <thead>
                 <tr>
                   <th>Дата</th>
                   <th>Заголовок</th>
                   <th>Slug</th>
-                  <th>Статус</th>
-                  <th>Дії</th>
+                  <th class="admin-col-status">Статус</th>
+                  <th class="admin-col-actions">Дії</th>
                 </tr>
               </thead>
               <tbody>
-<?php foreach ($items as $row): ?>
+<?php foreach ($adminListRecent as $row): ?>
 <?php
     if (!is_array($row)) {
         continue;
     }
-    $rowSlug = (string) ($row['slug'] ?? '');
-    if ($rowSlug === '') {
-        continue;
-    }
-    $rowPublished = news_item_is_published($row);
+    admin_render_news_list_row($row, $adminListFilter);
 ?>
-                <tr>
-                  <td><?= htmlspecialchars((string) ($row['date'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><code><?= htmlspecialchars($rowSlug, ENT_QUOTES, 'UTF-8') ?></code></td>
-                  <td>
-<?php if ($rowPublished): ?>
-                    <span class="admin-badge admin-badge-published">Published</span>
-<?php else: ?>
-                    <span class="admin-badge admin-badge-draft">Draft</span>
-<?php endif; ?>
-                  </td>
-                  <td class="admin-actions">
-                    <a class="btn-link" href="index.php?<?= htmlspecialchars(http_build_query(['edit' => $rowSlug]), ENT_QUOTES, 'UTF-8') ?>">Редагувати</a>
-                    <form method="post" action="save.php" class="admin-delete-form" data-action="delete">
-                      <input type="hidden" name="action" value="delete" />
-                      <input type="hidden" name="slug" value="<?= htmlspecialchars($rowSlug, ENT_QUOTES, 'UTF-8') ?>" />
-                      <button type="submit" class="btn btn-danger" data-action="delete">Видалити</button>
-                    </form>
-                  </td>
-                </tr>
 <?php endforeach; ?>
               </tbody>
             </table>
           </div>
+<?php if ($adminListOlder !== []): ?>
+          <details class="admin-list-older">
+            <summary>Показати старіші новини</summary>
+            <div class="admin-list-card">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Заголовок</th>
+                    <th>Slug</th>
+                    <th class="admin-col-status">Статус</th>
+                    <th class="admin-col-actions">Дії</th>
+                  </tr>
+                </thead>
+                <tbody>
+<?php foreach ($adminListOlder as $row): ?>
+<?php
+    if (!is_array($row)) {
+        continue;
+    }
+    admin_render_news_list_row($row, $adminListFilter);
+?>
+<?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          </details>
+<?php endif; ?>
 <?php endif; ?>
         </div>
 
@@ -211,18 +385,11 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
             <label for="title">Заголовок</label>
             <input type="text" id="title" name="title" value="<?= htmlspecialchars($formTitle, ENT_QUOTES, 'UTF-8') ?>" required />
 
-            <label for="slug">Slug <span class="admin-hint">(a-z, 0-9, дефіс; при створенні порожньо = авто)</span></label>
-            <input
-              type="text"
-              id="slug"
-              name="slug"
-              value="<?= htmlspecialchars($formSlug, ENT_QUOTES, 'UTF-8') ?>"
-              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-              <?= $isEdit ? 'required' : '' ?>
-            />
-
             <label for="date">Дата</label>
             <input type="date" id="date" name="date" value="<?= htmlspecialchars($formDate, ENT_QUOTES, 'UTF-8') ?>" required />
+            <p class="admin-hint"><?= $isEdit
+                ? 'Посилання статті (slug) фіксоване після створення — зміна заголовка або дати URL не змінює.'
+                : 'Посилання (slug) буде згенеровано один раз із заголовка та дати при створенні.' ?></p>
 
             <label for="excerpt">Короткий опис (excerpt)</label>
             <textarea id="excerpt" name="excerpt" required><?= htmlspecialchars($formExcerpt, ENT_QUOTES, 'UTF-8') ?></textarea>
@@ -237,7 +404,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
               <input type="file" id="cover_file" name="cover_file" accept="image/jpeg,image/png,image/gif,image/webp" />
 
               <label for="cover" class="admin-hint" style="display:block;margin-top:var(--space-2);">Або шлях вручну</label>
-              <input type="text" id="cover" name="cover" value="<?= htmlspecialchars($formCover, ENT_QUOTES, 'UTF-8') ?>" placeholder="img/news/{slug}/cover.jpg" />
+              <input type="text" id="cover" name="cover" value="<?= htmlspecialchars($formCover, ENT_QUOTES, 'UTF-8') ?>" placeholder="img/news/…/cover.jpg" />
 
               <div class="admin-cover-preview" id="cover-preview"<?= $coverPreviewSrc === '' ? ' hidden' : '' ?>>
                 <img id="cover-preview-img" src="<?= htmlspecialchars($coverPreviewSrc, ENT_QUOTES, 'UTF-8') ?>" alt="" />
@@ -316,7 +483,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
     <script type="module" src="../js/main.js"></script>
     <script>
       (function () {
-        const deleteConfirmMessage = 'Ви впевнені, що хочете видалити цю новину? Цю дію неможливо скасувати.';
+        const deleteConfirmMessage = 'Delete this news item? This cannot be undone.';
 
         document.querySelectorAll('form[data-action="delete"]').forEach(function (form) {
           form.addEventListener('submit', function (e) {

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require __DIR__ . '/auth.php';
+admin_require_auth();
+
 require __DIR__ . '/admin-lib.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -40,12 +43,39 @@ if ($action === 'delete') {
     admin_redirect_index(['deleted' => '1']);
 }
 
+if ($action === 'toggle_published') {
+    $toggleSlug = news_normalize_article_slug((string) ($_POST['slug'] ?? ''));
+    if ($toggleSlug === null) {
+        admin_redirect_error('Некоректний slug.');
+    }
+
+    $data = admin_load_data_or_error();
+    $toggled = false;
+    foreach ($data['items'] as $index => $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        if (!news_item_matches_slug_key($item, $toggleSlug)) {
+            continue;
+        }
+        $data['items'][$index]['published'] = !news_item_is_published($item);
+        $toggled = true;
+        break;
+    }
+
+    if (!$toggled) {
+        admin_redirect_error('Новину не знайдено: ' . $toggleSlug);
+    }
+
+    admin_persist_data($data);
+    admin_redirect_index(['toggled' => '1']);
+}
+
 $oldSlugRaw = trim((string) ($_POST['old_slug'] ?? ''));
 $oldSlug = $oldSlugRaw !== '' ? news_normalize_article_slug($oldSlugRaw) : null;
 $isEdit = $oldSlug !== null;
 
 $title = trim((string) ($_POST['title'] ?? ''));
-$slugInput = trim((string) ($_POST['slug'] ?? ''));
 $date = trim((string) ($_POST['date'] ?? ''));
 $excerpt = trim((string) ($_POST['excerpt'] ?? ''));
 $content = (string) ($_POST['content'] ?? '');
@@ -75,25 +105,38 @@ if (trim($content) === '') {
     admin_redirect_error('Контент обовʼязковий.');
 }
 
-$slug = news_resolve_article_slug(
-    $slugInput,
-    $title,
-    $date,
-    $isEdit ? $oldSlug : null
-);
-
-if ($slug === null) {
-    admin_redirect_error('Slug некоректний. Дозволено лише a-z, 0-9 та дефіс.');
-}
-
 $data = admin_load_data_or_error();
 
-if (news_article_slug_is_taken($data['items'], $slug, $isEdit ? $oldSlug : null)) {
-    admin_redirect_error('Новина з таким slug вже існує: ' . $slug);
-}
+if ($isEdit) {
+    $existingItem = null;
+    foreach ($data['items'] as $existing) {
+        if (!is_array($existing)) {
+            continue;
+        }
+        if (news_item_matches_slug_key($existing, (string) $oldSlug)) {
+            $existingItem = $existing;
+            break;
+        }
+    }
 
-if ($isEdit && $oldSlug !== $slug) {
-    admin_rename_news_img_dir($oldSlug, $slug);
+    if ($existingItem === null) {
+        admin_redirect_error('Новину для редагування не знайдено: ' . $oldSlug);
+    }
+
+    $slug = news_normalize_article_slug((string) ($existingItem['slug'] ?? ''));
+    if ($slug === null) {
+        admin_redirect_error('Запис має некоректний slug; зверніться до розробника.');
+    }
+} else {
+    $slug = news_generate_slug_for_create($title, $date);
+
+    if ($slug === null) {
+        admin_redirect_error('Не вдалося згенерувати slug із заголовка та дати. Перевірте заголовок і дату.');
+    }
+
+    if (news_article_slug_is_taken($data['items'], $slug, null)) {
+        admin_redirect_error('Новина з таким slug вже існує: ' . $slug);
+    }
 }
 
 $coverFile = isset($_FILES['cover_file']) && is_array($_FILES['cover_file']) ? $_FILES['cover_file'] : null;
@@ -103,9 +146,8 @@ if ($coverFile !== null && ($coverFile['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOA
 
 $galleryFiles = isset($_FILES['gallery_files']) && is_array($_FILES['gallery_files']) ? $_FILES['gallery_files'] : null;
 
-$slugOldForPaths = $isEdit ? $oldSlug : null;
-$galleryKept = admin_parse_gallery_keep($slugOldForPaths, $slug);
-$cover = admin_resolve_cover_path($slug, $coverManual, $coverFile, $slugOldForPaths, $slug);
+$galleryKept = admin_parse_gallery_keep(null, null);
+$cover = admin_resolve_cover_path($slug, $coverManual, $coverFile, null, null);
 $gallery = admin_process_gallery_uploads($slug, $galleryKept, $galleryFiles);
 
 $item = admin_build_item_from_post(

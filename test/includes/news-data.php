@@ -124,34 +124,28 @@ function news_slug_from_title_and_date(string $title, string $date): ?string
         $base = 'news';
     }
 
-    return news_normalize_article_slug($base . '-' . $date);
+    $suffix = '-' . $date;
+    $maxBaseLen = 200 - strlen($suffix);
+    if ($maxBaseLen < 1) {
+        return null;
+    }
+    if (strlen($base) > $maxBaseLen) {
+        $base = substr($base, 0, $maxBaseLen);
+        $base = trim($base, '-');
+        if ($base === '') {
+            $base = 'news';
+        }
+    }
+
+    return news_normalize_article_slug($base . $suffix);
 }
 
 /**
- * Manual slug, edit fallback, or title+date when input is empty.
+ * Create-only: build immutable article slug from title + date. Do not use on edit.
  */
-function news_resolve_article_slug(
-    string $slugInput,
-    string $title,
-    string $date,
-    ?string $editFallbackSlug = null
-): ?string {
-    $slugInput = trim($slugInput);
-
-    if ($slugInput === '') {
-        if ($editFallbackSlug !== null) {
-            return news_normalize_article_slug($editFallbackSlug);
-        }
-
-        return news_slug_from_title_and_date($title, $date);
-    }
-
-    $candidate = news_sanitize_slug_candidate($slugInput);
-    if ($candidate === '') {
-        return null;
-    }
-
-    return news_normalize_article_slug($candidate);
+function news_generate_slug_for_create(string $title, string $date): ?string
+{
+    return news_slug_from_title_and_date($title, $date);
 }
 
 /**
