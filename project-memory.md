@@ -72,8 +72,11 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 
 - `id` === `slug`; `date` → `YYYY-MM-DD`.
 - Slugs: create via `news_generate_slug_for_create()` (`news_sanitize_slug_candidate` + date); **immutable after save** (edit updates title/date/content only); uniqueness via `news_article_slug_is_taken()` on create.
+- **Transliteration:** Ukrainian Cyrillic → Latin via explicit char map in `news_transliterate_for_slug()` (not `iconv`, which often drops Cyrillic on Windows); used by preview (`slug_preview=1`) and create save alike.
 - `cover` / `gallery` under `img/news/{slug}/`.
 - `published === true` for public views; admin/list uses `news_item_is_published()` for display (accepts JSON boolean and common truthy forms).
+
+**Legacy HTML import (one-time):** `php test/migrate-legacy-news.php` (optional `--dry-run`) or admin **Import legacy HTML news**. Parses `test/news/*.html`; slug from filename; skips duplicates; **always** backs up `news.json.bak-{timestamp}` before write; appends run to `data/migration-log.json`. **Rollback last migration** restores latest `.bak-*` only (HTML untouched).
 
 ---
 
@@ -87,7 +90,9 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 - **`login.php`** / **`logout.php`** — sign in / sign out.
 - **`change-password.php`** — update `password_hash` in config (authenticated).
 - **`hash-password.php`** — CLI helper to generate a new bcrypt hash.
+- **`import-legacy.php`** / **`rollback-migration.php`** / **`migration-lib.php`** — legacy HTML import + rollback from `news.json.bak-*`; writes `data/migration-log.json` per run.
 - **`admin-lib.php`**, **`index.php`**, **`save.php`** — CRUD/upload; list **Перегляд** → `../news/article.php?slug=&preview=1` (new tab); **toggle_published** flips `published` in JSON.
+- **Create form:** live slug preview under title/date (`URL will be: …`); `index.php?slug_preview=1` returns JSON via `news_generate_slug_for_create()` (same as save on create). Edit form shows immutable stored slug only.
 
 **Default staging login:** `admin` / `password` — change `password_hash` in `test/config/admin-auth.php` before production.
 
@@ -105,6 +110,30 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 ---
 
 ## Task log (latest first)
+
+### 2026-06-23 — Admin migration log + rollback
+
+- **Created:** `test/admin/migration-lib.php`, `test/admin/import-legacy.php`, `test/admin/rollback-migration.php`
+- **Modified:** `test/admin/index.php`, `test/migrate-legacy-news.php`, `project-memory.md`
+- **Logic:** `migration-log.json` per run; dashboard import/rollback; restore from latest `news.json.bak-*` only.
+
+### 2026-06-23 — Legacy HTML → news.json migration tool
+
+- **Created:** `test/migrate-legacy-news.php`, `test/includes/migrate-legacy-news.php`
+- **Modified:** `project-memory.md`
+- **Logic:** CLI one-time import from `test/news/*.html` (skips `article.php`); slug = filename; `published: true`; backs up `news.json` before write; skips duplicate slugs; HTML files untouched.
+
+### 2026-06-14 — Ukrainian slug transliteration (explicit map)
+
+- **Created:** none
+- **Modified:** `test/includes/news-data.php`, `project-memory.md`
+- **Logic:** `news_ukrainian_latin_map()` + `news_transliterate_for_slug()` replace `iconv` for slug base; preview/create/uniqueness share `news_generate_slug_for_create()`.
+
+### 2026-06-14 — Admin live slug preview (create form)
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `project-memory.md`
+- **Logic:** `?slug_preview=1` JSON uses `news_generate_slug_for_create()`; edit shows fixed stored slug.
 
 ### 2026-06-14 — Immutable article slugs (CMS)
 

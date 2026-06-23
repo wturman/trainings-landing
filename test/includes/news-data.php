@@ -97,6 +97,79 @@ function news_normalize_article_slug(string $slug): ?string
     return $slug;
 }
 
+/**
+ * Ukrainian Cyrillic → Latin (URL slug). Used instead of iconv, which often strips Cyrillic on Windows.
+ *
+ * @return array<string, string>
+ */
+function news_ukrainian_latin_map(): array
+{
+    return [
+        'а' => 'a',
+        'б' => 'b',
+        'в' => 'v',
+        'г' => 'h',
+        'ґ' => 'g',
+        'д' => 'd',
+        'е' => 'e',
+        'є' => 'ye',
+        'ж' => 'zh',
+        'з' => 'z',
+        'и' => 'y',
+        'і' => 'i',
+        'ї' => 'yi',
+        'й' => 'y',
+        'к' => 'k',
+        'л' => 'l',
+        'м' => 'm',
+        'н' => 'n',
+        'о' => 'o',
+        'п' => 'p',
+        'р' => 'r',
+        'с' => 's',
+        'т' => 't',
+        'у' => 'u',
+        'ф' => 'f',
+        'х' => 'kh',
+        'ц' => 'ts',
+        'ч' => 'ch',
+        'ш' => 'sh',
+        'щ' => 'shch',
+        'ь' => '',
+        'ю' => 'yu',
+        'я' => 'ya',
+        '’' => '',
+        '\'' => '',
+        'ʼ' => '',
+    ];
+}
+
+function news_transliterate_for_slug(string $text): string
+{
+    $text = mb_strtolower($text, 'UTF-8');
+    $map = news_ukrainian_latin_map();
+    $length = mb_strlen($text, 'UTF-8');
+    $out = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $char = mb_substr($text, $i, 1, 'UTF-8');
+        if (isset($map[$char])) {
+            $out .= $map[$char];
+            continue;
+        }
+        if (preg_match('/[a-z0-9]/', $char) === 1) {
+            $out .= $char;
+            continue;
+        }
+        if (preg_match('/\s/u', $char) === 1) {
+            $out .= ' ';
+            continue;
+        }
+    }
+
+    return $out;
+}
+
 function news_sanitize_slug_candidate(string $slug): string
 {
     $slug = trim($slug);
@@ -104,12 +177,7 @@ function news_sanitize_slug_candidate(string $slug): string
         return '';
     }
 
-    $slug = mb_strtolower($slug, 'UTF-8');
-    $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);
-    if (is_string($converted) && $converted !== '') {
-        $slug = strtolower($converted);
-    }
-
+    $slug = news_transliterate_for_slug($slug);
     $slug = preg_replace('/[^a-z0-9]+/', '-', $slug) ?? '';
     $slug = trim($slug, '-');
     $slug = preg_replace('/-+/', '-', $slug) ?? '';

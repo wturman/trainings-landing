@@ -7,6 +7,25 @@ admin_require_auth();
 
 require __DIR__ . '/admin-lib.php';
 
+if (isset($_GET['slug_preview']) && (string) $_GET['slug_preview'] === '1') {
+    header('Content-Type: application/json; charset=UTF-8');
+
+    $previewTitle = trim((string) ($_GET['title'] ?? ''));
+    $previewDate = trim((string) ($_GET['date'] ?? ''));
+
+    if ($previewTitle === '' || $previewDate === '' || !admin_validate_date($previewDate)) {
+        echo json_encode(['ready' => false], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $previewSlug = news_generate_slug_for_create($previewTitle, $previewDate);
+    echo json_encode(
+        ['ready' => $previewSlug !== null, 'slug' => $previewSlug],
+        JSON_UNESCAPED_UNICODE
+    );
+    exit;
+}
+
 $message = '';
 $messageType = '';
 
@@ -24,6 +43,23 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
     $messageType = 'ok';
 } elseif (isset($_GET['ok']) && $_GET['ok'] === '1') {
     $message = 'Новину збережено в news.json.';
+    $messageType = 'ok';
+} elseif (isset($_GET['migration']) && $_GET['migration'] === 'imported') {
+    $found = (int) ($_GET['found'] ?? 0);
+    $imported = (int) ($_GET['imported'] ?? 0);
+    $skipped = (int) ($_GET['skipped'] ?? 0);
+    $message = sprintf(
+        'Міграцію legacy HTML завершено: знайдено %d файлів, імпортовано %d, пропущено %d. Журнал: data/migration-log.json.',
+        $found,
+        $imported,
+        $skipped
+    );
+    $messageType = 'ok';
+} elseif (isset($_GET['migration']) && $_GET['migration'] === 'rollback') {
+    $backup = isset($_GET['backup']) ? (string) $_GET['backup'] : '';
+    $message = $backup !== ''
+        ? 'Відкат виконано: news.json відновлено з ' . $backup . '.'
+        : 'Відкат виконано: news.json відновлено з останньої резервної копії.';
     $messageType = 'ok';
 } elseif (isset($_GET['error']) && is_string($_GET['error']) && $_GET['error'] !== '') {
     $message = $_GET['error'];
@@ -157,6 +193,16 @@ $formPublished = $isEdit ? news_item_is_published($editItem) : false;
 $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover)
     ? admin_public_asset_href($formCover)
     : '';
+
+$adminSlugPreviewText = 'URL will be generated automatically';
+if ($isEdit && $formSlug !== '') {
+    $adminSlugPreviewText = 'URL will be: ' . $formSlug;
+} elseif (!$isEdit && trim($formTitle) !== '' && admin_validate_date($formDate)) {
+    $generatedPreviewSlug = news_generate_slug_for_create(trim($formTitle), $formDate);
+    if ($generatedPreviewSlug !== null) {
+        $adminSlugPreviewText = 'URL will be: ' . $generatedPreviewSlug;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -223,6 +269,11 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       .admin-form textarea { min-height: 6rem; resize: vertical; }
       .admin-form #content { min-height: 10rem; }
       .admin-hint { font-weight: 400; font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-1); }
+      .admin-slug-preview {
+        margin-top: var(--space-2); margin-bottom: var(--space-1); padding: var(--space-2) var(--space-3);
+        background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: var(--radius-sm);
+        font-family: var(--font-body); font-size: 0.9rem; color: var(--color-primary);
+      }
       .admin-form .row-check { margin-top: var(--space-3); font-family: var(--font-heading); }
       .admin-form .row-check input[type="checkbox"] { width: auto; margin-right: var(--space-1); }
       .admin-form-actions { margin-top: var(--space-4); display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
@@ -258,6 +309,10 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       .admin-list-older[open] summary::before { transform: rotate(90deg); }
       .admin-list-older .admin-list-card { margin-top: var(--space-2); border-top-left-radius: 0; border-top-right-radius: 0; }
       .admin-list-count { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+      .admin-migration-tools { padding: var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+      .admin-migration-warning { color: #b71c1c; font-weight: 600; margin-bottom: var(--space-2); }
+      .admin-migration-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+      .admin-migration-actions form { margin: 0; }
     </style>
   </head>
   <body>
@@ -293,6 +348,20 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
 <?php if ($message !== ''): ?>
         <p class="admin-msg <?= htmlspecialchars($messageType, ENT_QUOTES, 'UTF-8') ?>" role="status"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
 <?php endif; ?>
+
+        <div class="admin-section admin-migration-tools">
+          <h2 class="section-title">Legacy HTML migration</h2>
+          <p class="admin-hint admin-migration-warning">Use only if something went wrong.</p>
+          <div class="admin-migration-actions">
+            <form method="post" action="import-legacy.php" data-confirm="Import all legacy HTML news into news.json? A backup will be created first.">
+              <button type="submit" class="btn btn-secondary">Import legacy HTML news</button>
+            </form>
+            <form method="post" action="rollback-migration.php" data-confirm="Restore news.json from the latest backup? Current JSON will be replaced.">
+              <button type="submit" class="btn btn-danger">Rollback last migration</button>
+            </form>
+          </div>
+          <p class="admin-hint">Backups: <code>data/news.json.bak-{timestamp}</code>. Log: <code>data/migration-log.json</code>. Legacy <code>news/*.html</code> files are never modified.</p>
+        </div>
 
         <div class="admin-section">
           <h2 class="section-title">Усі записи</h2>
@@ -387,6 +456,12 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
 
             <label for="date">Дата</label>
             <input type="date" id="date" name="date" value="<?= htmlspecialchars($formDate, ENT_QUOTES, 'UTF-8') ?>" required />
+            <p
+              id="admin-slug-preview"
+              class="admin-slug-preview"
+              aria-live="polite"
+              data-edit-slug="<?= $isEdit && $formSlug !== '' ? htmlspecialchars($formSlug, ENT_QUOTES, 'UTF-8') : '' ?>"
+            ><?= htmlspecialchars($adminSlugPreviewText, ENT_QUOTES, 'UTF-8') ?></p>
             <p class="admin-hint"><?= $isEdit
                 ? 'Посилання статті (slug) фіксоване після створення — зміна заголовка або дати URL не змінює.'
                 : 'Посилання (slug) буде згенеровано один раз із заголовка та дати при створенні.' ?></p>
@@ -483,11 +558,88 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
     <script type="module" src="../js/main.js"></script>
     <script>
       (function () {
+        const titleEl = document.getElementById('title');
+        const dateEl = document.getElementById('date');
+        const previewEl = document.getElementById('admin-slug-preview');
+        if (!titleEl || !dateEl || !previewEl) {
+          return;
+        }
+
+        const placeholder = 'URL will be generated automatically';
+        const prefix = 'URL will be: ';
+        const editSlug = previewEl.getAttribute('data-edit-slug') || '';
+        let previewTimer = null;
+
+        function setPreviewText(text) {
+          previewEl.textContent = text;
+        }
+
+        function refreshCreateSlugPreview() {
+          const title = titleEl.value.trim();
+          const date = dateEl.value.trim();
+          if (title === '' || date === '') {
+            setPreviewText(placeholder);
+            return;
+          }
+
+          const url = new URL(window.location.href);
+          url.search = '';
+          url.searchParams.set('slug_preview', '1');
+          url.searchParams.set('title', title);
+          url.searchParams.set('date', date);
+
+          fetch(url.toString(), {
+            credentials: 'same-origin',
+            headers: { Accept: 'application/json' },
+          })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (data) {
+              if (data && data.ready && data.slug) {
+                setPreviewText(prefix + data.slug);
+              } else {
+                setPreviewText(placeholder);
+              }
+            })
+            .catch(function () {
+              setPreviewText(placeholder);
+            });
+        }
+
+        function scheduleCreateSlugPreview() {
+          if (previewTimer !== null) {
+            clearTimeout(previewTimer);
+          }
+          previewTimer = setTimeout(refreshCreateSlugPreview, 200);
+        }
+
+        if (editSlug !== '') {
+          setPreviewText(prefix + editSlug);
+          return;
+        }
+
+        titleEl.addEventListener('input', scheduleCreateSlugPreview);
+        dateEl.addEventListener('input', scheduleCreateSlugPreview);
+        dateEl.addEventListener('change', scheduleCreateSlugPreview);
+      })();
+    </script>
+    <script>
+      (function () {
         const deleteConfirmMessage = 'Delete this news item? This cannot be undone.';
 
         document.querySelectorAll('form[data-action="delete"]').forEach(function (form) {
           form.addEventListener('submit', function (e) {
             if (!window.confirm(deleteConfirmMessage)) {
+              e.preventDefault();
+            }
+          });
+        });
+
+        document.querySelectorAll('form[data-confirm]').forEach(function (form) {
+          form.addEventListener('submit', function (e) {
+            const message = form.getAttribute('data-confirm') || 'Continue?';
+            if (!window.confirm(message)) {
               e.preventDefault();
             }
           });
