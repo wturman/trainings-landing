@@ -114,6 +114,13 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 
 ## Task log (latest first)
 
+### 2026-06-14 — News JSON id/slug normalization
+
+- **Created:** `test/normalize-news-json.php`, `test/normalize-news-slugs.mjs`
+- **Modified:** `test/data/news.json`, `project-memory.md`
+- **Rule:** `slug` = Ukrainian transliteration of lowercase `title` (Latin, hyphen-separated) + `-` + `YYYY-MM-DD`; `id` === `slug` (same as `news_generate_slug_for_create()`). Only `id`/`slug` updated; `cover`/`gallery` paths unchanged (still use pre-migration folder names).
+- **Other:** Fixed invalid JSON (missing comma between first two items). Backup `news.json.bak-2026-06-26T11-57-07`. Nine items total; eight slugs changed, `vid-mriy-do-diy-2026-06-23` already matched title+date.
+
 ### 2026-06-23 — Admin WYSIWYG H2/H3 headings
 
 - **Created:** none
