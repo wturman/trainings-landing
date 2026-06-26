@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/migrate-legacy-news.php';
 
 function admin_migration_data_dir(): string
 {
-    return dirname(admin_json_path());
+    return dirname(news_data_json_path());
 }
 
 function admin_migration_log_path(): string
@@ -20,7 +20,7 @@ function admin_migration_log_path(): string
  */
 function admin_migration_list_backup_files(): array
 {
-    $pattern = admin_json_path() . '.bak-*';
+    $pattern = news_data_json_path() . '.bak-*';
     $files = glob($pattern) ?: [];
     sort($files);
 
@@ -92,7 +92,7 @@ function admin_migration_append_log_run(array $run): void
  */
 function admin_migration_run_legacy_import(): array
 {
-    $jsonPath = admin_json_path();
+    $jsonPath = news_data_json_path();
     $newsDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'news';
     $ignore = migrate_legacy_news_ignore_basenames();
     $htmlFiles = glob($newsDir . DIRECTORY_SEPARATOR . '*.html') ?: [];
@@ -281,7 +281,7 @@ function admin_migration_rollback_latest_backup(): array
         return ['ok' => false, 'error' => 'Резервну копію news.json не знайдено.'];
     }
 
-    $jsonPath = admin_json_path();
+    $jsonPath = news_data_json_path();
     if (!copy($backupPath, $jsonPath)) {
         return ['ok' => false, 'error' => 'Не вдалося відновити news.json з резервної копії.'];
     }

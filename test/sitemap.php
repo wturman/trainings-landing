@@ -6,7 +6,7 @@ require __DIR__ . '/includes/news-data.php';
 
 header('Content-Type: application/xml; charset=UTF-8');
 
-$jsonPath = __DIR__ . '/data/news.json';
+$jsonPath = news_data_json_path();
 $items = load_published_news($jsonPath);
 
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')

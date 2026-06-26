@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/includes/news-data.php';
 require __DIR__ . '/includes/news-render.php';
 
-$homepageNews = array_slice(load_published_news(__DIR__ . '/data/news.json'), 0, 3);
+$homepageNews = array_slice(load_published_news(news_data_json_path()), 0, 3);
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -22,6 +22,7 @@ $homepageNews = array_slice(load_published_news(__DIR__ . '/data/news.json'), 0,
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <title>ГО «Сила інтелекту» — розвиток критичного мислення, рівності та громадянської участі</title>
+    <script src="js/theme-boot.js"></script>
     <link rel="stylesheet" href="css/main.css" />
     <link rel="canonical" href="https://silaintellect.org/">
     <script type="module" src="js/main.js"></script>
@@ -57,7 +58,7 @@ $homepageNews = array_slice(load_published_news(__DIR__ . '/data/news.json'), 0,
         <li><a href="#about">Про нас</a></li>
         <li><a href="#directions">Напрями</a></li>
         <!-- <li><a href="#services">Послуги</a></li> -->
-        <li><a href="news.html">Новини</a></li>
+        <li><a href="news.php">Новини</a></li>
         <!-- <li><a href="#aktualno">Актуально</a></li> -->
         <li><a href="#contacts">Контакти</a></li>
       </ul>
@@ -254,7 +255,7 @@ $homepageNews = array_slice(load_published_news(__DIR__ . '/data/news.json'), 0,
 <!-- Останні новини -->
 <section id="news" class="news-section">
   <h2>
-    <a href="news.html">Останні новини</a>
+    <a href="news.php">Останні новини</a>
   </h2>
   <div class="news-grid">
 <?php foreach ($homepageNews as $item): ?>
@@ -262,7 +263,7 @@ $homepageNews = array_slice(load_published_news(__DIR__ . '/data/news.json'), 0,
 <?php endforeach; ?>
   </div>
   <p class="news-section__more">
-    <a href="news.html" class="cta-btn">Усі новини</a>
+    <a href="news.php" class="cta-btn">Усі новини</a>
   </p>
 </section>
 

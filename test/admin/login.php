@@ -32,23 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <title>Вхід — адмін новин</title>
+    <script src="../js/theme-boot.js"></script>
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .admin-login-page { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: var(--space-4) var(--space-2); }
-      .admin-login-card { width: 100%; max-width: 24rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: var(--space-4); }
-      .admin-login-card h1 { color: var(--color-primary); font-size: 1.35rem; margin-bottom: var(--space-3); display: inline-block; }
-      .admin-login-card h1::after { content: ""; display: block; width: 48px; height: 3px; background: var(--color-accent); border-radius: 2px; margin-top: var(--space-1); }
-      .admin-login-card label { display: block; margin-top: var(--space-3); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); }
-      .admin-login-card input { width: 100%; box-sizing: border-box; margin-top: var(--space-1); padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); }
-      .admin-login-error { margin-top: var(--space-2); padding: var(--space-2); background: #ffebee; color: #b71c1c; border-radius: var(--radius-sm); font-size: 0.9rem; }
-      .admin-login-card .btn { width: 100%; margin-top: var(--space-4); text-align: center; }
-      .admin-login-back { margin-top: var(--space-3); text-align: center; font-size: 0.9rem; }
-      .admin-login-back a { color: var(--color-primary); font-weight: 600; }
-    </style>
   </head>
   <body>
     <main class="admin-login-page">

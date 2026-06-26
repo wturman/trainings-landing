@@ -2,19 +2,14 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/news-data.php';
-
-function admin_json_path(): string
-{
-    return __DIR__ . '/../data/news.json';
-}
+require_once dirname(__DIR__, 2) . '/includes/news-data.php';
 
 /**
  * @return array{items: list<array<string, mixed>>}
  */
 function admin_load_data(): array
 {
-    $raw = file_get_contents(admin_json_path());
+    $raw = file_get_contents(news_data_json_path());
     if ($raw === false) {
         return ['items' => []];
     }
@@ -36,7 +31,7 @@ function admin_load_data(): array
  */
 function admin_load_data_or_error(): array
 {
-    $raw = file_get_contents(admin_json_path());
+    $raw = file_get_contents(news_data_json_path());
     if ($raw === false) {
         admin_redirect_error('Не вдалося прочитати news.json.');
     }
@@ -76,7 +71,7 @@ function admin_persist_data(array $data): void
         admin_redirect_error('Не вдалося сформувати JSON.');
     }
 
-    $written = file_put_contents(admin_json_path(), $encoded . "\n", LOCK_EX);
+    $written = file_put_contents(news_data_json_path(), $encoded . "\n", LOCK_EX);
     if ($written === false) {
         admin_redirect_error('Не вдалося записати news.json.');
     }

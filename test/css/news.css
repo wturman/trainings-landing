@@ -370,7 +370,7 @@ a.news-card:hover {
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  background: var(--color-surface, #fff);
+  background: var(--color-surface);
   color: var(--color-primary);
   font-family: var(--font-heading);
   font-weight: 600;

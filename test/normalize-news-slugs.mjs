@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const jsonPath = path.join(__dirname, 'data', 'news.json');
+const jsonPath = path.join(__dirname, 'data', 'news.json'); // SSOT: test/data/news.json (see news_data_json_path)
 
 /** @type {Record<string, string>} */
 const UKR_MAP = {

@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   background:
-    linear-gradient(160deg, rgba(15, 76, 92, 0.82) 0%, rgba(15, 76, 92, 0.55) 100%),
+    linear-gradient(160deg, var(--color-hero-overlay-start) 0%, var(--color-hero-overlay-end) 100%),
     url("../img/main.jpg") center center / cover no-repeat;
   overflow: hidden;
 }
@@ -34,15 +34,15 @@
 
 .hero-content h1 {
   font-size: clamp(2.2rem, 6vw, 4rem);
-  color: var(--color-surface);
+  color: var(--color-on-hero);
   margin-bottom: var(--space-3);
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 12px var(--color-hero-text-shadow);
   line-height: 1.15;
 }
 
 .hero-content p {
   font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-on-hero-muted);
   margin-bottom: var(--space-4);
   line-height: 1.65;
   max-width: 560px;
@@ -54,13 +54,13 @@
   font-size: 1rem;
   padding: var(--space-2) var(--space-5);
   background: var(--color-accent);
-  color: var(--color-surface);
-  box-shadow: 0 4px 20px rgba(231, 111, 81, 0.45);
+  color: var(--color-on-accent);
+  box-shadow: var(--shadow-accent);
 }
 
 .hero-content .btn:hover {
-  background: #d05c3e;
-  box-shadow: 0 6px 24px rgba(231, 111, 81, 0.55);
+  background: var(--color-accent-hover);
+  box-shadow: var(--shadow-accent-hover);
   transform: translateY(-3px);
 }
 
@@ -91,8 +91,8 @@
 
 .slogan span {
   font-size: clamp(0.8rem, 1.5vw, 1rem);
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  color: var(--color-on-hero-subtle);
+  text-shadow: 0 1px 6px var(--color-hero-slogan-shadow);
   line-height: 1.4;
   white-space: normal;
 }

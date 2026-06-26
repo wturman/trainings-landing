@@ -45,6 +45,14 @@ function news_article_href(array $item): string
 }
 
 /**
+ * Archive list URL relative to `/test/news/article.php`.
+ */
+function news_archive_href(): string
+{
+    return '../news.php';
+}
+
+/**
  * Site-root asset path → URL relative to /test/news/*.php
  */
 function news_article_asset_path(string $path): string
@@ -161,7 +169,7 @@ function render_news_article(array $item): void
     $likedAlready = $articleSlug !== '' && news_user_has_engagement_cookie('liked', $articleSlug);
     $slugAttr = htmlspecialchars($articleSlug, ENT_QUOTES, 'UTF-8');
     ?>
-        <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
+        <p class="news-article__back"><a href="<?= htmlspecialchars(news_archive_href(), ENT_QUOTES, 'UTF-8') ?>">← Усі новини</a></p>
 
         <time class="news-article__date" datetime="<?= $dateIso ?>"><?= $dateUk ?></time>
 
@@ -237,7 +245,7 @@ function render_news_article(array $item): void
         </section>
     <?php endif; ?>
         <p class="news-article__footer-nav">
-          <a href="../news.html">← Повернутися до архіву новин</a>
+          <a href="<?= htmlspecialchars(news_archive_href(), ENT_QUOTES, 'UTF-8') ?>">← Повернутися до архіву новин</a>
         </p>
     <?php
 }
@@ -245,13 +253,13 @@ function render_news_article(array $item): void
 function render_news_article_not_found(): void
 {
     ?>
-        <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
+        <p class="news-article__back"><a href="<?= htmlspecialchars(news_archive_href(), ENT_QUOTES, 'UTF-8') ?>">← Усі новини</a></p>
         <h1>Новину не знайдено</h1>
         <div class="news-article__content">
           <p>Запитану новину не знайдено або вона недоступна. Перевірте посилання або поверніться до архіву.</p>
         </div>
         <p class="news-article__footer-nav">
-          <a href="../news.html">← Повернутися до архіву новин</a>
+          <a href="<?= htmlspecialchars(news_archive_href(), ENT_QUOTES, 'UTF-8') ?>">← Повернутися до архіву новин</a>
         </p>
     <?php
 }

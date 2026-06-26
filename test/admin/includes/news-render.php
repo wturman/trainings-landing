@@ -44,6 +44,11 @@ function news_article_href(array $item): string
     return 'news/article.php?slug=' . rawurlencode($slug);
 }
 
+function news_archive_href(): string
+{
+    return '../news.php';
+}
+
 /**
  * Site-root asset path → URL relative to /test/news/*.php
  */
@@ -156,7 +161,7 @@ function render_news_article(array $item): void
     $tags = is_array($item['tags'] ?? null) ? $item['tags'] : [];
     $gallery = is_array($item['gallery'] ?? null) ? $item['gallery'] : [];
     ?>
-        <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
+        <p class="news-article__back"><a href="../news.php">← Усі новини</a></p>
 
         <time class="news-article__date" datetime="<?= $dateIso ?>"><?= $dateUk ?></time>
 
@@ -203,7 +208,7 @@ function render_news_article(array $item): void
         </section>
     <?php endif; ?>
         <p class="news-article__footer-nav">
-          <a href="../news.html">← Повернутися до архіву новин</a>
+          <a href="../news.php">← Повернутися до архіву новин</a>
         </p>
     <?php
 }
@@ -211,13 +216,13 @@ function render_news_article(array $item): void
 function render_news_article_not_found(): void
 {
     ?>
-        <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
+        <p class="news-article__back"><a href="../news.php">← Усі новини</a></p>
         <h1>Новину не знайдено</h1>
         <div class="news-article__content">
           <p>Запитану новину не знайдено або вона недоступна. Перевірте посилання або поверніться до архіву.</p>
         </div>
         <p class="news-article__footer-nav">
-          <a href="../news.html">← Повернутися до архіву новин</a>
+          <a href="../news.php">← Повернутися до архіву новин</a>
         </p>
     <?php
 }

@@ -20,7 +20,7 @@ if ($slug === null) {
     exit;
 }
 
-$jsonPath = __DIR__ . '/../data/news.json';
+$jsonPath = news_data_json_path();
 $result = news_record_article_like($jsonPath, $slug);
 
 if ($result === null) {

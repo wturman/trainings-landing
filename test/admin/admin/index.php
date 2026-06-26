@@ -27,7 +27,7 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
     $messageType = 'error';
 }
 
-$jsonPath = __DIR__ . '/../data/news.json';
+$jsonPath = news_data_json_path();
 $items = load_all_news($jsonPath);
 
 $editSlug = isset($_GET['edit']) ? news_normalize_article_slug((string) $_GET['edit']) : null;
@@ -57,62 +57,13 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>Адмін — новини — ГО «Сила інтелекту»</title>
+    <script src="../js/theme-boot.js"></script>
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .admin-page { padding-bottom: var(--space-6); }
-      .admin-page .news-archive { max-width: 52rem; margin: 0 auto; padding: var(--space-4) var(--space-2); }
-      .admin-panel__meta { color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: var(--space-4); }
-      .admin-panel__meta code { font-size: 0.85em; }
-      .admin-msg { padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin-bottom: var(--space-3); border: 1px solid var(--color-border); }
-      .admin-msg.ok { background: #e8f5e9; color: #1b5e20; border-color: #c8e6c9; }
-      .admin-msg.error { background: #ffebee; color: #b71c1c; border-color: #ffcdd2; }
-      .admin-section { margin-top: var(--space-5); }
-      .admin-section h2.section-title { margin-bottom: var(--space-3); }
-      .admin-table-wrap { overflow-x: auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
-      .admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-family: var(--font-body); }
-      .admin-table th, .admin-table td { text-align: left; padding: var(--space-2); border-bottom: 1px solid var(--color-border); vertical-align: top; }
-      .admin-table th { font-family: var(--font-heading); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-text-muted); background: var(--color-bg); }
-      .admin-table tr:last-child td { border-bottom: none; }
-      .admin-table code { font-size: 0.8em; color: var(--color-primary); }
-      .admin-actions { white-space: nowrap; }
-      .admin-actions form { display: inline; margin: 0; }
-      .admin-actions .btn-link { margin-right: var(--space-2); color: var(--color-primary); font-weight: 600; text-decoration: underline; }
-      .admin-actions .btn-link:hover { color: var(--color-accent); }
-      .admin-form { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-4); margin-top: var(--space-3); }
-      .admin-form label { display: block; margin-top: var(--space-3); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); font-size: 0.95rem; }
-      .admin-form label:first-of-type { margin-top: 0; }
-      .admin-form input[type="text"], .admin-form input[type="date"], .admin-form textarea, .admin-form input[type="file"] {
-        width: 100%; box-sizing: border-box; margin-top: var(--space-1); padding: var(--space-2);
-        border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 1rem; background: var(--color-surface);
-      }
-      .admin-form textarea { min-height: 6rem; resize: vertical; }
-      .admin-form #content { min-height: 10rem; }
-      .admin-hint { font-weight: 400; font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-1); }
-      .admin-form .row-check { margin-top: var(--space-3); font-family: var(--font-heading); }
-      .admin-form .row-check input[type="checkbox"] { width: auto; margin-right: var(--space-1); }
-      .admin-form-actions { margin-top: var(--space-4); display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
-      .admin-form-actions .btn-cancel { color: var(--color-text-muted); font-weight: 600; }
-      .admin-form-actions .btn-cancel:hover { color: var(--color-primary); }
-      .admin-media-block { margin-top: var(--space-2); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); }
-      .admin-cover-preview { margin-top: var(--space-2); max-width: 280px; }
-      .admin-cover-preview img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
-      .admin-gallery-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
-      .admin-gallery-item { width: 96px; }
-      .admin-gallery-item img { width: 96px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--color-border); display: block; }
-      .admin-gallery-item .btn { width: 100%; margin-top: var(--space-1); padding: 6px 8px; font-size: 0.75rem; }
-      .admin-gallery-item .path { font-size: 0.65rem; color: var(--color-text-muted); word-break: break-all; margin-top: 4px; }
-      .admin-badge { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-sm); font-family: var(--font-heading); }
-      .admin-badge-published { background: #e8f5e9; color: #1b5e20; }
-      .admin-badge-draft { background: #fff3e0; color: #e65100; }
-      .btn.btn-danger { background: #c62828; }
-      .btn.btn-danger:hover { background: #b71c1c; }
-      .btn.btn-secondary { background: var(--color-primary); }
-      .btn.btn-secondary:hover { background: #0a3340; }
-    </style>
   </head>
   <body>
     <header class="site-header">
@@ -137,7 +88,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
       </div>
     </header>
 
-    <main class="news-archive-page admin-page">
+    <main class="news-archive-page admin-page admin-page--legacy">
       <section class="news-archive admin-panel" aria-labelledby="admin-page-title">
         <p class="news-archive__back"><a href="../news.php">← Публічний архів новин</a></p>
         <h1 id="admin-page-title">Керування новинами</h1>

@@ -3,6 +3,22 @@
 declare(strict_types=1);
 
 /**
+ * Absolute path to the only news JSON store: `/test/data/news.json`.
+ * All PHP loaders and writers must use this helper — no hardcoded paths elsewhere.
+ */
+function news_data_json_path(): string
+{
+    static $resolved = null;
+    if ($resolved !== null) {
+        return $resolved;
+    }
+
+    $resolved = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'news.json';
+
+    return $resolved;
+}
+
+/**
  * @return list<array<string, mixed>>
  */
 function load_all_news(string $jsonPath): array
@@ -95,6 +111,79 @@ function news_normalize_article_slug(string $slug): ?string
     }
 
     return $slug;
+}
+
+/**
+ * @param array<string, mixed> $item
+ */
+function news_get_seo_title(array $item, string $siteBrand = ''): string
+{
+    $title = trim((string) ($item['title'] ?? ''));
+    if ($siteBrand === '') {
+        return $title;
+    }
+
+    return $title !== '' ? $title . ' | ' . $siteBrand : $siteBrand;
+}
+
+/**
+ * @param array<string, mixed> $item
+ */
+function news_get_seo_description(array $item, int $maxLength = 320): string
+{
+    $excerpt = trim((string) ($item['excerpt'] ?? ''));
+    if ($excerpt !== '') {
+        return $excerpt;
+    }
+
+    $content = (string) ($item['content'] ?? '');
+    $plain = trim(preg_replace('/\s+/u', ' ', strip_tags($content)) ?? '');
+    $plain = html_entity_decode($plain, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $plain = trim($plain);
+
+    if ($plain === '') {
+        return trim((string) ($item['title'] ?? ''));
+    }
+
+    if (mb_strlen($plain, 'UTF-8') > $maxLength) {
+        $plain = mb_substr($plain, 0, max(1, $maxLength - 1), 'UTF-8') . '…';
+    }
+
+    return $plain;
+}
+
+/**
+ * Absolute image URL for Open Graph (cover, else first gallery image, else site logo).
+ *
+ * @param array<string, mixed> $item
+ */
+function news_get_seo_image(array $item, string $siteOrigin): string
+{
+    $siteOrigin = rtrim($siteOrigin, '/');
+    $imagePath = ltrim((string) ($item['cover'] ?? ''), '/');
+
+    if ($imagePath === '' && is_array($item['gallery'] ?? null)) {
+        foreach ($item['gallery'] as $galleryPath) {
+            if (!is_string($galleryPath)) {
+                continue;
+            }
+            $galleryPath = ltrim($galleryPath, '/');
+            if ($galleryPath !== '' && str_starts_with($galleryPath, 'img/')) {
+                $imagePath = $galleryPath;
+                break;
+            }
+        }
+    }
+
+    if ($imagePath === '') {
+        $imagePath = 'test/img/logo.png';
+    }
+
+    if (preg_match('#^https?://#i', $imagePath) === 1) {
+        return $imagePath;
+    }
+
+    return $siteOrigin . '/' . ltrim($imagePath, '/');
 }
 
 /**

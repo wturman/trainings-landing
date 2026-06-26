@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/includes/news-data.php';
 require __DIR__ . '/includes/news-render.php';
 
-$newsItems = load_published_news(__DIR__ . '/data/news.json');
+$newsItems = load_published_news(news_data_json_path());
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -15,6 +15,7 @@ $newsItems = load_published_news(__DIR__ . '/data/news.json');
     <link rel="icon" type="image/png" href="img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>Новини — ГО «Сила інтелекту»</title>
+    <script src="js/theme-boot.js"></script>
     <link rel="stylesheet" href="css/main.css" />
     <script type="module" src="js/main.js"></script>
     <link
@@ -45,6 +46,7 @@ $newsItems = load_published_news(__DIR__ . '/data/news.json');
             <li><a href="index.html#about">Про нас</a></li>
             <li><a href="index.html#directions">Напрями</a></li>
             <li><a href="index.html#services">Послуги</a></li>
+            <li><a href="news.php">Новини</a></li>
           </ul>
         </nav>
         <button class="burger" aria-label="Відкрити меню" aria-expanded="false">

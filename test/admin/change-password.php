@@ -32,25 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>Зміна пароля — адмін</title>
+    <script src="../js/theme-boot.js"></script>
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .admin-page { padding-bottom: var(--space-6); }
-      .admin-page .news-archive { max-width: 32rem; margin: 0 auto; padding: var(--space-4) var(--space-2); }
-      .admin-msg { padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin-bottom: var(--space-3); border: 1px solid var(--color-border); }
-      .admin-msg.ok { background: #e8f5e9; color: #1b5e20; border-color: #c8e6c9; }
-      .admin-msg.error { background: #ffebee; color: #b71c1c; border-color: #ffcdd2; }
-      .admin-form { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-4); margin-top: var(--space-3); }
-      .admin-form label { display: block; margin-top: var(--space-3); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); font-size: 0.95rem; }
-      .admin-form label:first-of-type { margin-top: 0; }
-      .admin-form input[type="password"] { width: 100%; box-sizing: border-box; margin-top: var(--space-1); padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 1rem; }
-      .admin-hint { font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-1); }
-      .admin-form-actions { margin-top: var(--space-4); display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }
-      .admin-form-actions .btn-cancel { color: var(--color-text-muted); font-weight: 600; }
-    </style>
   </head>
   <body>
     <header class="site-header">
@@ -76,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </header>
 
-    <main class="news-archive-page admin-page">
+    <main class="news-archive-page admin-page admin-page--compact">
       <section class="news-archive admin-panel" aria-labelledby="change-password-title">
         <p class="news-archive__back"><a href="index.php">← До керування новинами</a></p>
         <h1 id="change-password-title">Зміна пароля</h1>

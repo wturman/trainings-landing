@@ -24,6 +24,55 @@
   --color-surface:    #ffffff;
   --color-border:     #dde8e3;
 
+  /* Semantic (derived; theme overrides in html.theme-*) */
+  --color-primary-hover:     #0a3340;
+  --color-accent-hover:      #d05c3e;
+  --color-on-primary:        #ffffff;
+  --color-on-primary-muted:  rgba(255, 255, 255, 0.8);
+  --color-on-accent:         #ffffff;
+  --color-header-scrolled:   rgba(255, 255, 255, 0.96);
+  --color-hero-overlay-start: rgba(15, 76, 92, 0.82);
+  --color-hero-overlay-end:   rgba(15, 76, 92, 0.55);
+  --color-on-hero:            #ffffff;
+  --color-on-hero-muted:      rgba(255, 255, 255, 0.9);
+  --color-on-hero-subtle:     rgba(255, 255, 255, 0.92);
+  --color-hero-text-shadow:   rgba(0, 0, 0, 0.35);
+  --color-hero-slogan-shadow: rgba(0, 0, 0, 0.5);
+  --shadow-accent:            0 4px 20px rgba(231, 111, 81, 0.45);
+  --shadow-accent-hover:      0 6px 24px rgba(231, 111, 81, 0.55);
+  --color-overlay:            rgba(0, 0, 0, 0.9);
+  --color-overlay-mid:        rgba(0, 0, 0, 0.55);
+  --color-overlay-strong:     rgba(0, 0, 0, 0.8);
+  --color-on-overlay:         #ffffff;
+  --color-footer-icon-bg:     rgba(255, 255, 255, 0.1);
+  --color-social-facebook:    #a8c7f0;
+  --color-social-instagram:   #f4a8c0;
+  --color-social-telegram:    #a8d8f0;
+  --color-nav-overlay-toggle-bg:     rgba(255, 255, 255, 0.08);
+  --color-nav-overlay-toggle-border: rgba(255, 255, 255, 0.25);
+  --color-primary-subtle:     color-mix(in srgb, var(--color-primary) 6%, transparent);
+  --color-primary-subtle-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --color-primary-row-hover:  color-mix(in srgb, var(--color-primary) 4%, transparent);
+  --color-primary-focus-ring: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  --color-success-bg:         #e8f5e9;
+  --color-success-text:       #1b5e20;
+  --color-success-border:     #c8e6c9;
+  --color-success-accent:     #43a047;
+  --color-success-text-strong:#2e7d32;
+  --color-success-border-strong: #81c784;
+  --color-error-bg:           #ffebee;
+  --color-error-text:         #b71c1c;
+  --color-error-border:       #ffcdd2;
+  --color-warning-bg:         #fff3e0;
+  --color-warning-text:       #e65100;
+  --color-neutral-bg:         #f5f5f5;
+  --color-neutral-border:     #e0e0e0;
+  --color-neutral:            #78909c;
+  --color-neutral-hover:      #607d8b;
+  --color-draft-accent:       #bdbdbd;
+  --color-danger:             #c62828;
+  --color-danger-hover:       #b71c1c;
+
   /* Spacing (8px base) */
   --space-1: 8px;
   --space-2: 16px;
@@ -150,7 +199,7 @@ section {
   display: inline-block;
   padding: var(--space-2) var(--space-4);
   background: var(--color-accent);
-  color: var(--color-surface);
+  color: var(--color-on-accent);
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.95rem;
@@ -162,7 +211,7 @@ section {
 }
 
 .btn:hover {
-  background: #d05c3e;
+  background: var(--color-accent-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -171,7 +220,7 @@ section {
   display: inline-block;
   padding: var(--space-2) var(--space-4);
   background: var(--color-primary);
-  color: var(--color-surface);
+  color: var(--color-on-primary);
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.95rem;
@@ -180,7 +229,7 @@ section {
 }
 
 .cta-btn:hover {
-  background: #0a3340;
+  background: var(--color-primary-hover);
   transform: translateY(-2px);
 }
 
@@ -208,7 +257,7 @@ section {
   width: 44px;
   height: 44px;
   background: var(--color-primary);
-  color: var(--color-surface);
+  color: var(--color-on-primary);
   border: none;
   border-radius: 50%;
   font-size: 1.2rem;
@@ -288,4 +337,33 @@ section {
 .footer h2::after {
   margin-left: auto;
   margin-right: auto;
+}
+
+/* ============================================================
+   THEME OVERRIDES (do not modify :root)
+   ============================================================ */
+html.theme-light {
+  --color-bg: #f6f1e9;
+  --color-text: #1e2d2f;
+  --color-surface: #ffffff;
+  --color-border: #dde8e3;
+  --color-text-muted: #5a6e70;
+  --color-on-primary: #ffffff;
+  --color-on-primary-muted: rgba(255, 255, 255, 0.8);
+}
+
+html.theme-dark {
+  --color-bg: #121a1c;
+  --color-text: #e8eeef;
+  --color-surface: #1a2629;
+  --color-border: #2d3f44;
+  --color-text-muted: #9eb0b3;
+  --color-primary: #6eb4c4;
+  --color-primary-hover: #4d9aab;
+  --color-accent-hover: #e8836a;
+  --color-on-primary: #0d1214;
+  --color-on-primary-muted: rgba(13, 18, 20, 0.85);
+  --color-header-scrolled: rgba(26, 38, 41, 0.96);
+  --color-neutral-bg: #2a3438;
+  --color-neutral-border: #3d4a4f;
 }

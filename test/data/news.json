@@ -1,5 +1,6 @@
 {
     "items": [
+
         {
             "id": "vid-mriy-do-diy-2026-06-23",
             "slug": "vid-mriy-do-diy-2026-06-23",
@@ -17,17 +18,11 @@
                 "img/news/vid-mriy-do-diy-2026-06-23/vid-mriy-do-diy-2026-06-23-06.png"
             ],
             "tags": [],
-            "published": false,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": false
         },
         {
-            "id": "tuteshni-obladnannya-2026-06-20",
-            "slug": "tuteshni-obladnannya-2026-06-20",
+            "id": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
+            "slug": "nove-obladnannia-dlia-tuteshnikh-2026-06-20",
             "title": "Тутешні обладнання",
             "date": "2026-06-20",
             "excerpt": "Молодіжний простір «Тутешні» отримав нове обладнання — ноутбук, проєктор, екран та інші ресурси для навчання, творчості й спільних ініціатив.",
@@ -47,17 +42,11 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "koly-dytyacha-tvorchist-ozhyvaye-mahiya-nashoho-maysterklasu-v-obrazhiyivtsi-2026-06-13",
-            "slug": "koly-dytyacha-tvorchist-ozhyvaye-mahiya-nashoho-maysterklasu-v-obrazhiyivtsi-2026-06-13",
+            "id": "rozpys-metelykiv-2026-06-13",
+            "slug": "rozpys-metelykiv-2026-06-13",
             "title": "Коли дитяча творчість оживає: магія нашого майстер-класу в Ображіївці!",
             "date": "2026-06-13",
             "excerpt": "Сьогодні в Молодіжному просторі відбулося щось неймовірно тепле, яскраве та сповнене щирих посмішок. Діти і підлітки зібралися разом, щоб творити справжнє диво — розписувати метеликів із соленого тіста!",
@@ -76,17 +65,11 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "navchalnyy-rik-pozadu-poperedu-lito-novykh-mozhlyvostey-2026-05-31",
-            "slug": "navchalnyy-rik-pozadu-poperedu-lito-novykh-mozhlyvostey-2026-05-31",
+            "id": "zakinchennia-navchalnoho-roku-2026-05-31",
+            "slug": "zakinchennia-navchalnoho-roku-2026-05-31",
             "title": "Навчальний рік позаду — попереду літо нових можливостей!",
             "date": "2026-05-31",
             "excerpt": "На черговій зустрічі учасники нашого молодіжного проєкту підбили підсумки навчального року, поділилися своїми досягненнями, враженнями та планами на майбутнє.",
@@ -102,17 +85,11 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "razom-tsikavishe-2026-05-23",
-            "slug": "razom-tsikavishe-2026-05-23",
+            "id": "potochna-zustrich-pro-harnyi-nastrii-2026-05-23",
+            "slug": "potochna-zustrich-pro-harnyi-nastrii-2026-05-23",
             "title": "Разом цікавіше!",
             "date": "2026-05-23",
             "excerpt": "Ще одна зустріч учасників нашого молодіжного проєкту пройшла в атмосфері гарного настрою, дружнього спілкування та цікавого дозвілля.",
@@ -128,17 +105,11 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "harnyy-nastriy-zhyve-spilkuvannya-ta-aktyvnyy-vidpochynok-2026-05-09",
-            "slug": "harnyy-nastriy-zhyve-spilkuvannya-ta-aktyvnyy-vidpochynok-2026-05-09",
+            "id": "potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09",
+            "slug": "potochna-zustrich-chai-kava-potantsiuiemo-2026-05-09",
             "title": "Гарний настрій, живе спілкування та активний відпочинок",
             "date": "2026-05-09",
             "excerpt": "Чергова зустріч учасників нашого молодіжного проєкту пройшла тепло, активно та по-домашньому затишно.",
@@ -156,17 +127,11 @@
                 "ЄднанняДляГромади,",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "novi-nastilni-ihry-2026-05-02",
-            "slug": "novi-nastilni-ihry-2026-05-02",
+            "id": "nastilni-ihry-2026-05-02",
+            "slug": "nastilni-ihry-2026-05-02",
             "title": "Нові настільні ігри",
             "date": "2026-05-02",
             "excerpt": "Вечір настільних ігор для молоді: командна гра, знайомства та відпочинок.",
@@ -184,17 +149,11 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "chornobylskyy-kinoperehlyad-2026-04-26",
-            "slug": "chornobylskyy-kinoperehlyad-2026-04-26",
+            "id": "film-pro-chornobyl-2026-04-26",
+            "slug": "film-pro-chornobyl-2026-04-26",
             "title": "Чорнобильський кіноперегляд",
             "date": "2026-04-26",
             "excerpt": "Спільний перегляд та обговорення фільму про події в Чорнобилі та їхній урок для сьогодення.",
@@ -210,17 +169,11 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
-            "id": "rozpochynayemo-robotu-nad-nashym-molodizhnym-proyektom-2026-04-18",
-            "slug": "rozpochynayemo-robotu-nad-nashym-molodizhnym-proyektom-2026-04-18",
+            "id": "ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18",
+            "slug": "ustanovchi-zakhody-ta-otsinka-potreb-2026-04-18",
             "title": "Розпочинаємо роботу над нашим молодіжним проєктом",
             "date": "2026-04-18",
             "excerpt": "В Ображіївському будинку культури відбулася установча зустріч команди проєкту, представників Молодіжного клубу «Тутешні», партнерів та активної молоді громади.",
@@ -238,13 +191,7 @@
                 "ЄднанняДляГромади,",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         }
     ]
 }

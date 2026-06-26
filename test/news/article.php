@@ -8,25 +8,16 @@ require __DIR__ . '/../includes/news-render.php';
 $slugRaw = isset($_GET['slug']) ? (string) $_GET['slug'] : '';
 $slug = news_normalize_article_slug($slugRaw);
 $preview = isset($_GET['preview']) && (string) $_GET['preview'] === '1';
-$jsonPath = __DIR__ . '/../data/news.json';
+$jsonPath = news_data_json_path();
 
-// preview=1: JSON item by slug (draft or published), no legacy HTML.
-// default: published JSON only, then legacy news/{slug}.html fallback.
+// preview=1: JSON item by slug (draft or published).
+// default: published JSON only from news.json.
 if ($slug !== null) {
     $item = $preview
         ? load_news_item_by_slug($jsonPath, $slug)
         : load_published_news_item_by_slug($jsonPath, $slug);
 } else {
     $item = null;
-}
-
-if ($item === null && $slug !== null && !$preview) {
-    $legacyFile = news_legacy_article_file(__DIR__, $slug);
-    if ($legacyFile !== null) {
-        header('Content-Type: text/html; charset=UTF-8');
-        readfile($legacyFile);
-        exit;
-    }
 }
 
 if ($item !== null && !$preview) {
@@ -64,14 +55,14 @@ $ogUrl = '';
 $twitterCard = 'summary_large_image';
 
 if (!$notFound) {
-    $articleTitle = trim((string) ($item['title'] ?? ''));
-    $articleExcerpt = trim((string) ($item['excerpt'] ?? ''));
     $articleSlug = (string) ($item['slug'] ?? $slug ?? '');
-    $coverPath = ltrim((string) ($item['cover'] ?? ''), '/');
 
-    $metaTitle = $articleTitle !== '' ? $articleTitle . ' | ' . $siteBrand : $siteBrand;
-    $metaDescription = $articleExcerpt !== '' ? $articleExcerpt : $articleTitle;
-    $ogTitle = $articleTitle !== '' ? $articleTitle : $siteBrand;
+    $metaTitle = news_get_seo_title($item, $siteBrand);
+    $metaDescription = news_get_seo_description($item);
+    $ogTitle = news_get_seo_title($item);
+    if ($ogTitle === '') {
+        $ogTitle = $siteBrand;
+    }
     $ogDescription = $metaDescription;
 
     $tagParts = [];
@@ -89,23 +80,7 @@ if (!$notFound) {
         $ogUrl = $canonicalUrl;
     }
 
-    $imagePath = $coverPath;
-    if ($imagePath === '' && is_array($item['gallery'] ?? null)) {
-        foreach ($item['gallery'] as $galleryPath) {
-            if (!is_string($galleryPath)) {
-                continue;
-            }
-            $galleryPath = ltrim($galleryPath, '/');
-            if ($galleryPath !== '' && str_starts_with($galleryPath, 'img/')) {
-                $imagePath = $galleryPath;
-                break;
-            }
-        }
-    }
-    if ($imagePath === '') {
-        $imagePath = 'test/img/logo.png';
-    }
-    $ogImage = $siteOrigin . '/' . ltrim($imagePath, '/');
+    $ogImage = news_get_seo_image($item, $siteOrigin);
 }
 
 $pageTitle = htmlspecialchars($metaTitle, ENT_QUOTES, 'UTF-8');
@@ -151,6 +126,7 @@ $twitterCardEsc = htmlspecialchars($twitterCard, ENT_QUOTES, 'UTF-8');
 <?php endif; ?>
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="../js/theme-boot.js"></script>
     <link rel="stylesheet" href="../css/main.css" />
 <?php if (!$notFound && is_array($item['gallery'] ?? null) && $item['gallery'] !== []): ?>
     <link rel="stylesheet" href="../css/gallery.css" />
@@ -187,7 +163,7 @@ $twitterCardEsc = htmlspecialchars($twitterCard, ENT_QUOTES, 'UTF-8');
             <li><a href="../index.html#about">Про нас</a></li>
             <li><a href="../index.html#directions">Напрями</a></li>
             <li><a href="../index.html#services">Послуги</a></li>
-            <li><a href="../news.html">Новини</a></li>
+            <li><a href="../news.php">Новини</a></li>
           </ul>
         </nav>
         <button class="burger" aria-label="Відкрити меню" aria-expanded="false">

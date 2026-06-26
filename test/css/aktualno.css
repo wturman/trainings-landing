@@ -82,12 +82,12 @@
 }
 
 .view-all:hover {
-  background: #0a3340;
+  background: var(--color-primary-hover);
   transform: translateY(-3px);
 }
 
 .view-all a {
-  color: var(--color-surface);
+  color: var(--color-on-primary);
   font-family: var(--font-heading);
   font-size: 0.9rem;
   font-weight: 600;

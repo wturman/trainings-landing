@@ -66,7 +66,7 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
     $messageType = 'error';
 }
 
-$jsonPath = __DIR__ . '/../data/news.json';
+$jsonPath = news_data_json_path();
 $items = load_all_news($jsonPath);
 
 $adminListFilter = isset($_GET['filter']) ? (string) $_GET['filter'] : 'all';
@@ -212,132 +212,13 @@ if ($isEdit && $formSlug !== '') {
     <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>Адмін — новини — ГО «Сила інтелекту»</title>
+    <script src="../js/theme-boot.js"></script>
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .admin-page { padding-bottom: var(--space-6); background: var(--color-bg); }
-      .admin-page .news-archive { max-width: 56rem; margin: 0 auto; padding: var(--space-5) var(--space-2); }
-      .admin-dashboard-intro { margin-bottom: var(--space-4); }
-      .admin-list-hint { margin-bottom: var(--space-2); }
-      .admin-msg { padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin-bottom: var(--space-3); border: 1px solid var(--color-border); }
-      .admin-msg.ok { background: #e8f5e9; color: #1b5e20; border-color: #c8e6c9; }
-      .admin-msg.error { background: #ffebee; color: #b71c1c; border-color: #ffcdd2; }
-      .admin-section { margin-top: var(--space-5); }
-      .admin-section h2.section-title { margin-bottom: var(--space-3); }
-      .admin-list-card { overflow-x: auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
-      .admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-family: var(--font-body); }
-      .admin-table th, .admin-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); vertical-align: middle; }
-      .admin-table th { font-family: var(--font-heading); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); background: var(--color-bg); position: sticky; top: 0; z-index: 1; }
-      .admin-table tbody tr { transition: background var(--transition); }
-      .admin-table tbody tr:hover { background: rgba(15, 76, 92, 0.04); }
-      .admin-table tr:last-child td { border-bottom: none; }
-      .admin-col-date { white-space: nowrap; font-size: 0.85rem; color: var(--color-text-muted); width: 6.5rem; }
-      .admin-col-title { font-family: var(--font-heading); font-weight: 600; color: var(--color-text); line-height: 1.35; min-width: 10rem; }
-      .admin-col-slug code { font-size: 0.78em; color: var(--color-primary); word-break: break-all; }
-      .admin-col-status { width: 7rem; }
-      .admin-col-actions { width: 14rem; }
-      .admin-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 5px 10px; border-radius: 999px; font-family: var(--font-heading); letter-spacing: 0.02em; text-transform: uppercase; }
-      .admin-badge-published { background: #e8f5e9; color: #2e7d32; border: 1px solid #81c784; }
-      .admin-badge-draft { background: #f5f5f5; color: #e65100; border: 1px solid #e0e0e0; }
-      .admin-table tr.admin-row--published td:first-child { box-shadow: inset 4px 0 0 #43a047; }
-      .admin-table tr.admin-row--draft td:first-child { box-shadow: inset 4px 0 0 #bdbdbd; }
-      .admin-action-groups { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
-      .admin-action-group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
-      .admin-action-group--danger { margin-top: 0.15rem; padding-top: var(--space-2); border-top: 1px dashed #ffcdd2; width: 100%; }
-      .admin-action-group form { display: inline; margin: 0; }
-      .btn.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; line-height: 1.2; }
-      .btn.btn-edit { background: var(--color-primary); }
-      .btn.btn-edit:hover { background: #0a3340; }
-      .btn.btn-preview { background: transparent; color: var(--color-primary); border: 2px solid var(--color-primary); box-shadow: none; }
-      .btn.btn-preview:hover { background: rgba(15, 76, 92, 0.08); transform: none; }
-      .btn.btn-publish { background: var(--color-accent); }
-      .btn.btn-publish:hover { background: #d05c3e; }
-      .btn.btn-unpublish { background: #78909c; }
-      .btn.btn-unpublish:hover { background: #607d8b; }
-      .btn.btn-danger { background: #c62828; }
-      .btn.btn-danger:hover { background: #b71c1c; }
-      .admin-form { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-4); margin-top: var(--space-3); }
-      .admin-form label { display: block; margin-top: var(--space-3); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); font-size: 0.95rem; }
-      .admin-form label:first-of-type { margin-top: 0; }
-      .admin-form input[type="text"], .admin-form input[type="date"], .admin-form textarea, .admin-form input[type="file"] {
-        width: 100%; box-sizing: border-box; margin-top: var(--space-1); padding: var(--space-2);
-        border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 1rem; background: var(--color-surface);
-      }
-      .admin-form textarea { min-height: 6rem; resize: vertical; }
-      .admin-form #content { min-height: 10rem; }
-      .admin-wysiwyg { margin-top: var(--space-1); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); overflow: hidden; }
-      .admin-wysiwyg__toolbar { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: var(--space-2); border-bottom: 1px solid var(--color-border); background: var(--color-bg); }
-      .admin-wysiwyg__btn {
-        font-family: var(--font-heading); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.65rem;
-        border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface);
-        color: var(--color-primary); cursor: pointer; line-height: 1.2;
-      }
-      .admin-wysiwyg__btn:hover { border-color: var(--color-primary); background: rgba(15, 76, 92, 0.06); }
-      .admin-wysiwyg__editor {
-        min-height: 12rem; max-height: 28rem; overflow-y: auto; padding: var(--space-3);
-        font-family: var(--font-body); font-size: 1rem; line-height: 1.7; color: var(--color-text);
-        outline: none;
-      }
-      .admin-wysiwyg__editor:focus { box-shadow: inset 0 0 0 2px rgba(15, 76, 92, 0.15); }
-      .admin-wysiwyg__editor p { margin: 0 0 var(--space-3); }
-      .admin-wysiwyg__editor h2,
-      .admin-wysiwyg__editor h3 { font-family: var(--font-heading); color: var(--color-primary); margin: 0 0 var(--space-3); line-height: 1.3; }
-      .admin-wysiwyg__editor h2 { font-size: 1.35rem; }
-      .admin-wysiwyg__editor h3 { font-size: 1.15rem; }
-      .admin-wysiwyg__editor ul,
-      .admin-wysiwyg__editor ol { margin: 0 0 var(--space-3); padding-left: 1.35rem; }
-      .admin-wysiwyg__editor a { color: var(--color-accent); text-decoration: underline; }
-      .admin-wysiwyg__editor strong { font-weight: 700; }
-      .admin-content-fallback { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-      .admin-hint { font-weight: 400; font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-1); }
-      .admin-slug-preview {
-        margin-top: var(--space-2); margin-bottom: var(--space-1); padding: var(--space-2) var(--space-3);
-        background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: var(--radius-sm);
-        font-family: var(--font-body); font-size: 0.9rem; color: var(--color-primary);
-      }
-      .admin-form .row-check { margin-top: var(--space-3); font-family: var(--font-heading); }
-      .admin-form .row-check input[type="checkbox"] { width: auto; margin-right: var(--space-1); }
-      .admin-form-actions { margin-top: var(--space-4); display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
-      .admin-form-actions .btn-cancel { color: var(--color-text-muted); font-weight: 600; }
-      .admin-form-actions .btn-cancel:hover { color: var(--color-primary); }
-      .admin-media-block { margin-top: var(--space-2); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); }
-      .admin-cover-preview { margin-top: var(--space-2); max-width: 280px; }
-      .admin-cover-preview img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
-      .admin-gallery-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
-      .admin-gallery-item { width: 96px; }
-      .admin-gallery-item img { width: 96px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--color-border); display: block; }
-      .admin-gallery-item .btn { width: 100%; margin-top: var(--space-1); padding: 6px 8px; font-size: 0.75rem; }
-      .admin-gallery-item .path { font-size: 0.65rem; color: var(--color-text-muted); word-break: break-all; margin-top: 4px; }
-      .btn.btn-secondary { background: var(--color-primary); }
-      .btn.btn-secondary:hover { background: #0a3340; }
-      .admin-list-filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); align-items: center; }
-      .admin-list-filters__label { font-size: 0.85rem; color: var(--color-text-muted); margin-right: var(--space-1); font-family: var(--font-heading); font-weight: 600; }
-      .admin-filter-pill {
-        display: inline-block; padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
-        text-decoration: none; color: var(--color-primary); border: 1px solid var(--color-border); background: var(--color-surface);
-        font-family: var(--font-heading); transition: background var(--transition), color var(--transition), border-color var(--transition);
-      }
-      .admin-filter-pill:hover { border-color: var(--color-primary); background: rgba(15, 76, 92, 0.06); }
-      .admin-filter-pill.is-active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-      .admin-list-older { margin-top: var(--space-3); }
-      .admin-list-older summary {
-        cursor: pointer; font-family: var(--font-heading); font-weight: 600; color: var(--color-primary);
-        padding: var(--space-2) var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border);
-        border-radius: var(--radius-md); list-style: none;
-      }
-      .admin-list-older summary::-webkit-details-marker { display: none; }
-      .admin-list-older summary::before { content: "▸ "; display: inline-block; transition: transform var(--transition); }
-      .admin-list-older[open] summary::before { transform: rotate(90deg); }
-      .admin-list-older .admin-list-card { margin-top: var(--space-2); border-top-left-radius: 0; border-top-right-radius: 0; }
-      .admin-list-count { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: var(--space-2); }
-      .admin-migration-tools { padding: var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
-      .admin-migration-warning { color: #b71c1c; font-weight: 600; margin-bottom: var(--space-2); }
-      .admin-migration-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
-      .admin-migration-actions form { margin: 0; }
-    </style>
   </head>
   <body>
     <header class="site-header">
@@ -384,7 +265,7 @@ if ($isEdit && $formSlug !== '') {
               <button type="submit" class="btn btn-danger">Rollback last migration</button>
             </form>
           </div>
-          <p class="admin-hint">Backups: <code>data/news.json.bak-{timestamp}</code>. Log: <code>data/migration-log.json</code>. Legacy <code>news/*.html</code> files are never modified.</p>
+          <p class="admin-hint">Backups: <code>data/news.json.bak-{timestamp}</code>. Log: <code>data/migration-log.json</code>. Articles: <code>news/article.php?slug=</code> from JSON only.</p>
         </div>
 
         <div class="admin-section">

@@ -115,6 +115,12 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 
 ## Task log (latest first)
 
+### 2026-06-14 — News gallery lightbox gesture fixes
+
+- **Created:** none
+- **Modified:** `test/js/gallery.js`, `test/css/gallery.css`, `project-memory.md`
+- **Logic:** Central gesture state (scale, pan, pinch/swipe/pan flags). Swipe between slides only when `scale ≤ 1.2` and not pinching; pinch 1×–4× with focal-point math; one-finger pan when zoomed; tap/click on zoomed image or `Escape` resets zoom; full reset on slide change/close. Viewport `overscroll-behavior: none` + zoom class to avoid scroll conflicts.
+
 ### 2026-06-14 — News gallery mobile zoom + lightbox swipe
 
 - **Created:** none

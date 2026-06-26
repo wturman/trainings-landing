@@ -14,7 +14,7 @@ if (PHP_SAPI !== 'cli') {
 
 require __DIR__ . '/includes/news-data.php';
 
-$jsonPath = __DIR__ . '/data/news.json';
+$jsonPath = news_data_json_path();
 $raw = file_get_contents($jsonPath);
 if ($raw === false) {
     fwrite(STDERR, "Cannot read news.json\n");

@@ -14,7 +14,7 @@ if (PHP_SAPI !== 'cli') {
 
 require __DIR__ . '/includes/migrate-legacy-news.php';
 
-$jsonPath = __DIR__ . '/data/news.json';
+$jsonPath = news_data_json_path();
 $newsDir = __DIR__ . '/news';
 
 $restoreFromHtml = [

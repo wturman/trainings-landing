@@ -2,31 +2,22 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../includes/news-data.php';
-require __DIR__ . '/../includes/news-render.php';
+require dirname(__DIR__, 2) . '/includes/news-data.php';
+require dirname(__DIR__, 2) . '/includes/news-render.php';
 
 $slugRaw = isset($_GET['slug']) ? (string) $_GET['slug'] : '';
 $slug = news_normalize_article_slug($slugRaw);
 $preview = isset($_GET['preview']) && (string) $_GET['preview'] === '1';
-$jsonPath = __DIR__ . '/../data/news.json';
+$jsonPath = news_data_json_path();
 
-// preview=1: JSON item by slug (draft or published), no legacy HTML.
-// default: published JSON only, then legacy news/{slug}.html fallback.
+// preview=1: JSON item by slug (draft or published).
+// default: published JSON only from news.json.
 if ($slug !== null) {
     $item = $preview
         ? load_news_item_by_slug($jsonPath, $slug)
         : load_published_news_item_by_slug($jsonPath, $slug);
 } else {
     $item = null;
-}
-
-if ($item === null && $slug !== null && !$preview) {
-    $legacyFile = news_legacy_article_file(__DIR__, $slug);
-    if ($legacyFile !== null) {
-        header('Content-Type: text/html; charset=UTF-8');
-        readfile($legacyFile);
-        exit;
-    }
 }
 
 $notFound = $item === null;
@@ -126,7 +117,7 @@ $ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
             <li><a href="../index.html#about">Про нас</a></li>
             <li><a href="../index.html#directions">Напрями</a></li>
             <li><a href="../index.html#services">Послуги</a></li>
-            <li><a href="../news.html">Новини</a></li>
+            <li><a href="../../news.php">Новини</a></li>
           </ul>
         </nav>
         <button class="burger" aria-label="Відкрити меню" aria-expanded="false">

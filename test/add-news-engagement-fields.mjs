@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const jsonPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', 'news.json');
+const jsonPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', 'news.json'); // SSOT: test/data/news.json (see news_data_json_path)
 const raw = fs.readFileSync(jsonPath, 'utf8');
 const data = JSON.parse(raw);
 

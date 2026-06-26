@@ -19,7 +19,7 @@ require __DIR__ . '/admin/migration-lib.php';
 $dryRun = in_array('--dry-run', $argv, true);
 
 if ($dryRun) {
-    $jsonPath = admin_json_path();
+    $jsonPath = news_data_json_path();
     $newsDir = __DIR__ . DIRECTORY_SEPARATOR . 'news';
     $ignore = migrate_legacy_news_ignore_basenames();
     $htmlFiles = glob($newsDir . DIRECTORY_SEPARATOR . '*.html') ?: [];

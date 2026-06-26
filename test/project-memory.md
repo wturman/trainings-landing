@@ -12,9 +12,9 @@
 | Path | Role |
 |------|------|
 | `index.html` / `index.php` | Landing: hero, about, directions, `#news`, portfolio, stories, footer |
-| `news.html` / `news.php` | News archive (vertical `.news-feed`; PHP reads JSON) |
-| `news/*.html` | Static article pages (legacy; target: one PHP template) |
-| `data/news.json` | **Single source of truth** for news content |
+| `news.php` | JSON-driven news archive (canonical list) |
+| `news/article.php` | Single article by `?slug=` from `data/news.json` only |
+| `data/news.json` | **Single source of truth** for news content (path: `news_data_json_path()` only) |
 | `includes/news-data.php` | `load_published_news()` |
 | `includes/news-render.php` | `render_news_feed_item()`, `render_news_card()` |
 | `css/main.css` | Design tokens + `@import` section styles |
@@ -211,6 +211,15 @@ Spacing: `--space-1` (8px) … `--space-6` (64px).
 
 ## 10. Changelog
 
+**2026-06-14 — JSON-only news routing**  
+Removed legacy `news/{slug}.html` fallback from `news/article.php`. Archive/nav links use `news.php`; article links use `news_article_href()` → `news/article.php?slug=` from JSON. Static `news/*.html` article files are no longer served by PHP.
+
+**2026-06-14 — Enforced single JSON source of truth**  
+All PHP under `/test` resolves news data only via `news_data_json_path()` in `includes/news-data.php` (`test/data/news.json`). Removed `admin_json_path()` alias; updated frontend (`index.php`, `news.php`, `sitemap.php`), admin, migration tools, and CLI scripts. Stale `admin/data/news.json` removed from use.
+
+**2026-06-14 — News load fix (admin + frontend)**  
+`test/data/news.json` had invalid JSON (missing comma between first two items), so `json_decode` failed and all PHP loaders returned empty lists. Repaired JSON. Added `news_data_json_path()` in `includes/news-data.php` as the single path to `data/news.json`. Fixed `admin/news.php` and `admin/news/article.php`, which pointed at stale `admin/data/news.json`. Removed duplicate `test/news.json`. Admin `admin-lib.php` now requires canonical `test/includes/news-data.php`.
+
 **2026-06-14 — Memory merge**  
 Root `project-memory.md` merged into this file; root doc is redirect only.
 
@@ -231,6 +240,15 @@ Created schema; seed 3 articles.
 
 **2026-06-14 — Burger overlay**  
 `setNavOpen()`, overlay click, `pointer-events` on mobile `.nav`.
+
+**2026-06-14 — Dark mode**  
+Implemented dark mode with system detection, toggle UI, and localStorage persistence.
+
+**2026-06-14 — Dark mode primary**  
+`html.theme-dark` overrides `--color-primary` to `#6eb4c4` for softer teal headings/links and clearer contrast on dark surfaces.
+
+**2026-06-14 — Design system audit**  
+Extended `:root` semantic color tokens (hovers, on-primary, overlays, admin status); component CSS and `css/admin.css` now use variables only; fixed admin pages loading stale `admin/css/main.css` without theme support.
 
 ---
 
