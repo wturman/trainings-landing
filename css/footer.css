@@ -2,8 +2,8 @@
    FOOTER
    ============================================================ */
 .footer {
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: var(--color-footer-bg);
+  color: var(--color-footer-on);
   padding: var(--space-6) var(--space-4);
   text-align: center;
   opacity: 0;
@@ -18,7 +18,7 @@
 
 .footer h2 {
   font-size: clamp(1.4rem, 3vw, 2rem);
-  color: var(--color-surface);
+  color: var(--color-footer-on);
   margin-bottom: var(--space-3);
 }
 
@@ -34,7 +34,7 @@
 
 .footer p {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-footer-on-muted);
   margin: var(--space-1) auto;
   max-width: none;
   line-height: 1.6;
@@ -64,18 +64,18 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-footer-icon-bg);
   font-size: 1.1rem;
-  color: var(--color-surface);
+  color: var(--color-footer-on);
   transition: background var(--transition), transform var(--transition), color var(--transition);
 }
 
 .social-icon:hover {
   transform: translateY(-3px);
   background: var(--color-accent);
-  color: var(--color-surface);
+  color: var(--color-on-accent);
 }
 
-.social-icon.facebook  { color: #a8c7f0; }
-.social-icon.instagram { color: #f4a8c0; }
-.social-icon.telegram  { color: #a8d8f0; }
+.social-icon.facebook  { color: var(--color-social-facebook); }
+.social-icon.instagram { color: var(--color-social-instagram); }
+.social-icon.telegram  { color: var(--color-social-telegram); }

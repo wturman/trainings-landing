@@ -16,7 +16,7 @@
 .site-header.scrolled {
   height: 60px;
   box-shadow: var(--shadow-md);
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--color-header-scrolled);
 }
 
 /* backdrop-filter on an ancestor makes position:fixed nav cover the header box only (mobile menu strip bug) */
@@ -44,6 +44,23 @@
   align-items: center;
   gap: var(--space-1);
   flex-shrink: 0;
+}
+
+html.theme-dark .logo-link .logo-block {
+  background: var(--color-header-brand-bg);
+  border: 1px solid var(--color-header-brand-border);
+  border-radius: var(--radius-sm);
+  padding: 4px var(--space-2);
+  box-shadow: var(--shadow-sm);
+}
+
+.logo-link:focus {
+  outline: none;
+}
+
+.logo-link:focus-visible .logo-block {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
 }
 
 .logo-img {
@@ -107,6 +124,20 @@
   width: 100%;
 }
 
+.nav a:focus {
+  outline: none;
+}
+
+.nav a:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.nav a:active {
+  color: var(--color-primary);
+}
+
 /* ============================================================
    BURGER BUTTON
    ============================================================ */
@@ -129,6 +160,15 @@
 
 .burger:hover {
   background: var(--color-bg);
+}
+
+.burger:focus {
+  outline: none;
+}
+
+.burger:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
 }
 
 /* Fixed-size inner canvas — spans are positioned inside this */
@@ -186,7 +226,7 @@
   .nav {
     position: fixed;
     inset: 0;
-    background: var(--color-primary);
+    background: var(--color-nav-overlay-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -213,7 +253,7 @@
 
   .nav a {
     font-size: 1.3rem;
-    color: var(--color-surface);
+    color: var(--color-nav-overlay-on);
     letter-spacing: 0.06em;
   }
 
@@ -227,5 +267,88 @@
 
   .header-inner {
     padding: 0 var(--space-3);
+  }
+}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.header-inner .theme-toggle--bar {
+  display: none;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+}
+
+.theme-toggle i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.theme-toggle-item--nav {
+  list-style: none;
+}
+
+@media (min-width: 769px) {
+  .theme-toggle--bar {
+    display: none !important;
+  }
+
+  .theme-toggle-item--nav {
+    display: list-item;
+  }
+
+  .theme-toggle--nav .theme-toggle__text {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner .theme-toggle--bar {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: var(--space-1);
+  }
+
+  .theme-toggle-item--nav {
+    margin-top: var(--space-3);
+  }
+
+  .theme-toggle--nav {
+    width: 100%;
+    justify-content: center;
+    background: var(--color-nav-overlay-toggle-bg);
+    border-color: var(--color-nav-overlay-toggle-border);
+    color: var(--color-nav-overlay-on);
+    font-size: 1rem;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .theme-toggle--nav:hover {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
   }
 }

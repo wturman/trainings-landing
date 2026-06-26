@@ -1,6 +1,8 @@
-# Project memory — `/test` (canonical)
+# Project memory — `/test` (archived staging)
 
-**Source of truth:** All active development happens under **`/test`** only. Do not use production HTML or live site scans. Paths below are relative to `/test` unless noted. Production domain may appear in legacy links until `BASE_URL` config exists.
+**Status:** CMS promoted to **site root** (2026-06-14). Do not use `/test` for production runtime; keep in sync only if intentionally mirroring fixes.
+
+**Source of truth for live site:** repo root (`project-memory.md`, `data/news.json`, `includes/`, `admin/`).
 
 **For agents:** Do not scan the whole repo unless this doc is insufficient.  
 **Rule:** Treat HTML inside `<!-- ... -->` as non-existent legacy unless the user asks to restore it.
@@ -259,8 +261,8 @@ Dark mode: light brand chip behind header logo (`--color-header-brand-*`). Foote
 **2026-06-14 — Dark theme UI polish**  
 Dark theme UI polish pass completed: tuned contrast tokens, elevation shadows, mobile nav overlay colors, and focus/hover/active states for buttons, nav, cards, and links.
 
-**2026-06-14 — Pre-production audit**  
-SEO: `news_site_origin()`, `news_canonical_article_url()`, article/admin-preview meta via `news_get_seo_*` only. Routing: PHP surfaces use `index.php`, `news.php`, `article.php?slug=` (no `.html` in PHP). Admin save (`save.php`, `admin/admin/save.php`) preserves `views`/`likes`/`engagement` on edit. Performance: duplicate `gallery.js` removed from article PHP (loaded via `main.js`). JSON: `data/news.json` validated (9 items, required fields, unique slugs/ids). Legacy static `*.html` mirrors still contain `index.html` nav — not used by canonical PHP routes; review before decommissioning.
+**2026-06-14 — Production migration**  
+CMS promoted to site root; all runtime `/test` URL prefixes removed from PHP (`news_canonical_article_url`, `sitemap.php`, SEO fallback `img/logo.png`, engagement cookie path). `/test` retained as archive only.
 
 ---
 

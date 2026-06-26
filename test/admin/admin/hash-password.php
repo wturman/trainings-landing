@@ -9,7 +9,7 @@ if (PHP_SAPI !== 'cli') {
 
 $password = $argv[1] ?? '';
 if ($password === '') {
-    fwrite(STDERR, "Usage: php test/admin/hash-password.php \"your-password\"\n");
+    fwrite(STDERR, "Usage: php admin/hash-password.php \"your-password\"\n");
     exit(1);
 }
 

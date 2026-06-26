@@ -1,12 +1,38 @@
 # Project memory — trainings-landing
 
-**Active development:** only **`/test`**. Do not change site files outside `/test` except this file.
+**Active runtime:** site root (promoted from `/test` on 2026-06-14). **`/test`** remains an archived staging copy; production PHP must not reference `/test`.
 
 ---
 
 ## Working context
 
 | Area | Location |
+|------|----------|
+| News data (SSOT) | `data/news.json` |
+| Load / filter | `includes/news-data.php` |
+| Render | `includes/news-render.php` |
+| Archive | `news.php` |
+| Article (dynamic) | `news/article.php?slug=` |
+| Homepage news (3 items) | `index.php` |
+| Legacy static articles | `news/*.html` (direct URLs only) |
+| News admin | `admin/` (login required) |
+| Sitemap | `sitemap.php` → `/news/article.php?slug=` |
+
+**Stack:** static HTML/CSS/JS + minimal PHP. **JSON owns news content.**
+
+---
+
+## Task log — production migration (2026-06-14)
+
+Promoted CMS from `/test` to site root: `includes/`, `data/`, `config/`, `admin/`, `index.php`, `news.php`, `sitemap.php`, `news/article.php`, `news/like.php`, `css/`, `js/`, `img/news/`, CLI/migration scripts. Path switch: canonical URLs `/news/article.php?slug=`; `news_get_seo_image` fallback `img/logo.png`; engagement cookies use script dirname (no `/test/` prefix). `index.html` news links → `news.php`.
+
+---
+
+## Archived `/test` context (historical)
+
+**Former active development:** **`/test`** (see `test/project-memory.md`).
+
+| Area (was) | Location (was) |
 |------|----------|
 | News data (SSOT) | `/test/data/news.json` |
 | Load / filter | `/test/includes/news-data.php` |

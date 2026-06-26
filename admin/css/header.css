@@ -1,0 +1,231 @@
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 1000;
+  transition: height var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.site-header.scrolled {
+  height: 60px;
+  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+/* backdrop-filter on an ancestor makes position:fixed nav cover the header box only (mobile menu strip bug) */
+@media (min-width: 769px) {
+  .site-header.scrolled {
+    backdrop-filter: blur(6px);
+  }
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+.logo-block {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  transition: height var(--transition);
+}
+
+.logo-text-img {
+  height: 36px;
+  width: auto;
+  transition: height var(--transition);
+}
+
+.site-header.scrolled .logo-img {
+  height: 32px;
+}
+
+.site-header.scrolled .logo-text-img {
+  height: 28px;
+}
+
+/* ============================================================
+   DESKTOP NAV
+   ============================================================ */
+.nav ul {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.nav a {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 3px;
+  transition: color var(--transition);
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: 1px;
+  transition: width var(--transition);
+}
+
+.nav a:hover {
+  color: var(--color-accent);
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+/* ============================================================
+   BURGER BUTTON
+   ============================================================ */
+.burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  z-index: 1101;
+  transition: background var(--transition);
+  /* inner canvas for precise span positioning */
+  position: relative;
+}
+
+.burger:hover {
+  background: var(--color-bg);
+}
+
+/* Fixed-size inner canvas — spans are positioned inside this */
+.burger::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 20px;
+  position: relative;
+  pointer-events: none;
+}
+
+.burger span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  width: 22px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transform-origin: center;
+  /* translate(-50%, 0) keeps left:50% centered horizontally */
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity   0.25s ease;
+}
+
+/* Evenly spaced: 0 / 9px / 18px from top of the 20px canvas,
+   offset by -10px (half of 20px) to center within the 40px button */
+.burger span:nth-child(1) { transform: translate(-50%, -9px);  }
+.burger span:nth-child(2) { transform: translate(-50%,  0px);  }
+.burger span:nth-child(3) { transform: translate(-50%,  9px);  }
+
+/* Active — X state */
+.burger.active span:nth-child(1) {
+  transform: translate(-50%, 0px) rotate(45deg);
+}
+
+.burger.active span:nth-child(2) {
+  opacity: 0;
+  /* no width change — avoids horizontal glitch mid-transition */
+}
+
+.burger.active span:nth-child(3) {
+  transform: translate(-50%, 0px) rotate(-45deg);
+}
+
+/* ============================================================
+   MOBILE NAV OVERLAY
+   ============================================================ */
+@media (max-width: 768px) {
+  .burger {
+    display: flex;
+  }
+
+  .nav {
+    position: fixed;
+    inset: 0;
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+    z-index: 1100;
+  }
+
+  .nav.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  .nav a {
+    font-size: 1.3rem;
+    color: var(--color-surface);
+    letter-spacing: 0.06em;
+  }
+
+  .nav a::after {
+    background: var(--color-accent);
+  }
+
+  .nav a:hover {
+    color: var(--color-secondary);
+  }
+
+  .header-inner {
+    padding: 0 var(--space-3);
+  }
+}

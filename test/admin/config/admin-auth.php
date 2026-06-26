@@ -15,7 +15,7 @@ if (!defined('ADMIN_AUTH_LOADING')) {
  *
  *   php -r "echo password_hash('YOUR_NEW_PASSWORD', PASSWORD_DEFAULT), PHP_EOL;"
  *
- * Or run: php test/admin/hash-password.php "YOUR_NEW_PASSWORD"
+ * Or run: php admin/hash-password.php "YOUR_NEW_PASSWORD"
  */
 return [
     'username' => 'admin',
