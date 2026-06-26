@@ -1,0 +1,249 @@
+/* ============================================================
+   PORTFOLIO
+   ============================================================ */
+.portfolio {
+  background: var(--color-bg);
+}
+
+.portfolio > h2 {
+  margin-bottom: var(--space-5);
+  color: var(--color-primary);
+  position: relative;
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.portfolio > h2::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-top: var(--space-1);
+}
+
+.portfolio > h2.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+.projects {
+  margin-bottom: var(--space-6);
+}
+
+.projects-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  border-right: 3px solid var(--color-accent);
+  display: inline-block;
+}
+
+.projects-title.typing {
+  animation: typingProjects 1.5s steps(7, end) forwards;
+}
+
+.projects-title.finished {
+  border-right: none;
+}
+
+@keyframes typingProjects {
+  from { width: 0; }
+  to   { width: 7ch; }
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.project-item {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow var(--transition);
+}
+
+.project-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.project-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.project-image {
+  flex: 0 0 45%;
+  overflow: hidden;
+}
+
+.project-image img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.project-item:hover .project-image img {
+  transform: scale(1.04);
+}
+
+.project-text {
+  flex: 1;
+  padding: var(--space-4);
+}
+
+.project-text h4 {
+  font-size: 1.15rem;
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.project-text p {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: none;
+}
+
+/* ============================================================
+   STORIES
+   ============================================================ */
+.stories {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.stories-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  border-right: 3px solid var(--color-accent);
+  display: inline-block;
+}
+
+.stories-title.typing {
+  animation: typingStories 2s steps(18, end) forwards;
+}
+
+.stories-title.finished {
+  border-right: none;
+}
+
+@keyframes typingStories {
+  from { width: 0; }
+  to   { width: 18ch; }
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.story-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.story-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.story-photo img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-secondary);
+}
+
+.story-card p {
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: none;
+}
+
+.story-card-logo {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.story-card-logo img {
+  width: 60%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width: 768px) {
+  .project-item,
+  .project-item:nth-child(even) {
+    flex-direction: column;
+  }
+
+  .project-image {
+    flex: none;
+    width: 100%;
+  }
+
+  .project-image img {
+    height: 300px;
+  }
+
+  .project-text {
+    padding: var(--space-3);
+    width: 100%;
+  }
+
+  .story-card-logo {
+    display: none;
+  }
+}

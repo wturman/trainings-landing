@@ -1,0 +1,354 @@
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 1000;
+  transition: height var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.site-header.scrolled {
+  height: 60px;
+  box-shadow: var(--shadow-md);
+  background: var(--color-header-scrolled);
+}
+
+/* backdrop-filter on an ancestor makes position:fixed nav cover the header box only (mobile menu strip bug) */
+@media (min-width: 769px) {
+  .site-header.scrolled {
+    backdrop-filter: blur(6px);
+  }
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+.logo-block {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+html.theme-dark .logo-link .logo-block {
+  background: var(--color-header-brand-bg);
+  border: 1px solid var(--color-header-brand-border);
+  border-radius: var(--radius-sm);
+  padding: 4px var(--space-2);
+  box-shadow: var(--shadow-sm);
+}
+
+.logo-link:focus {
+  outline: none;
+}
+
+.logo-link:focus-visible .logo-block {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  transition: height var(--transition);
+}
+
+.logo-text-img {
+  height: 36px;
+  width: auto;
+  transition: height var(--transition);
+}
+
+.site-header.scrolled .logo-img {
+  height: 32px;
+}
+
+.site-header.scrolled .logo-text-img {
+  height: 28px;
+}
+
+/* ============================================================
+   DESKTOP NAV
+   ============================================================ */
+.nav ul {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.nav a {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 3px;
+  transition: color var(--transition);
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: 1px;
+  transition: width var(--transition);
+}
+
+.nav a:hover {
+  color: var(--color-accent);
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.nav a:focus {
+  outline: none;
+}
+
+.nav a:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.nav a:active {
+  color: var(--color-primary);
+}
+
+/* ============================================================
+   BURGER BUTTON
+   ============================================================ */
+.burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  z-index: 1101;
+  transition: background var(--transition);
+  /* inner canvas for precise span positioning */
+  position: relative;
+}
+
+.burger:hover {
+  background: var(--color-bg);
+}
+
+.burger:focus {
+  outline: none;
+}
+
+.burger:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Fixed-size inner canvas — spans are positioned inside this */
+.burger::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 20px;
+  position: relative;
+  pointer-events: none;
+}
+
+.burger span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  width: 22px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transform-origin: center;
+  /* translate(-50%, 0) keeps left:50% centered horizontally */
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity   0.25s ease;
+}
+
+/* Evenly spaced: 0 / 9px / 18px from top of the 20px canvas,
+   offset by -10px (half of 20px) to center within the 40px button */
+.burger span:nth-child(1) { transform: translate(-50%, -9px);  }
+.burger span:nth-child(2) { transform: translate(-50%,  0px);  }
+.burger span:nth-child(3) { transform: translate(-50%,  9px);  }
+
+/* Active — X state */
+.burger.active span:nth-child(1) {
+  transform: translate(-50%, 0px) rotate(45deg);
+}
+
+.burger.active span:nth-child(2) {
+  opacity: 0;
+  /* no width change — avoids horizontal glitch mid-transition */
+}
+
+.burger.active span:nth-child(3) {
+  transform: translate(-50%, 0px) rotate(-45deg);
+}
+
+/* ============================================================
+   MOBILE NAV OVERLAY
+   ============================================================ */
+@media (max-width: 768px) {
+  .burger {
+    display: flex;
+  }
+
+  .nav {
+    position: fixed;
+    inset: 0;
+    background: var(--color-nav-overlay-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+    z-index: 1100;
+  }
+
+  .nav.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  .nav a {
+    font-size: 1.3rem;
+    color: var(--color-nav-overlay-on);
+    letter-spacing: 0.06em;
+  }
+
+  .nav a::after {
+    background: var(--color-accent);
+  }
+
+  .nav a:hover {
+    color: var(--color-secondary);
+  }
+
+  .header-inner {
+    padding: 0 var(--space-3);
+  }
+}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.header-inner .theme-toggle--bar {
+  display: none;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+}
+
+.theme-toggle i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.theme-toggle-item--nav {
+  list-style: none;
+}
+
+@media (min-width: 769px) {
+  .theme-toggle--bar {
+    display: none !important;
+  }
+
+  .theme-toggle-item--nav {
+    display: list-item;
+  }
+
+  .theme-toggle--nav .theme-toggle__text {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner .theme-toggle--bar {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: var(--space-1);
+  }
+
+  .theme-toggle-item--nav {
+    margin-top: var(--space-3);
+  }
+
+  .theme-toggle--nav {
+    width: 100%;
+    justify-content: center;
+    background: var(--color-nav-overlay-toggle-bg);
+    border-color: var(--color-nav-overlay-toggle-border);
+    color: var(--color-nav-overlay-on);
+    font-size: 1rem;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .theme-toggle--nav:hover {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+  }
+}

@@ -1,0 +1,191 @@
+/* ============================================================
+   DIRECTIONS
+   ============================================================ */
+.directions {
+  background: var(--color-bg);
+}
+
+.directions h2 {
+  margin-bottom: var(--space-5);
+  color: var(--color-primary);
+  position: relative;
+  display: inline-block;
+}
+
+.directions h2::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-top: var(--space-1);
+}
+
+/* ============================================================
+   GRID
+   ============================================================ */
+.direction-grid {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.direction-card {
+  flex: 1 1 180px;
+  min-height: 180px;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition), transform var(--transition), flex 0.4s ease;
+}
+
+.direction-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.direction-card:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+}
+
+.direction-card.active {
+  flex: 2 1 360px;
+  box-shadow: var(--shadow-lg);
+  transform: none;
+  border-color: var(--color-secondary);
+}
+
+.direction-card.inactive {
+  opacity: 0.55;
+  transform: scale(0.97);
+}
+
+/* Card header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+  gap: var(--space-1);
+}
+
+.card-header h3 {
+  font-size: 1rem;
+  color: var(--color-primary);
+  line-height: 1.35;
+  flex: 1;
+}
+
+.arrow {
+  font-size: 1rem;
+  color: var(--color-accent);
+  flex-shrink: 0;
+  margin-left: var(--space-1);
+  transition: transform var(--transition);
+}
+
+.direction-card.active .arrow {
+  transform: rotate(90deg);
+}
+
+/* Summary */
+.card-summary {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  max-width: none;
+  margin-top: auto;
+}
+
+/* More button */
+.more-btn {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-2);
+  background: var(--color-accent);
+  color: var(--color-surface);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition);
+  border: none;
+}
+
+.direction-card:hover .more-btn {
+  opacity: 1;
+}
+
+/* Card details */
+.card-details {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.55s ease, opacity 0.45s ease;
+  margin-top: 0;
+}
+
+.direction-card.active .card-details {
+  max-height: 600px;
+  opacity: 1;
+  margin-top: var(--space-3);
+}
+
+.card-details img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+
+.card-details p {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  max-width: none;
+  text-align: justify;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width: 768px) {
+  .direction-grid {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .direction-card {
+    flex: none;
+    width: 100%;
+    min-height: 100px;
+    height: auto;
+  }
+
+  .direction-card.active {
+    flex: none;
+    height: auto;
+    transform: none;
+  }
+
+  .more-btn {
+    display: none;
+  }
+}

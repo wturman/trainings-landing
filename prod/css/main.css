@@ -1,0 +1,422 @@
+@import url("header.css");
+@import url("hero.css");
+@import url("about.css");
+@import url("programs.css");
+@import url("gallery.css");
+@import url("footer.css");
+@import url("directions.css");
+@import url("portfolio.css");
+@import url("aktualno.css");
+@import url("services.css");
+@import url("news.css");
+
+/* ============================================================
+   DESIGN SYSTEM — CSS VARIABLES
+   ============================================================ */
+:root {
+  /* Colors */
+  --color-primary:    #0f4c5c;
+  --color-accent:     #e76f51;
+  --color-secondary:  #bfd8bd;
+  --color-bg:         #f6f1e9;
+  --color-text:       #1e2d2f;
+  --color-text-muted: #5a6e70;
+  --color-surface:    #ffffff;
+  --color-border:     #dde8e3;
+
+  /* Semantic (derived; theme overrides in html.theme-*) */
+  --color-primary-hover:     #0a3340;
+  --color-accent-hover:      #d05c3e;
+  --color-on-primary:        #ffffff;
+  --color-on-primary-muted:  rgba(255, 255, 255, 0.8);
+  --color-on-accent:         #ffffff;
+  --color-header-scrolled:   rgba(255, 255, 255, 0.96);
+  --color-hero-overlay-start: rgba(15, 76, 92, 0.82);
+  --color-hero-overlay-end:   rgba(15, 76, 92, 0.55);
+  --color-on-hero:            #ffffff;
+  --color-on-hero-muted:      rgba(255, 255, 255, 0.9);
+  --color-on-hero-subtle:     rgba(255, 255, 255, 0.92);
+  --color-hero-text-shadow:   rgba(0, 0, 0, 0.35);
+  --color-hero-slogan-shadow: rgba(0, 0, 0, 0.5);
+  --shadow-accent:            0 4px 20px rgba(231, 111, 81, 0.45);
+  --shadow-accent-hover:      0 6px 24px rgba(231, 111, 81, 0.55);
+  --color-overlay:            rgba(0, 0, 0, 0.9);
+  --color-overlay-mid:        rgba(0, 0, 0, 0.55);
+  --color-overlay-strong:     rgba(0, 0, 0, 0.8);
+  --color-on-overlay:         #ffffff;
+  --color-footer-icon-bg:     rgba(255, 255, 255, 0.1);
+  --color-footer-bg:          #0f4c5c;
+  --color-footer-on:          #ffffff;
+  --color-footer-on-muted:    rgba(255, 255, 255, 0.8);
+  --color-header-brand-bg:    #ffffff;
+  --color-header-brand-border:#dde8e3;
+  --color-social-facebook:    #a8c7f0;
+  --color-social-instagram:   #f4a8c0;
+  --color-social-telegram:    #a8d8f0;
+  --color-nav-overlay-toggle-bg:     rgba(255, 255, 255, 0.08);
+  --color-nav-overlay-toggle-border: rgba(255, 255, 255, 0.25);
+  --color-nav-overlay-bg:            var(--color-primary);
+  --color-nav-overlay-on:            var(--color-on-primary);
+  --color-focus-outline:             var(--color-accent);
+  --color-primary-subtle:     color-mix(in srgb, var(--color-primary) 6%, transparent);
+  --color-primary-subtle-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --color-primary-row-hover:  color-mix(in srgb, var(--color-primary) 4%, transparent);
+  --color-primary-focus-ring: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  --color-success-bg:         #e8f5e9;
+  --color-success-text:       #1b5e20;
+  --color-success-border:     #c8e6c9;
+  --color-success-accent:     #43a047;
+  --color-success-text-strong:#2e7d32;
+  --color-success-border-strong: #81c784;
+  --color-error-bg:           #ffebee;
+  --color-error-text:         #b71c1c;
+  --color-error-border:       #ffcdd2;
+  --color-warning-bg:         #fff3e0;
+  --color-warning-text:       #e65100;
+  --color-neutral-bg:         #f5f5f5;
+  --color-neutral-border:     #e0e0e0;
+  --color-neutral:            #78909c;
+  --color-neutral-hover:      #607d8b;
+  --color-draft-accent:       #bdbdbd;
+  --color-danger:             #c62828;
+  --color-danger-hover:       #b71c1c;
+
+  /* Spacing (8px base) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+
+  /* Typography */
+  --font-heading: "Montserrat", sans-serif;
+  --font-body:    "Open Sans", sans-serif;
+
+  /* Radii */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(15, 76, 92, 0.08);
+  --shadow-md: 0 4px 16px rgba(15, 76, 92, 0.12);
+  --shadow-lg: 0 8px 32px rgba(15, 76, 92, 0.16);
+
+  /* Transitions */
+  --transition: 0.3s ease;
+
+  /* Content width */
+  --content-width: 1200px;
+  --text-width: 680px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  line-height: 1.25;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.6rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+h4 { font-size: 1.1rem; }
+
+p {
+  max-width: var(--text-width);
+  line-height: 1.7;
+}
+
+/* ============================================================
+   LAYOUT UTILITIES
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+section {
+  padding: var(--space-6) var(--space-4);
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  color: var(--color-primary);
+  margin-bottom: var(--space-5);
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-top: var(--space-1);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  border: none;
+}
+
+.btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 3px;
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.cta-btn {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), transform var(--transition);
+}
+
+.cta-btn:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
+}
+
+.cta-btn:focus {
+  outline: none;
+}
+
+.cta-btn:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 3px;
+}
+
+.cta-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   SCROLL REVEAL (shared)
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+.back-to-top {
+  position: fixed;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  width: 44px;
+  height: 44px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition), background var(--transition);
+  z-index: 900;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: hover) {
+  .back-to-top:hover {
+    background: var(--color-accent);
+    transform: translateY(-3px);
+  }
+}
+
+.back-to-top:focus {
+  outline: none;
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
+@media (max-width: 768px) {
+  section {
+    padding: var(--space-5) var(--space-3);
+  }
+
+  .container {
+    padding: 0 var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: var(--space-4) var(--space-2);
+  }
+
+  .container {
+    padding: 0 var(--space-2);
+  }
+}
+
+/* Section h2 underlines — nearly full heading width, small side inset */
+.about-content h2::after,
+.directions h2::after,
+.news-section h2::after,
+.aktualno h2::after,
+.services h2::after,
+.portfolio > h2::after,
+.footer h2::after,
+.section-title::after {
+  width: calc(100% - var(--space-2));
+  margin-left: var(--space-1);
+  margin-right: var(--space-1);
+}
+
+.footer h2 {
+  display: inline-block;
+}
+
+.footer h2::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   THEME OVERRIDES (do not modify :root)
+   ============================================================ */
+html.theme-light {
+  --color-bg: #f6f1e9;
+  --color-text: #1e2d2f;
+  --color-surface: #ffffff;
+  --color-border: #dde8e3;
+  --color-text-muted: #5a6e70;
+  --color-on-primary: #ffffff;
+  --color-on-primary-muted: rgba(255, 255, 255, 0.8);
+}
+
+html.theme-dark {
+  --color-bg: #121a1c;
+  --color-text: #e8eeef;
+  --color-surface: #1a2629;
+  --color-border: #3d5259;
+  --color-text-muted: #a8b6b9;
+  --color-primary: #82c9d8;
+  --color-primary-hover: #5eb3c6;
+  --color-secondary: #b8d9c8;
+  --color-accent-hover: #e8836a;
+  --color-on-primary: #0d1214;
+  --color-on-primary-muted: rgba(13, 18, 20, 0.85);
+  --color-header-scrolled: rgba(26, 38, 41, 0.96);
+  --color-neutral-bg: #2a3438;
+  --color-neutral-border: #3d4a4f;
+  --color-header-brand-bg: #ffffff;
+  --color-header-brand-border: #dde8e3;
+  --color-nav-overlay-bg: var(--color-footer-bg);
+  --color-nav-overlay-on: var(--color-footer-on);
+  --color-shadow-tint: #000000;
+  --shadow-sm: 0 2px 10px color-mix(in srgb, var(--color-shadow-tint) 32%, transparent);
+  --shadow-md: 0 4px 18px color-mix(in srgb, var(--color-shadow-tint) 42%, transparent);
+  --shadow-lg: 0 8px 28px color-mix(in srgb, var(--color-shadow-tint) 52%, transparent);
+}
+
+/* ============================================================
+   DARK THEME — focus & links (accessibility)
+   ============================================================ */
+html.theme-dark a:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
