@@ -27,50 +27,75 @@ if ($notFound) {
 }
 
 $siteBrand = 'Сила інтелекту';
-$siteOrigin = 'https://silaintellect.org';
+$siteOrigin = news_site_origin();
 
-if ($notFound) {
-    $metaTitle = 'Новина не знайдена | ' . $siteBrand;
-    $metaDescription = 'Запис відсутній';
-    $ogTitle = '';
-    $ogDescription = '';
-    $ogType = 'article';
-    $ogImage = '';
-    $ogUrl = $slug !== null
-        ? $siteOrigin . '/news/article.php?slug=' . rawurlencode($slug)
-        : '';
-} else {
-    $articleTitle = (string) ($item['title'] ?? '');
-    $articleExcerpt = (string) ($item['excerpt'] ?? '');
+$metaTitle = 'Новина не знайдена | ' . $siteBrand;
+$metaDescription = '';
+$metaKeywords = '';
+$canonicalUrl = '';
+$ogTitle = '';
+$ogDescription = '';
+$ogType = 'article';
+$ogImage = '';
+$ogUrl = '';
+$twitterCard = 'summary_large_image';
+
+if (!$notFound) {
     $articleSlug = (string) ($item['slug'] ?? $slug ?? '');
-    $coverPath = ltrim((string) ($item['cover'] ?? ''), '/');
 
-    $metaTitle = $articleTitle !== '' ? $articleTitle . ' | ' . $siteBrand : $siteBrand;
-    $metaDescription = $articleExcerpt;
-    $ogTitle = $articleTitle;
-    $ogDescription = $articleExcerpt;
-    $ogType = 'article';
-    $ogImage = $coverPath !== '' ? $siteOrigin . '/' . $coverPath : '';
-    $ogUrl = $articleSlug !== ''
-        ? $siteOrigin . '/news/article.php?slug=' . rawurlencode($articleSlug)
-        : '';
+    $metaTitle = news_get_seo_title($item, $siteBrand);
+    $metaDescription = news_get_seo_description($item);
+    $ogTitle = news_get_seo_title($item);
+    if ($ogTitle === '') {
+        $ogTitle = $siteBrand;
+    }
+    $ogDescription = $metaDescription;
+
+    $tagParts = [];
+    if (is_array($item['tags'] ?? null)) {
+        foreach ($item['tags'] as $tag) {
+            if (is_string($tag) && trim($tag) !== '') {
+                $tagParts[] = trim($tag);
+            }
+        }
+    }
+    $metaKeywords = implode(', ', $tagParts);
+
+    if ($articleSlug !== '') {
+        $canonicalUrl = news_canonical_article_url($articleSlug, $siteOrigin);
+        $ogUrl = $canonicalUrl;
+    }
+
+    $ogImage = news_get_seo_image($item, $siteOrigin);
+} elseif ($slug !== null) {
+    $ogUrl = news_canonical_article_url($slug, $siteOrigin);
 }
 
 $pageTitle = htmlspecialchars($metaTitle, ENT_QUOTES, 'UTF-8');
 $metaDescriptionEsc = htmlspecialchars($metaDescription, ENT_QUOTES, 'UTF-8');
+$metaKeywordsEsc = htmlspecialchars($metaKeywords, ENT_QUOTES, 'UTF-8');
+$canonicalUrlEsc = htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8');
 $ogTitleEsc = htmlspecialchars($ogTitle, ENT_QUOTES, 'UTF-8');
 $ogDescriptionEsc = htmlspecialchars($ogDescription, ENT_QUOTES, 'UTF-8');
 $ogTypeEsc = htmlspecialchars($ogType, ENT_QUOTES, 'UTF-8');
 $ogImageEsc = htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8');
 $ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
+$twitterCardEsc = htmlspecialchars($twitterCard, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="<?= $metaDescriptionEsc ?>" />
+    <title><?= $pageTitle ?></title>
 <?php if (!$notFound): ?>
+    <meta name="description" content="<?= $metaDescriptionEsc ?>" />
+<?php if ($metaKeywords !== ''): ?>
+    <meta name="keywords" content="<?= $metaKeywordsEsc ?>" />
+<?php endif; ?>
+<?php if ($canonicalUrl !== ''): ?>
+    <link rel="canonical" href="<?= $canonicalUrlEsc ?>" />
+<?php endif; ?>
     <meta property="og:title" content="<?= $ogTitleEsc ?>" />
     <meta property="og:description" content="<?= $ogDescriptionEsc ?>" />
     <meta property="og:type" content="<?= $ogTypeEsc ?>" />
@@ -80,24 +105,27 @@ $ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
 <?php if ($ogUrl !== ''): ?>
     <meta property="og:url" content="<?= $ogUrlEsc ?>" />
 <?php endif; ?>
+    <meta name="twitter:card" content="<?= $twitterCardEsc ?>" />
+    <meta name="twitter:title" content="<?= $ogTitleEsc ?>" />
+    <meta name="twitter:description" content="<?= $ogDescriptionEsc ?>" />
+<?php if ($ogImage !== ''): ?>
+    <meta name="twitter:image" content="<?= $ogImageEsc ?>" />
 <?php endif; ?>
-    <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
+<?php endif; ?>
+    <link rel="icon" type="image/png" href="../../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <title><?= $pageTitle ?></title>
-    <link rel="stylesheet" href="../css/main.css" />
+    <script src="../../js/theme-boot.js"></script>
+    <link rel="stylesheet" href="../../css/main.css" />
 <?php if (!$notFound && is_array($item['gallery'] ?? null) && $item['gallery'] !== []): ?>
-    <link rel="stylesheet" href="../css/gallery.css" />
+    <link rel="stylesheet" href="../../css/gallery.css" />
 <?php endif; ?>
-    <script type="module" src="../js/main.js"></script>
-<?php if (!$notFound && is_array($item['gallery'] ?? null) && $item['gallery'] !== []): ?>
-    <script type="module" src="../js/gallery.js"></script>
-<?php endif; ?>
+    <script type="module" src="../../js/main.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
   </head>
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo-link" aria-label="Перейти на головну сторінку">
+        <a href="../../index.php" class="logo-link" aria-label="Перейти на головну сторінку">
           <div class="logo-block">
             <img
               src="../img/logo.png"
@@ -113,10 +141,10 @@ $ogUrlEsc = htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8');
         </a>
         <nav class="nav">
           <ul>
-            <li><a href="../index.html">Головна</a></li>
-            <li><a href="../index.html#about">Про нас</a></li>
-            <li><a href="../index.html#directions">Напрями</a></li>
-            <li><a href="../index.html#services">Послуги</a></li>
+            <li><a href="../../index.php">Головна</a></li>
+            <li><a href="../../index.php#about">Про нас</a></li>
+            <li><a href="../../index.php#directions">Напрями</a></li>
+            <li><a href="../../index.php#services">Послуги</a></li>
             <li><a href="../../news.php">Новини</a></li>
           </ul>
         </nav>

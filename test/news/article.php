@@ -25,7 +25,6 @@ if ($item !== null && !$preview) {
     if ($viewSlug !== '') {
         $engagement = news_record_article_view($jsonPath, $viewSlug);
         $item['views'] = $engagement['views'];
-        $item['likes'] = $engagement['likes'];
     }
 }
 
@@ -37,11 +36,7 @@ if ($notFound) {
 
 $siteBrand = 'Сила інтелекту';
 
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-    || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443)
-    ? 'https'
-    : 'http';
-$siteOrigin = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+$siteOrigin = news_site_origin();
 
 $metaTitle = 'Новина не знайдена | ' . $siteBrand;
 $metaDescription = '';
@@ -76,7 +71,7 @@ if (!$notFound) {
     $metaKeywords = implode(', ', $tagParts);
 
     if ($articleSlug !== '') {
-        $canonicalUrl = $siteOrigin . '/test/news/article.php?slug=' . rawurlencode($articleSlug);
+        $canonicalUrl = news_canonical_article_url($articleSlug, $siteOrigin);
         $ogUrl = $canonicalUrl;
     }
 
@@ -132,18 +127,12 @@ $twitterCardEsc = htmlspecialchars($twitterCard, ENT_QUOTES, 'UTF-8');
     <link rel="stylesheet" href="../css/gallery.css" />
 <?php endif; ?>
     <script type="module" src="../js/main.js"></script>
-<?php if (!$notFound && is_array($item['gallery'] ?? null) && $item['gallery'] !== []): ?>
-    <script type="module" src="../js/gallery.js"></script>
-<?php endif; ?>
-<?php if (!$notFound): ?>
-    <script type="module" src="../js/news-article-like.js"></script>
-<?php endif; ?>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
   </head>
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo-link" aria-label="Перейти на головну сторінку">
+        <a href="../index.php" class="logo-link" aria-label="Перейти на головну сторінку">
           <div class="logo-block">
             <img
               src="../img/logo.png"
@@ -159,10 +148,10 @@ $twitterCardEsc = htmlspecialchars($twitterCard, ENT_QUOTES, 'UTF-8');
         </a>
         <nav class="nav">
           <ul>
-            <li><a href="../index.html">Головна</a></li>
-            <li><a href="../index.html#about">Про нас</a></li>
-            <li><a href="../index.html#directions">Напрями</a></li>
-            <li><a href="../index.html#services">Послуги</a></li>
+            <li><a href="../index.php">Головна</a></li>
+            <li><a href="../index.php#about">Про нас</a></li>
+            <li><a href="../index.php#directions">Напрями</a></li>
+            <li><a href="../index.php#services">Послуги</a></li>
             <li><a href="../news.php">Новини</a></li>
           </ul>
         </nav>

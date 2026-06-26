@@ -32,7 +32,7 @@
 }
 
 .news-gallery__thumb:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-focus-outline);
   outline-offset: 2px;
 }
 
@@ -176,7 +176,7 @@ body.news-gallery-lightbox-open {
 .news-gallery-lightbox__close:focus-visible,
 .news-gallery-lightbox__prev:focus-visible,
 .news-gallery-lightbox__next:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-focus-outline);
   outline-offset: 2px;
 }
 

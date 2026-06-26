@@ -46,6 +46,23 @@
   flex-shrink: 0;
 }
 
+html.theme-dark .logo-link .logo-block {
+  background: var(--color-header-brand-bg);
+  border: 1px solid var(--color-header-brand-border);
+  border-radius: var(--radius-sm);
+  padding: 4px var(--space-2);
+  box-shadow: var(--shadow-sm);
+}
+
+.logo-link:focus {
+  outline: none;
+}
+
+.logo-link:focus-visible .logo-block {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
+}
+
 .logo-img {
   height: 40px;
   width: auto;
@@ -107,6 +124,20 @@
   width: 100%;
 }
 
+.nav a:focus {
+  outline: none;
+}
+
+.nav a:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.nav a:active {
+  color: var(--color-primary);
+}
+
 /* ============================================================
    BURGER BUTTON
    ============================================================ */
@@ -129,6 +160,15 @@
 
 .burger:hover {
   background: var(--color-bg);
+}
+
+.burger:focus {
+  outline: none;
+}
+
+.burger:focus-visible {
+  outline: 2px solid var(--color-focus-outline);
+  outline-offset: 2px;
 }
 
 /* Fixed-size inner canvas — spans are positioned inside this */
@@ -186,7 +226,7 @@
   .nav {
     position: fixed;
     inset: 0;
-    background: var(--color-primary);
+    background: var(--color-nav-overlay-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -213,7 +253,7 @@
 
   .nav a {
     font-size: 1.3rem;
-    color: var(--color-on-primary);
+    color: var(--color-nav-overlay-on);
     letter-spacing: 0.06em;
   }
 
@@ -259,7 +299,7 @@
 }
 
 .theme-toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-focus-outline);
   outline-offset: 2px;
 }
 
@@ -302,7 +342,7 @@
     justify-content: center;
     background: var(--color-nav-overlay-toggle-bg);
     border-color: var(--color-nav-overlay-toggle-border);
-    color: var(--color-on-primary);
+    color: var(--color-nav-overlay-on);
     font-size: 1rem;
     padding: var(--space-2) var(--space-3);
   }

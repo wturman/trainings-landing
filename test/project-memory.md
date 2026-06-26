@@ -250,6 +250,18 @@ Implemented dark mode with system detection, toggle UI, and localStorage persist
 **2026-06-14 — Design system audit**  
 Extended `:root` semantic color tokens (hovers, on-primary, overlays, admin status); component CSS and `css/admin.css` now use variables only; fixed admin pages loading stale `admin/css/main.css` without theme support.
 
+**2026-06-14 — Likes removed; views counter fix**  
+Removed article like UI/JS; `like.php` returns 410. Fixed view counting: dynamic engagement cookie path, published-only recording, IP meta parsing for JSON objects, cookie set when IP window blocks repeat views.
+
+**2026-06-14 — Dark theme header/footer**  
+Dark mode: light brand chip behind header logo (`--color-header-brand-*`). Footer locked to `--color-footer-*` tokens so appearance stays deep-teal + light text in all themes.
+
+**2026-06-14 — Dark theme UI polish**  
+Dark theme UI polish pass completed: tuned contrast tokens, elevation shadows, mobile nav overlay colors, and focus/hover/active states for buttons, nav, cards, and links.
+
+**2026-06-14 — Pre-production audit**  
+SEO: `news_site_origin()`, `news_canonical_article_url()`, article/admin-preview meta via `news_get_seo_*` only. Routing: PHP surfaces use `index.php`, `news.php`, `article.php?slug=` (no `.html` in PHP). Admin save (`save.php`, `admin/admin/save.php`) preserves `views`/`likes`/`engagement` on edit. Performance: duplicate `gallery.js` removed from article PHP (loaded via `main.js`). JSON: `data/news.json` validated (9 items, required fields, unique slugs/ids). Legacy static `*.html` mirrors still contain `index.html` nav — not used by canonical PHP routes; review before decommissioning.
+
 ---
 
 *Last updated: merged canonical memory for `/test` staging + CMS.*

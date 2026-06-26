@@ -186,6 +186,28 @@ function news_get_seo_image(array $item, string $siteOrigin): string
     return $siteOrigin . '/' . ltrim($imagePath, '/');
 }
 
+function news_site_origin(): string
+{
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443)
+        ? 'https'
+        : 'http';
+
+    return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+}
+
+function news_canonical_article_url(string $slug, ?string $siteOrigin = null): string
+{
+    $normalized = news_normalize_article_slug($slug);
+    if ($normalized === null) {
+        return '';
+    }
+
+    $origin = $siteOrigin ?? news_site_origin();
+
+    return rtrim($origin, '/') . '/test/news/article.php?slug=' . rawurlencode($normalized);
+}
+
 /**
  * Ukrainian Cyrillic → Latin (URL slug). Used instead of iconv, which often strips Cyrillic on Windows.
  *
@@ -499,6 +521,23 @@ function news_save_json_document(string $jsonPath, array $data): bool
     return true;
 }
 
+function news_engagement_cookie_path(): string
+{
+    $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+    if ($script !== '' && str_starts_with($script, '/test/')) {
+        return '/test/';
+    }
+
+    if ($script !== '') {
+        $dir = dirname($script);
+        if ($dir !== '/' && $dir !== '.' && $dir !== '\\') {
+            return rtrim($dir, '/') . '/';
+        }
+    }
+
+    return '/';
+}
+
 function news_set_engagement_cookie(string $cookieName, int $maxAgeSeconds): void
 {
     if ($cookieName === '' || headers_sent()) {
@@ -510,7 +549,7 @@ function news_set_engagement_cookie(string $cookieName, int $maxAgeSeconds): voi
 
     setcookie($cookieName, '1', [
         'expires' => time() + $maxAgeSeconds,
-        'path' => '/test/',
+        'path' => news_engagement_cookie_path(),
         'secure' => $secure,
         'httponly' => false,
         'samesite' => 'Lax',
@@ -569,8 +608,17 @@ function news_normalize_item_engagement_meta(mixed $raw): array
         return ['views_ips' => $viewsIps, 'likes_ips' => $likesIps];
     }
 
-    if (isset($raw['views_ips']) && is_array($raw['views_ips'])) {
-        foreach ($raw['views_ips'] as $ip => $timestamp) {
+    if (isset($raw['views_ips'])) {
+        $viewsRaw = $raw['views_ips'];
+        if (is_array($viewsRaw)) {
+            $viewsSource = $viewsRaw;
+        } elseif (is_object($viewsRaw)) {
+            $viewsSource = (array) $viewsRaw;
+        } else {
+            $viewsSource = [];
+        }
+
+        foreach ($viewsSource as $ip => $timestamp) {
             if (!is_string($ip) || !news_is_valid_client_ip($ip)) {
                 continue;
             }
@@ -655,7 +703,7 @@ function news_increment_view_with_ip_tracking(string $jsonPath, string $slug, ?s
         }
 
         $item['engagement'] = [
-            'views_ips' => (object) $meta['views_ips'],
+            'views_ips' => $meta['views_ips'],
             'likes_ips' => $meta['likes_ips'],
         ];
 
@@ -715,7 +763,7 @@ function news_increment_like_with_ip_tracking(string $jsonPath, string $slug, ?s
         }
 
         $item['engagement'] = [
-            'views_ips' => (object) $meta['views_ips'],
+            'views_ips' => $meta['views_ips'],
             'likes_ips' => $meta['likes_ips'],
         ];
 
@@ -784,32 +832,40 @@ function news_increment_item_engagement(string $jsonPath, string $slug, string $
 }
 
 /**
- * Record one view per browser per article (30-minute cookie window).
+ * Record one view per browser per article (30-minute cookie + IP window).
  *
- * @return array{views: int, likes: int}
+ * @return array{views: int}
  */
 function news_record_article_view(string $jsonPath, string $slug): array
 {
-    $item = load_news_item_by_slug($jsonPath, $slug);
+    $slug = news_normalize_article_slug($slug);
+    if ($slug === null) {
+        return ['views' => 0];
+    }
+
+    $item = load_published_news_item_by_slug($jsonPath, $slug);
     if ($item === null) {
-        return ['views' => 0, 'likes' => 0];
+        return ['views' => 0];
     }
 
-    $engagement = news_item_engagement_from_array($item);
-
-    if (news_user_has_engagement_cookie('viewed', $slug)) {
-        return $engagement;
-    }
+    $engagement = ['views' => news_item_engagement_count($item, 'views')];
 
     $cookieName = news_engagement_cookie_name('viewed', $slug);
     if ($cookieName === null) {
         return $engagement;
     }
 
+    if (news_user_has_engagement_cookie('viewed', $slug)) {
+        return $engagement;
+    }
+
     $clientIp = news_client_ip();
+    $now = time();
     if ($clientIp !== null) {
         $meta = news_item_engagement_meta($item);
-        if (news_view_ip_blocked_within_window($meta['views_ips'], $clientIp, time())) {
+        if (news_view_ip_blocked_within_window($meta['views_ips'], $clientIp, $now)) {
+            news_set_engagement_cookie($cookieName, 30 * 60);
+
             return $engagement;
         }
     }
@@ -817,72 +873,18 @@ function news_record_article_view(string $jsonPath, string $slug): array
     $after = news_increment_view_with_ip_tracking($jsonPath, $slug, $clientIp);
     if ($after !== null) {
         news_set_engagement_cookie($cookieName, 30 * 60);
-        $engagement = $after;
+        $engagement = ['views' => $after['views']];
     }
 
     return $engagement;
 }
 
 /**
+ * Likes UI disabled — endpoint unused. Kept for backward compatibility.
+ *
  * @return array{views: int, likes: int, already: bool}|null
  */
 function news_record_article_like(string $jsonPath, string $slug): ?array
 {
-    $slug = news_normalize_article_slug($slug);
-    if ($slug === null) {
-        return null;
-    }
-
-    $item = load_published_news_item_by_slug($jsonPath, $slug);
-    if ($item === null) {
-        return null;
-    }
-
-    $engagement = news_item_engagement_from_array($item);
-
-    if (news_user_has_engagement_cookie('liked', $slug)) {
-        return [
-            'views' => $engagement['views'],
-            'likes' => $engagement['likes'],
-            'already' => true,
-        ];
-    }
-
-    $cookieName = news_engagement_cookie_name('liked', $slug);
-    if ($cookieName === null) {
-        return null;
-    }
-
-    $clientIp = news_client_ip();
-    if ($clientIp !== null) {
-        $meta = news_item_engagement_meta($item);
-        if (news_likes_ip_contains($meta['likes_ips'], $clientIp)) {
-            return [
-                'views' => $engagement['views'],
-                'likes' => $engagement['likes'],
-                'already' => true,
-            ];
-        }
-    }
-
-    $after = news_increment_like_with_ip_tracking($jsonPath, $slug, $clientIp);
-    if ($after === null) {
-        return null;
-    }
-
-    if ($after['blocked']) {
-        return [
-            'views' => $after['views'],
-            'likes' => $after['likes'],
-            'already' => true,
-        ];
-    }
-
-    news_set_engagement_cookie($cookieName, 365 * 24 * 60 * 60);
-
-    return [
-        'views' => $after['views'],
-        'likes' => $after['likes'],
-        'already' => false,
-    ];
+    return null;
 }

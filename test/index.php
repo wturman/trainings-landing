@@ -37,7 +37,7 @@ $homepageNews = array_slice(load_published_news(news_data_json_path()), 0, 3);
 <header class="site-header">
   <div class="header-inner">
     <!-- Лого -->
-    <a href="index.html" class="logo-link" aria-label="Перейти на головну сторінку">
+    <a href="index.php" class="logo-link" aria-label="Перейти на головну сторінку">
       <div class="logo-block">
         <img
           src="img/logo.png"

@@ -68,7 +68,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo-link" aria-label="Перейти на головну сторінку">
+        <a href="../index.php" class="logo-link" aria-label="Перейти на головну сторінку">
           <div class="logo-block">
             <img src="../img/logo.png" alt="Логотип громадської організації Сила інтелекту" class="logo-img" />
             <img src="../img/logo-text.png" alt="Логотип громадської організації Сила інтелекту" class="logo-text-img" />
@@ -76,7 +76,7 @@ $coverPreviewSrc = $formCover !== '' && admin_is_safe_news_asset_path($formCover
         </a>
         <nav class="nav">
           <ul>
-            <li><a href="../index.html">Головна</a></li>
+            <li><a href="../index.php">Головна</a></li>
             <li><a href="../news.php">Новини</a></li>
             <li><a href="index.php" aria-current="page">Адмін</a></li>
             <li><a href="logout.php">Вийти</a></li>

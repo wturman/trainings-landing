@@ -12,7 +12,7 @@ $newsItems = load_published_news(news_data_json_path());
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" type="image/png" href="img/favicon-16x16.png" />
+    <link rel="icon" type="image/png" href="../img/favicon-16x16.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>Новини — ГО «Сила інтелекту»</title>
     <script src="../js/theme-boot.js"></script>
@@ -26,15 +26,15 @@ $newsItems = load_published_news(news_data_json_path());
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <a href="index.html" class="logo-link" aria-label="Перейти на головну сторінку">
+        <a href="../index.php" class="logo-link" aria-label="Перейти на головну сторінку">
           <div class="logo-block">
             <img
-              src="img/logo.png"
+              src="../img/logo.png"
               alt="Логотип громадської організації Сила інтелекту"
               class="logo-img"
             />
             <img
-              src="img/logo-text.png"
+              src="../img/logo-text.png"
               alt="Логотип громадської організації Сила інтелекту"
               class="logo-text-img"
             />
@@ -42,10 +42,10 @@ $newsItems = load_published_news(news_data_json_path());
         </a>
         <nav class="nav">
           <ul>
-            <li><a href="index.html">Головна</a></li>
-            <li><a href="index.html#about">Про нас</a></li>
-            <li><a href="index.html#directions">Напрями</a></li>
-            <li><a href="index.html#services">Послуги</a></li>
+            <li><a href="../index.php">Головна</a></li>
+            <li><a href="../index.php#about">Про нас</a></li>
+            <li><a href="../index.php#directions">Напрями</a></li>
+            <li><a href="../index.php#services">Послуги</a></li>
             <li><a href="../news.php">Новини</a></li>
           </ul>
         </nav>
@@ -59,7 +59,7 @@ $newsItems = load_published_news(news_data_json_path());
 
     <main class="news-archive-page">
       <section class="news-archive" aria-labelledby="news-archive-title">
-        <p class="news-archive__back"><a href="index.html">← Повернутися на головну</a></p>
+        <p class="news-archive__back"><a href="../index.php">← Повернутися на головну</a></p>
         <h1 id="news-archive-title">Новини</h1>
         <p class="news-archive__lead">Архів подій та оновлень організації «Сила інтелекту».</p>
 

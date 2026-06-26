@@ -2,8 +2,8 @@
    FOOTER
    ============================================================ */
 .footer {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--color-footer-bg);
+  color: var(--color-footer-on);
   padding: var(--space-6) var(--space-4);
   text-align: center;
   opacity: 0;
@@ -18,7 +18,7 @@
 
 .footer h2 {
   font-size: clamp(1.4rem, 3vw, 2rem);
-  color: var(--color-on-primary);
+  color: var(--color-footer-on);
   margin-bottom: var(--space-3);
 }
 
@@ -34,7 +34,7 @@
 
 .footer p {
   font-size: 1rem;
-  color: var(--color-on-primary-muted);
+  color: var(--color-footer-on-muted);
   margin: var(--space-1) auto;
   max-width: none;
   line-height: 1.6;
@@ -66,7 +66,7 @@
   border-radius: 50%;
   background: var(--color-footer-icon-bg);
   font-size: 1.1rem;
-  color: var(--color-on-primary);
+  color: var(--color-footer-on);
   transition: background var(--transition), transform var(--transition), color var(--transition);
 }
 
