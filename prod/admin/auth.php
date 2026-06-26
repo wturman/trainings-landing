@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    admin_start_session();
-}
-
 function admin_start_session(): void
 {
     if (session_status() === PHP_SESSION_ACTIVE) {
@@ -32,6 +28,10 @@ function admin_start_session(): void
     ]);
 
     session_start();
+}
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    admin_start_session();
 }
 
 function admin_current_return_path(): string
@@ -122,20 +122,60 @@ function admin_safe_return_url(?string $return): string
 
 function admin_is_safe_admin_relative_path(string $path): bool
 {
-    $path = strtok($path, '?') ?: $path;
-    if ($path === '' || str_contains($path, '\\')) {
+    $pathOnly = explode('?', $path, 2)[0];
+    if ($pathOnly === '' || str_contains($pathOnly, '\\')) {
         return false;
     }
 
-    if (preg_match('#^(index|login|logout|save|change-password|news|import-legacy|rollback-migration)\\.php$#', $path)) {
+    if (preg_match('#^(index|login|logout|save|change-password|news|import-legacy|rollback-migration)\\.php$#', $pathOnly)) {
         return true;
     }
 
-    if (preg_match('#^news/article\\.php$#', $path)) {
+    if (preg_match('#^news/article\\.php$#', $pathOnly)) {
         return true;
     }
 
     return false;
+}
+
+/**
+ * Build absolute path URL for redirects (same host), from admin-relative path.
+ */
+function admin_resolve_url(string $relative): string
+{
+    $relative = str_replace('\\', '/', trim($relative));
+    if ($relative === '') {
+        $relative = 'index.php';
+    }
+
+    if (preg_match('#^https?://#i', $relative)) {
+        return $relative;
+    }
+
+    $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? '/admin/index.php'));
+    $base = dirname($script);
+    if ($base === '/' || $base === '.' || $base === '') {
+        return '/' . ltrim($relative, '/');
+    }
+
+    return rtrim($base, '/') . '/' . ltrim($relative, '/');
+}
+
+function admin_redirect_after_login(string $return): void
+{
+    $path = admin_safe_return_url($return);
+    session_write_close();
+    header('Location: ' . admin_resolve_url($path), true, 303);
+    exit;
+}
+
+function admin_redirect_to_login(string $returnPath): void
+{
+    $safeReturn = admin_safe_return_url($returnPath);
+    $query = http_build_query(['return' => $safeReturn]);
+    session_write_close();
+    header('Location: ' . admin_resolve_url('login.php?' . $query), true, 303);
+    exit;
 }
 
 function admin_require_auth(): void
@@ -145,8 +185,7 @@ function admin_require_auth(): void
     }
 
     $return = admin_current_return_path();
-    header('Location: login.php?' . http_build_query(['return' => $return]));
-    exit;
+    admin_redirect_to_login($return);
 }
 
 function admin_attempt_login(string $username, string $password): bool

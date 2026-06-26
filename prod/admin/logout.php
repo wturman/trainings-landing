@@ -6,5 +6,6 @@ require __DIR__ . '/auth.php';
 
 admin_logout();
 
-header('Location: login.php');
+session_write_close();
+header('Location: ' . admin_resolve_url('login.php'), true, 303);
 exit;

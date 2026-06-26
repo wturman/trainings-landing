@@ -5,8 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/auth.php';
 
 if (admin_is_logged_in()) {
-    header('Location: index.php');
-    exit;
+    admin_redirect_after_login('index.php');
 }
 
 $error = '';
@@ -18,8 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $return = admin_safe_return_url($_POST['return'] ?? $return);
 
     if (admin_attempt_login($username, $password)) {
-        header('Location: ' . admin_safe_return_url($return));
-        exit;
+        admin_redirect_after_login($return);
     }
 
     $error = 'Невірний логін або пароль.';
@@ -48,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($error !== ''): ?>
         <p class="admin-login-error" role="alert"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
 <?php endif; ?>
-        <form method="post" action="login.php">
+        <form method="post" action="<?= htmlspecialchars(admin_resolve_url('login.php'), ENT_QUOTES, 'UTF-8') ?>" accept-charset="UTF-8">
           <input type="hidden" name="return" value="<?= htmlspecialchars($return, ENT_QUOTES, 'UTF-8') ?>" />
           <label for="username">Логін</label>
           <input type="text" id="username" name="username" autocomplete="username" required autofocus />
