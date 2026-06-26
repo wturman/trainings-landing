@@ -75,6 +75,7 @@ Public routing (`article.php?slug=`) stays the contract; roadmap items should no
 - **Transliteration:** Ukrainian Cyrillic → Latin via explicit char map in `news_transliterate_for_slug()` (not `iconv`, which often drops Cyrillic on Windows); used by preview (`slug_preview=1`) and create save alike.
 - `cover` / `gallery` under `img/news/{slug}/`.
 - `published === true` for public views; admin/list uses `news_item_is_published()` for display (accepts JSON boolean and common truthy forms).
+- **Engagement:** optional `views` / `likes` integers on each item (default 0 when missing). Public `article.php` records views; `news/like.php` records likes. Cookie anti-spam: `viewed_{slug}` (30 min), `liked_{slug}` (1 year), path `/test/`. **Dual layer:** same flows also use `engagement.views_ips` (IP → Unix timestamp, 30 min window for views) and `engagement.likes_ips` (list of IPs that liked); cookies are checked first, then IP; both must allow increment.
 
 **Legacy HTML import (one-time):** `php test/migrate-legacy-news.php` (optional `--dry-run`) or admin **Import legacy HTML news**. Parses `test/news/*.html`; slug from filename; skips duplicates; **always** backs up `news.json.bak-{timestamp}` before write; appends run to `data/migration-log.json`. **Rollback last migration** restores latest `.bak-*` only (HTML untouched).
 
@@ -113,6 +114,24 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 ---
 
 ## Task log (latest first)
+
+### 2026-06-14 — News gallery mobile zoom + lightbox swipe
+
+- **Created:** none
+- **Modified:** `test/js/gallery.js`, `test/css/gallery.css`, `project-memory.md`
+- **Logic:** Grid `.news-gallery img` on mobile: scrollable frame + `touch-action: pinch-zoom` for in-place zoom without affecting cover. Existing thumb click still opens full-screen lightbox (`rgba(0,0,0,0.9)`). Lightbox: ✕ close, backdrop/stage tap to close, desktop arrows + keyboard; touch swipe left/right changes slide with wrap; two-finger pinch zoom on image (resets on slide change). No HTML/backend changes.
+
+### 2026-06-14 — Engagement IP tracking (cookie + IP dual layer)
+
+- **Created:** `test/add-news-engagement-ip-fields.mjs`
+- **Modified:** `test/includes/news-data.php`, `test/data/news.json`, `project-memory.md`
+- **Logic:** Per article, `engagement.views_ips` and `engagement.likes_ips` in JSON (with existing `views`/`likes` counters). Cookie checks unchanged and run first; then `REMOTE_ADDR` validated via `filter_var`. Views: skip increment if IP timestamp within 30 min; else increment and store IP timestamp. Likes: skip if IP in `likes_ips`; else increment and append IP. Atomic JSON write unchanged. Missing `engagement` normalized at runtime and initialized in data via script.
+
+### 2026-06-14 — News article views and likes (cookie anti-spam)
+
+- **Created:** `test/news/like.php`, `test/js/news-article-like.js`, `test/add-news-engagement-fields.mjs`
+- **Modified:** `test/data/news.json`, `test/includes/news-data.php`, `test/includes/news-render.php`, `test/news/article.php`, `test/css/news.css`, `test/admin/admin-lib.php`, `test/admin/save.php`, `project-memory.md`
+- **Logic:** Each JSON article has `views` and `likes` (0 default). On `article.php` load (not `preview=1`), increment `views` once per browser per article unless cookie `viewed_{slug}` is set; then set that cookie for 30 minutes. Likes: UI under cover; `POST test/news/like.php` increments `likes` once per `liked_{slug}` cookie (long-lived). JSON updates via temp file + `LOCK_EX` rename. Admin edit preserves existing counts; new posts start at 0. Legacy HTML unchanged.
 
 ### 2026-06-14 — News JSON id/slug normalization
 

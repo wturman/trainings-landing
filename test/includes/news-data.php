@@ -326,3 +326,474 @@ function news_legacy_article_file(string $newsDirectory, string $slug): ?string
 
     return $realFile;
 }
+
+function news_item_engagement_count(array $item, string $field): int
+{
+    if ($field !== 'views' && $field !== 'likes') {
+        return 0;
+    }
+
+    if (!array_key_exists($field, $item)) {
+        return 0;
+    }
+
+    $value = $item[$field];
+    if (is_int($value)) {
+        return max(0, $value);
+    }
+
+    if (is_float($value) || (is_string($value) && is_numeric($value))) {
+        return max(0, (int) $value);
+    }
+
+    return 0;
+}
+
+function news_engagement_cookie_name(string $kind, string $slug): ?string
+{
+    $slug = news_normalize_article_slug($slug);
+    if ($slug === null) {
+        return null;
+    }
+
+    if ($kind !== 'viewed' && $kind !== 'liked') {
+        return null;
+    }
+
+    return $kind . '_' . $slug;
+}
+
+/**
+ * @return array{items: list<array<string, mixed>>}|null
+ */
+function news_load_json_document(string $jsonPath): ?array
+{
+    $raw = file_get_contents($jsonPath);
+    if ($raw === false) {
+        return null;
+    }
+
+    $data = json_decode($raw, true);
+    if (!is_array($data) || !isset($data['items']) || !is_array($data['items'])) {
+        return null;
+    }
+
+    return $data;
+}
+
+/**
+ * @param array{items: list<array<string, mixed>>} $data
+ */
+function news_save_json_document(string $jsonPath, array $data): bool
+{
+    $encoded = json_encode(
+        $data,
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    );
+
+    if ($encoded === false) {
+        return false;
+    }
+
+    $encoded .= "\n";
+    $temp = $jsonPath . '.tmp-' . getmypid();
+    if (file_put_contents($temp, $encoded, LOCK_EX) === false) {
+        return false;
+    }
+
+    if (!rename($temp, $jsonPath)) {
+        @unlink($temp);
+
+        return false;
+    }
+
+    return true;
+}
+
+function news_set_engagement_cookie(string $cookieName, int $maxAgeSeconds): void
+{
+    if ($cookieName === '' || headers_sent()) {
+        return;
+    }
+
+    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+
+    setcookie($cookieName, '1', [
+        'expires' => time() + $maxAgeSeconds,
+        'path' => '/test/',
+        'secure' => $secure,
+        'httponly' => false,
+        'samesite' => 'Lax',
+    ]);
+}
+
+function news_user_has_engagement_cookie(string $kind, string $slug): bool
+{
+    $name = news_engagement_cookie_name($kind, $slug);
+    if ($name === null) {
+        return false;
+    }
+
+    return isset($_COOKIE[$name]) && (string) $_COOKIE[$name] !== '';
+}
+
+/**
+ * @return array{views: int, likes: int}|null
+ */
+function news_item_engagement_from_array(array $item): array
+{
+    return [
+        'views' => news_item_engagement_count($item, 'views'),
+        'likes' => news_item_engagement_count($item, 'likes'),
+    ];
+}
+
+function news_is_valid_client_ip(string $ip): bool
+{
+    return filter_var($ip, FILTER_VALIDATE_IP) !== false;
+}
+
+function news_client_ip(): ?string
+{
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!is_string($ip) || $ip === '') {
+        return null;
+    }
+
+    if (!news_is_valid_client_ip($ip)) {
+        return null;
+    }
+
+    return $ip;
+}
+
+/**
+ * @return array{views_ips: array<string, int>, likes_ips: list<string>}
+ */
+function news_normalize_item_engagement_meta(mixed $raw): array
+{
+    $viewsIps = [];
+    $likesIps = [];
+
+    if (!is_array($raw)) {
+        return ['views_ips' => $viewsIps, 'likes_ips' => $likesIps];
+    }
+
+    if (isset($raw['views_ips']) && is_array($raw['views_ips'])) {
+        foreach ($raw['views_ips'] as $ip => $timestamp) {
+            if (!is_string($ip) || !news_is_valid_client_ip($ip)) {
+                continue;
+            }
+            $ts = is_int($timestamp) ? $timestamp : (is_numeric($timestamp) ? (int) $timestamp : 0);
+            if ($ts > 0) {
+                $viewsIps[$ip] = $ts;
+            }
+        }
+    }
+
+    if (isset($raw['likes_ips']) && is_array($raw['likes_ips'])) {
+        foreach ($raw['likes_ips'] as $ip) {
+            if (!is_string($ip) || !news_is_valid_client_ip($ip)) {
+                continue;
+            }
+            if (!in_array($ip, $likesIps, true)) {
+                $likesIps[] = $ip;
+            }
+        }
+    }
+
+    return ['views_ips' => $viewsIps, 'likes_ips' => $likesIps];
+}
+
+/**
+ * @return array{views_ips: array<string, int>, likes_ips: list<string>}
+ */
+function news_item_engagement_meta(array $item): array
+{
+    return news_normalize_item_engagement_meta($item['engagement'] ?? null);
+}
+
+function news_view_ip_blocked_within_window(array $viewsIps, string $ip, int $now, int $windowSeconds = 1800): bool
+{
+    if (!isset($viewsIps[$ip])) {
+        return false;
+    }
+
+    $seenAt = (int) $viewsIps[$ip];
+
+    return $seenAt > 0 && ($now - $seenAt) < $windowSeconds;
+}
+
+function news_likes_ip_contains(array $likesIps, string $ip): bool
+{
+    return in_array($ip, $likesIps, true);
+}
+
+/**
+ * @return array{views: int, likes: int}|null
+ */
+function news_increment_view_with_ip_tracking(string $jsonPath, string $slug, ?string $ip): ?array
+{
+    $slug = news_normalize_article_slug($slug);
+    if ($slug === null) {
+        return null;
+    }
+
+    $now = time();
+    $data = news_load_json_document($jsonPath);
+    if ($data === null) {
+        return null;
+    }
+
+    $updated = null;
+    foreach ($data['items'] as $index => $item) {
+        if (!is_array($item) || !news_item_matches_slug_key($item, $slug)) {
+            continue;
+        }
+
+        $meta = news_item_engagement_meta($item);
+
+        if ($ip !== null && news_view_ip_blocked_within_window($meta['views_ips'], $ip, $now)) {
+            return news_item_engagement_from_array($item);
+        }
+
+        $item['views'] = news_item_engagement_count($item, 'views') + 1;
+        $item['likes'] = news_item_engagement_count($item, 'likes');
+
+        if ($ip !== null) {
+            $meta['views_ips'][$ip] = $now;
+        }
+
+        $item['engagement'] = [
+            'views_ips' => (object) $meta['views_ips'],
+            'likes_ips' => $meta['likes_ips'],
+        ];
+
+        $data['items'][$index] = $item;
+        $updated = news_item_engagement_from_array($item);
+        break;
+    }
+
+    if ($updated === null) {
+        return null;
+    }
+
+    if (!news_save_json_document($jsonPath, $data)) {
+        return null;
+    }
+
+    return $updated;
+}
+
+/**
+ * @return array{views: int, likes: int, blocked: bool}|null
+ */
+function news_increment_like_with_ip_tracking(string $jsonPath, string $slug, ?string $ip): ?array
+{
+    $slug = news_normalize_article_slug($slug);
+    if ($slug === null) {
+        return null;
+    }
+
+    $data = news_load_json_document($jsonPath);
+    if ($data === null) {
+        return null;
+    }
+
+    $updated = null;
+    foreach ($data['items'] as $index => $item) {
+        if (!is_array($item) || !news_item_matches_slug_key($item, $slug)) {
+            continue;
+        }
+
+        $meta = news_item_engagement_meta($item);
+        $counts = news_item_engagement_from_array($item);
+
+        if ($ip !== null && news_likes_ip_contains($meta['likes_ips'], $ip)) {
+            return [
+                'views' => $counts['views'],
+                'likes' => $counts['likes'],
+                'blocked' => true,
+            ];
+        }
+
+        $item['views'] = $counts['views'];
+        $item['likes'] = $counts['likes'] + 1;
+
+        if ($ip !== null) {
+            $meta['likes_ips'][] = $ip;
+        }
+
+        $item['engagement'] = [
+            'views_ips' => (object) $meta['views_ips'],
+            'likes_ips' => $meta['likes_ips'],
+        ];
+
+        $data['items'][$index] = $item;
+        $updated = news_item_engagement_from_array($item);
+        break;
+    }
+
+    if ($updated === null) {
+        return null;
+    }
+
+    if (!news_save_json_document($jsonPath, $data)) {
+        return null;
+    }
+
+    return [
+        'views' => $updated['views'],
+        'likes' => $updated['likes'],
+        'blocked' => false,
+    ];
+}
+
+/**
+ * @return array{views: int, likes: int}|null
+ */
+function news_increment_item_engagement(string $jsonPath, string $slug, string $field): ?array
+{
+    if ($field !== 'views' && $field !== 'likes') {
+        return null;
+    }
+
+    $slug = news_normalize_article_slug($slug);
+    if ($slug === null) {
+        return null;
+    }
+
+    $data = news_load_json_document($jsonPath);
+    if ($data === null) {
+        return null;
+    }
+
+    $updated = null;
+    foreach ($data['items'] as $index => $item) {
+        if (!is_array($item) || !news_item_matches_slug_key($item, $slug)) {
+            continue;
+        }
+
+        $item['views'] = news_item_engagement_count($item, 'views');
+        $item['likes'] = news_item_engagement_count($item, 'likes');
+        $item[$field] = $item[$field] + 1;
+        $data['items'][$index] = $item;
+        $updated = news_item_engagement_from_array($item);
+        break;
+    }
+
+    if ($updated === null) {
+        return null;
+    }
+
+    if (!news_save_json_document($jsonPath, $data)) {
+        return null;
+    }
+
+    return $updated;
+}
+
+/**
+ * Record one view per browser per article (30-minute cookie window).
+ *
+ * @return array{views: int, likes: int}
+ */
+function news_record_article_view(string $jsonPath, string $slug): array
+{
+    $item = load_news_item_by_slug($jsonPath, $slug);
+    if ($item === null) {
+        return ['views' => 0, 'likes' => 0];
+    }
+
+    $engagement = news_item_engagement_from_array($item);
+
+    if (news_user_has_engagement_cookie('viewed', $slug)) {
+        return $engagement;
+    }
+
+    $cookieName = news_engagement_cookie_name('viewed', $slug);
+    if ($cookieName === null) {
+        return $engagement;
+    }
+
+    $clientIp = news_client_ip();
+    if ($clientIp !== null) {
+        $meta = news_item_engagement_meta($item);
+        if (news_view_ip_blocked_within_window($meta['views_ips'], $clientIp, time())) {
+            return $engagement;
+        }
+    }
+
+    $after = news_increment_view_with_ip_tracking($jsonPath, $slug, $clientIp);
+    if ($after !== null) {
+        news_set_engagement_cookie($cookieName, 30 * 60);
+        $engagement = $after;
+    }
+
+    return $engagement;
+}
+
+/**
+ * @return array{views: int, likes: int, already: bool}|null
+ */
+function news_record_article_like(string $jsonPath, string $slug): ?array
+{
+    $slug = news_normalize_article_slug($slug);
+    if ($slug === null) {
+        return null;
+    }
+
+    $item = load_published_news_item_by_slug($jsonPath, $slug);
+    if ($item === null) {
+        return null;
+    }
+
+    $engagement = news_item_engagement_from_array($item);
+
+    if (news_user_has_engagement_cookie('liked', $slug)) {
+        return [
+            'views' => $engagement['views'],
+            'likes' => $engagement['likes'],
+            'already' => true,
+        ];
+    }
+
+    $cookieName = news_engagement_cookie_name('liked', $slug);
+    if ($cookieName === null) {
+        return null;
+    }
+
+    $clientIp = news_client_ip();
+    if ($clientIp !== null) {
+        $meta = news_item_engagement_meta($item);
+        if (news_likes_ip_contains($meta['likes_ips'], $clientIp)) {
+            return [
+                'views' => $engagement['views'],
+                'likes' => $engagement['likes'],
+                'already' => true,
+            ];
+        }
+    }
+
+    $after = news_increment_like_with_ip_tracking($jsonPath, $slug, $clientIp);
+    if ($after === null) {
+        return null;
+    }
+
+    if ($after['blocked']) {
+        return [
+            'views' => $after['views'],
+            'likes' => $after['likes'],
+            'already' => true,
+        ];
+    }
+
+    news_set_engagement_cookie($cookieName, 365 * 24 * 60 * 60);
+
+    return [
+        'views' => $after['views'],
+        'likes' => $after['likes'],
+        'already' => false,
+    ];
+}

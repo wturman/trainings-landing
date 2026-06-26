@@ -17,13 +17,7 @@
                 "img/news/vid-mriy-do-diy-2026-06-23/vid-mriy-do-diy-2026-06-23-06.png"
             ],
             "tags": [],
-            "published": false,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": false
         },
         {
             "id": "tuteshni-obladnannya-2026-06-20",
@@ -47,13 +41,7 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "koly-dytyacha-tvorchist-ozhyvaye-mahiya-nashoho-maysterklasu-v-obrazhiyivtsi-2026-06-13",
@@ -76,13 +64,7 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "navchalnyy-rik-pozadu-poperedu-lito-novykh-mozhlyvostey-2026-05-31",
@@ -102,13 +84,7 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "razom-tsikavishe-2026-05-23",
@@ -128,13 +104,7 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "harnyy-nastriy-zhyve-spilkuvannya-ta-aktyvnyy-vidpochynok-2026-05-09",
@@ -156,13 +126,7 @@
                 "ЄднанняДляГромади,",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "novi-nastilni-ihry-2026-05-02",
@@ -184,13 +148,7 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "chornobylskyy-kinoperehlyad-2026-04-26",
@@ -210,13 +168,7 @@
                 "ЄднанняДляГромади",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         },
         {
             "id": "rozpochynayemo-robotu-nad-nashym-molodizhnym-proyektom-2026-04-18",
@@ -238,13 +190,7 @@
                 "ЄднанняДляГромади,",
                 "MinderooFoundation"
             ],
-            "published": true,
-            "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "published": true
         }
     ]
 }

@@ -19,11 +19,7 @@
             "tags": [],
             "published": false,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "tuteshni-obladnannya-2026-06-20",
@@ -49,11 +45,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "koly-dytyacha-tvorchist-ozhyvaye-mahiya-nashoho-maysterklasu-v-obrazhiyivtsi-2026-06-13",
@@ -78,11 +70,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "navchalnyy-rik-pozadu-poperedu-lito-novykh-mozhlyvostey-2026-05-31",
@@ -104,11 +92,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "razom-tsikavishe-2026-05-23",
@@ -130,11 +114,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "harnyy-nastriy-zhyve-spilkuvannya-ta-aktyvnyy-vidpochynok-2026-05-09",
@@ -158,11 +138,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "novi-nastilni-ihry-2026-05-02",
@@ -186,11 +162,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "chornobylskyy-kinoperehlyad-2026-04-26",
@@ -212,11 +184,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         },
         {
             "id": "rozpochynayemo-robotu-nad-nashym-molodizhnym-proyektom-2026-04-18",
@@ -240,11 +208,7 @@
             ],
             "published": true,
             "views": 0,
-            "likes": 0,
-            "engagement": {
-                "views_ips": {},
-                "likes_ips": []
-            }
+            "likes": 0
         }
     ]
 }

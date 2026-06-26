@@ -506,6 +506,8 @@ function admin_build_item_from_post(
         'gallery' => $gallery,
         'tags' => admin_parse_tags($tagsRaw),
         'published' => $published,
+        'views' => 0,
+        'likes' => 0,
     ];
 }
 

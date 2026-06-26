@@ -330,6 +330,82 @@ a.news-card:hover {
   object-fit: cover;
 }
 
+.news-article__engagement {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin: calc(-1 * var(--space-2)) 0 var(--space-5);
+  max-width: var(--content-width);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.news-article__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.news-article__stat-icon {
+  line-height: 1;
+}
+
+.news-article__stat-label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.news-article__stat-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.news-article__like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface, #fff);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.news-article__like-btn:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.news-article__like-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.news-article__like-btn.is-liked {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.news-article__like-btn .fa-heart {
+  font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+  .news-article__like-btn {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .news-article__content {
   position: relative;
   z-index: 1;

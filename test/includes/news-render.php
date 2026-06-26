@@ -155,6 +155,11 @@ function render_news_article(array $item): void
     $content = (string) ($item['content'] ?? '');
     $tags = is_array($item['tags'] ?? null) ? $item['tags'] : [];
     $gallery = is_array($item['gallery'] ?? null) ? $item['gallery'] : [];
+    $articleSlug = (string) ($item['slug'] ?? '');
+    $views = news_item_engagement_count($item, 'views');
+    $likes = news_item_engagement_count($item, 'likes');
+    $likedAlready = $articleSlug !== '' && news_user_has_engagement_cookie('liked', $articleSlug);
+    $slugAttr = htmlspecialchars($articleSlug, ENT_QUOTES, 'UTF-8');
     ?>
         <p class="news-article__back"><a href="../news.html">← Усі новини</a></p>
 
@@ -166,6 +171,35 @@ function render_news_article(array $item): void
           <div class="news-preview__frame">
             <img src="<?= $cover ?>" alt="<?= $coverAlt ?>" width="1200" height="630" />
           </div>
+        </div>
+
+        <div
+          class="news-article__engagement"
+          data-news-engagement
+          data-slug="<?= $slugAttr ?>"
+          data-liked="<?= $likedAlready ? '1' : '0' ?>"
+        >
+          <span class="news-article__stat" data-views-count>
+            <span class="news-article__stat-icon" aria-hidden="true">👁</span>
+            <span class="news-article__stat-label">Перегляди:</span>
+            <span class="news-article__stat-value"><?= (int) $views ?></span>
+          </span>
+          <span class="news-article__stat" data-likes-count>
+            <span class="news-article__stat-icon" aria-hidden="true">❤️</span>
+            <span class="news-article__stat-label">Вподобання:</span>
+            <span class="news-article__stat-value"><?= (int) $likes ?></span>
+          </span>
+          <button
+            type="button"
+            class="news-article__like-btn<?= $likedAlready ? ' is-liked' : '' ?>"
+            data-like-btn
+            <?= $likedAlready ? 'disabled' : '' ?>
+            aria-pressed="<?= $likedAlready ? 'true' : 'false' ?>"
+            aria-label="Вподобати цю новину"
+          >
+            <i class="fa<?= $likedAlready ? 's' : 'r' ?> fa-heart" aria-hidden="true"></i>
+            <span class="news-article__like-btn-text"><?= $likedAlready ? 'Дякуємо' : 'Вподобати' ?></span>
+          </button>
         </div>
 
         <div class="news-article__content">

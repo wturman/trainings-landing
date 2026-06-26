@@ -171,6 +171,8 @@ if ($isEdit) {
             continue;
         }
         if (news_item_matches_slug_key($existing, (string) $oldSlug)) {
+            $item['views'] = news_item_engagement_count($existing, 'views');
+            $item['likes'] = news_item_engagement_count($existing, 'likes');
             $nextItems[] = $item;
             $replaced = true;
             continue;
