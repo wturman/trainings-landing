@@ -268,6 +268,30 @@ if ($isEdit && $formSlug !== '') {
       }
       .admin-form textarea { min-height: 6rem; resize: vertical; }
       .admin-form #content { min-height: 10rem; }
+      .admin-wysiwyg { margin-top: var(--space-1); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); overflow: hidden; }
+      .admin-wysiwyg__toolbar { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: var(--space-2); border-bottom: 1px solid var(--color-border); background: var(--color-bg); }
+      .admin-wysiwyg__btn {
+        font-family: var(--font-heading); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.65rem;
+        border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface);
+        color: var(--color-primary); cursor: pointer; line-height: 1.2;
+      }
+      .admin-wysiwyg__btn:hover { border-color: var(--color-primary); background: rgba(15, 76, 92, 0.06); }
+      .admin-wysiwyg__editor {
+        min-height: 12rem; max-height: 28rem; overflow-y: auto; padding: var(--space-3);
+        font-family: var(--font-body); font-size: 1rem; line-height: 1.7; color: var(--color-text);
+        outline: none;
+      }
+      .admin-wysiwyg__editor:focus { box-shadow: inset 0 0 0 2px rgba(15, 76, 92, 0.15); }
+      .admin-wysiwyg__editor p { margin: 0 0 var(--space-3); }
+      .admin-wysiwyg__editor h2,
+      .admin-wysiwyg__editor h3 { font-family: var(--font-heading); color: var(--color-primary); margin: 0 0 var(--space-3); line-height: 1.3; }
+      .admin-wysiwyg__editor h2 { font-size: 1.35rem; }
+      .admin-wysiwyg__editor h3 { font-size: 1.15rem; }
+      .admin-wysiwyg__editor ul,
+      .admin-wysiwyg__editor ol { margin: 0 0 var(--space-3); padding-left: 1.35rem; }
+      .admin-wysiwyg__editor a { color: var(--color-accent); text-decoration: underline; }
+      .admin-wysiwyg__editor strong { font-weight: 700; }
+      .admin-content-fallback { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
       .admin-hint { font-weight: 400; font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-1); }
       .admin-slug-preview {
         margin-top: var(--space-2); margin-bottom: var(--space-1); padding: var(--space-2) var(--space-3);
@@ -469,9 +493,32 @@ if ($isEdit && $formSlug !== '') {
             <label for="excerpt">Короткий опис (excerpt)</label>
             <textarea id="excerpt" name="excerpt" required><?= htmlspecialchars($formExcerpt, ENT_QUOTES, 'UTF-8') ?></textarea>
 
-            <label for="content">Контент</label>
-            <textarea id="content" name="content" required><?= htmlspecialchars($formContent, ENT_QUOTES, 'UTF-8') ?></textarea>
-            <p class="admin-hint">Звичайний текст: порожній рядок між абзацами → при збереженні обгортається в &lt;p&gt;. Якщо вставляєте HTML — залишається без змін.</p>
+            <label for="content-editor">Контент</label>
+            <div class="admin-wysiwyg">
+              <div class="admin-wysiwyg__toolbar" data-admin-content-toolbar role="toolbar" aria-label="Форматування тексту">
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="bold" title="Жирний">B</button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="italic" title="Курсив"><em>I</em></button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="h2" title="Заголовок 2">H2</button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="h3" title="Заголовок 3">H3</button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="link" title="Посилання">Link</button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="unlink" title="Прибрати посилання">Unlink</button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="ul" title="Маркований список">• List</button>
+                <button type="button" class="admin-wysiwyg__btn" data-editor-cmd="ol" title="Нумерований список">1. List</button>
+              </div>
+              <div
+                id="content-editor"
+                class="admin-wysiwyg__editor news-article__content"
+                contenteditable="true"
+                role="textbox"
+                aria-multiline="true"
+                aria-labelledby="content-editor-label"
+                data-placeholder="Текст статті…"
+              ></div>
+              <span id="content-editor-label" class="admin-content-fallback">Контент</span>
+              <textarea id="content" name="content" class="admin-content-fallback" aria-hidden="true"></textarea>
+            </div>
+            <script type="application/json" id="admin-content-initial"><?= json_encode($formContent, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+            <p class="admin-hint">Виділіть текст і натисніть Link для посилання (відкривається в новій вкладці). Enter — новий абзац. Збереження лишає HTML у форматі статті.</p>
 
             <label for="cover">Обкладинка</label>
             <div class="admin-media-block">
@@ -624,6 +671,7 @@ if ($isEdit && $formSlug !== '') {
         dateEl.addEventListener('change', scheduleCreateSlugPreview);
       })();
     </script>
+    <script src="js/admin-content-editor.js"></script>
     <script>
       (function () {
         const deleteConfirmMessage = 'Delete this news item? This cannot be undone.';

@@ -95,6 +95,7 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 - **`import-legacy.php`** / **`rollback-migration.php`** / **`migration-lib.php`** — legacy HTML import + rollback from `news.json.bak-*`; writes `data/migration-log.json` per run.
 - **`admin-lib.php`**, **`index.php`**, **`save.php`** — CRUD/upload; list **Перегляд** → `../news/article.php?slug=&preview=1` (new tab); **toggle_published** flips `published` in JSON.
 - **Create form:** live slug preview under title/date (`URL will be: …`); `index.php?slug_preview=1` returns JSON via `news_generate_slug_for_create()` (same as save on create). Edit form shows immutable stored slug only.
+- **Content:** WYSIWYG (`admin/js/admin-content-editor.js`) — `contenteditable` toolbar (bold, italic, H2/H3, link/unlink, lists); serializes to hidden `textarea` as `<p>`/`<h2>`/`<h3>`/list HTML; `news_format_admin_content()` leaves HTML unchanged on save.
 
 **Default staging login:** `admin` / `password` — change `password_hash` in `test/config/admin-auth.php` before production.
 
@@ -112,6 +113,24 @@ PHP UI — **reads/writes only** `/test/data/news.json` (no database). **Session
 ---
 
 ## Task log (latest first)
+
+### 2026-06-23 — Admin WYSIWYG H2/H3 headings
+
+- **Created:** none
+- **Modified:** `test/admin/index.php`, `test/admin/js/admin-content-editor.js`, `project-memory.md`
+- **Logic:** Toolbar H2/H3 via `formatBlock`; serialize/load `<h2>`/`<h3>` blocks; public render unchanged.
+
+### 2026-06-23 — Admin WYSIWYG content editor
+
+- **Created:** `test/admin/js/admin-content-editor.js`
+- **Modified:** `test/admin/index.php`, `project-memory.md`
+- **Logic:** Toolbar + contenteditable; link via `prompt` → `target="_blank" rel="noopener"`; Enter → `<p>`; initial HTML from `#admin-content-initial` JSON; no schema/public render changes.
+
+### 2026-06-23 — News article layout (tablet/desktop)
+
+- **Created:** none
+- **Modified:** `test/css/news.css`, `project-memory.md`
+- **Logic:** From `769px`, `.news-article__content` and `.news-article__section` use `max-width: var(--content-width)` to match cover; justified body text; mobile rules unchanged (`--text-width` below 769px).
 
 ### 2026-06-23 — News JSON content repair + normalization
 

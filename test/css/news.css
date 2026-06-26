@@ -359,6 +359,24 @@ a.news-card:hover {
   text-align: justify;
 }
 
+@media (min-width: 769px) {
+  .news-article__content,
+  .news-article__section {
+    max-width: var(--content-width);
+    width: 100%;
+  }
+
+  .news-article__content {
+    text-align: justify;
+  }
+
+  .news-article__content p {
+    text-align: justify;
+    line-height: 1.75;
+    margin-bottom: var(--space-3);
+  }
+}
+
 .news-article__content a {
   pointer-events: auto;
   position: relative;
